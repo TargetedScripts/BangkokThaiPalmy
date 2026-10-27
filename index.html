@@ -21,13 +21,11 @@
   <!-- HEADER -->
   <header class="bg-red-800 text-white shadow-xl sticky top-0 z-50 border-b border-red-900">
     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-      <!-- Logo + Teks Takeaway -->
       <div class="flex items-center space-x-3">
         <img id="storeLogo" src="" alt="Logo" class="h-10 w-auto object-contain drop-shadow">
         <span class="font-bold text-xl tracking-wider text-amber-300 uppercase">Takeaway</span>
       </div>
       
-      <!-- Navigasi View, Admin Portal & Cart Trigger -->
       <div class="flex items-center space-x-2 sm:space-x-3">
         <a href="system-console.html" class="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-zinc-950/60 hover:bg-zinc-950 text-amber-400 border border-amber-500/30 transition flex items-center space-x-1">
           <i class="fa-solid fa-terminal"></i>
@@ -57,7 +55,6 @@
   <section class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden shadow-2xl">
     <div id="heroSlidesContainer" class="relative w-full h-full"></div>
 
-    <!-- BRANDING OVERLAY DEFAULT (Akan otomatis fade out jika slide menu promo tampil) -->
     <div id="defaultHeroOverlay" class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/50 to-black/70 flex flex-col justify-center items-center text-center p-6 text-white transition-opacity duration-700 opacity-100 pointer-events-auto">
       <img id="heroLogo" src="" alt="Bangkok Thai Logo" class="h-20 md:h-28 w-auto object-contain mb-3 filter drop-shadow-lg">
       <h2 class="text-2xl md:text-3xl font-extrabold tracking-widest text-amber-400 uppercase mb-2">Takeaway</h2>
@@ -70,43 +67,13 @@
     </div>
   </section>
 
-  <!-- FEATURE HIGHLIGHTS -->
-  <section class="max-w-7xl mx-auto px-4 py-8 w-full">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-      <div class="bg-zinc-800/80 p-5 rounded-2xl shadow-lg border border-zinc-700/60 flex items-center space-x-4">
-        <div class="w-12 h-12 bg-red-950/80 text-amber-400 rounded-full flex items-center justify-center flex-shrink-0 text-xl border border-red-800/60 shadow-inner">
-          <i class="fa-solid fa-fire"></i>
-        </div>
-        <div class="text-left">
-          <h3 class="font-bold text-sm text-stone-100">Authentic Recipes</h3>
-          <p class="text-xs text-stone-400">Traditional Thai wok stir-fry & fresh herbs.</p>
-        </div>
-      </div>
-
-      <div class="bg-zinc-800/80 p-5 rounded-2xl shadow-lg border border-zinc-700/60 flex items-center space-x-4">
-        <div class="w-12 h-12 bg-red-950/80 text-amber-400 rounded-full flex items-center justify-center flex-shrink-0 text-xl border border-red-800/60 shadow-inner">
-          <i class="fa-solid fa-bag-shopping"></i>
-        </div>
-        <div class="text-left">
-          <h3 class="font-bold text-sm text-stone-100">Fast Online Pickup</h3>
-          <p class="text-xs text-stone-400">Order online in seconds for easy collection.</p>
-        </div>
-      </div>
-
-      <div class="bg-zinc-800/80 p-5 rounded-2xl shadow-lg border border-zinc-700/60 flex items-center space-x-4">
-        <div class="w-12 h-12 bg-red-950/80 text-amber-400 rounded-full flex items-center justify-center flex-shrink-0 text-xl border border-red-800/60 shadow-inner">
-          <i class="fa-solid fa-leaf"></i>
-        </div>
-        <div class="text-left">
-          <h3 class="font-bold text-sm text-stone-100">Custom Spice & Veggie</h3>
-          <p class="text-xs text-stone-400">Tailored spice levels & vegetarian options.</p>
-        </div>
-      </div>
-    </div>
+  <!-- FEATURE HIGHLIGHTS BAR (COMPACT & DYNAMIC) -->
+  <section id="highlightsSection" class="max-w-7xl mx-auto px-4 py-4 w-full">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-center" id="highlightsGrid"></div>
   </section>
 
   <!-- MAIN MENU SECTION -->
-  <section id="online-menu" class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+  <section id="online-menu" class="max-w-7xl mx-auto px-4 py-4 w-full flex-grow">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2 border-b border-zinc-800 pb-4">
       <div>
         <h2 class="text-2xl font-bold text-stone-100 tracking-wide">Our Takeaway Menu</h2>
@@ -187,10 +154,8 @@
     </div>
   </footer>
 
-  <!-- CONFIGURATION SCRIPT -->
   <script src="assets/js/bangkokthaipalmy.js"></script>
 
-  <!-- ENGINE LOGIC IN SCRIPT TAG -->
   <script>
     const SECRET_KEY = "TargetedScripts-Master-Secret-2026!Key";
     let currentCategory = 'ALL';
@@ -211,6 +176,7 @@
 
       initStoreBranding();
       initHeroCarousel();
+      renderHighlightsBar();
       renderCategoryPills();
       renderMenu();
     });
@@ -219,14 +185,12 @@
       if (!activeConfig.encryptedToken && activeConfig.contract?.expiryDate) {
         return checkExpiryDate(activeConfig.contract.expiryDate, activeConfig.contract.status);
       }
-
       if (!activeConfig.encryptedToken) return true;
 
       try {
         const bytes = CryptoJS.AES.decrypt(activeConfig.encryptedToken, SECRET_KEY);
         const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
         const license = JSON.parse(decryptedText);
-
         return checkExpiryDate(license.expiryDate, license.status);
       } catch (e) {
         lockStoreFront("Tampered or Invalid License Token. Access Suspended.");
@@ -239,15 +203,12 @@
         lockStoreFront("Subscription Status Inactive. Please contact TargetedScripts.com.");
         return false;
       }
-
       const today = new Date();
       const todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
-
       if (todayStr > expiryDateStr) {
         lockStoreFront("Subscription Expired on " + expiryDateStr + ". Please contact TargetedScripts.com to renew contract.");
         return false;
       }
-
       return true;
     }
 
@@ -280,10 +241,8 @@
       }
     }
 
-    // LOGIKA HERO CAROUSEL DENGAN DYNAMIC OVERLAY SWITCHING
     function initHeroCarousel() {
       const container = document.getElementById('heroSlidesContainer');
-      const defaultOverlay = document.getElementById('defaultHeroOverlay');
       const baseImages = activeConfig.branding?.heroImages || [];
       const featuredItems = activeConfig.menuItems?.filter(i => i.isFeatured && i.image && i.isAvailable !== false) || [];
 
@@ -325,7 +284,6 @@
         </div>
       `).join('');
 
-      // Set Overlay Pertama Sesuai Tipe Slide 0
       updateOverlayVisibility(0);
 
       if (slidesDataGlobal.length > 1) {
@@ -335,13 +293,11 @@
           slides[heroIndex].classList.replace('opacity-100', 'opacity-0');
           heroIndex = (heroIndex + 1) % slides.length;
           slides[heroIndex].classList.replace('opacity-0', 'opacity-100');
-          
           updateOverlayVisibility(heroIndex);
         }, 4000);
       }
     }
 
-    // SEMBUNYIKAN BRANDING LOGO JIKA SLIDE MAKANAN PROMO MUNCUL
     function updateOverlayVisibility(index) {
       const defaultOverlay = document.getElementById('defaultHeroOverlay');
       if (!defaultOverlay || !slidesDataGlobal[index]) return;
@@ -353,6 +309,38 @@
         defaultOverlay.classList.replace('opacity-0', 'opacity-100');
         defaultOverlay.classList.replace('pointer-events-none', 'pointer-events-auto');
       }
+    }
+
+    // RENDER HIGHLIGHTS BAR TIPIS & RINGKAS (Dinamis dari config admin)
+    function renderHighlightsBar() {
+      const section = document.getElementById('highlightsSection');
+      const grid = document.getElementById('highlightsGrid');
+      const hl = activeConfig.highlights || {};
+
+      if (hl.enabled === false) {
+        section.classList.add('hidden');
+        return;
+      }
+
+      section.classList.remove('hidden');
+
+      const items = [
+        hl.item1 || { title: "Authentic Recipes", sub: "Traditional Thai wok stir-fry" },
+        hl.item2 || { title: "Fast Online Pickup", sub: "Order in seconds" },
+        hl.item3 || { title: "Custom Spice & Veggie", sub: "Tailored spice levels" }
+      ];
+
+      grid.innerHTML = items.map(i => `
+        <div class="bg-zinc-800/80 px-3.5 py-2.5 rounded-xl border border-zinc-700/60 flex items-center space-x-3 shadow-md">
+          <div class="w-8 h-8 bg-red-950/80 text-amber-400 rounded-lg flex items-center justify-center flex-shrink-0 text-sm border border-red-800/60">
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <div class="text-left">
+            <h4 class="font-bold text-xs text-stone-100 leading-tight">${i.title}</h4>
+            <p class="text-[10px] text-stone-400 leading-tight">${i.sub}</p>
+          </div>
+        </div>
+      `).join('');
     }
 
     function renderCategoryPills() {
