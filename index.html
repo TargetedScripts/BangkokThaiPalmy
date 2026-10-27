@@ -197,7 +197,7 @@
     let activeConfig = {};
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Prioritaskan config dari localStorage (hasil editan system-console/admin) atau fallback ke file JS
+      // Prioritaskan config dari localStorage atau fallback ke file JS
       const saved = localStorage.getItem('RESTOSYNC_WORKING_CONFIG');
       if (saved) {
         try { activeConfig = JSON.parse(saved); } catch(e) { activeConfig = RESTOSYNC_CONFIG; }
@@ -205,21 +205,25 @@
         activeConfig = typeof RESTOSYNC_CONFIG !== 'undefined' ? RESTOSYNC_CONFIG : {};
       }
 
-      // 1. VERIFIKASI LISENSI TERENKRIPSI AES-256
+      // 1. VERIFIKASI LISENSI SANGAT PRESISI
       if (!verifyLicenseToken()) {
-        return; // Jika lisensi terbukti expired / tampered, eksekusi dihentikan & tampilan terkunci
+        return; // Hentikan eksekusi jika lisensi kedaluwarsa atau tidak valid
       }
 
-      // 2. INISIALISASI WEBSITE
+      // 2. INISIALISASI TAMPILAN
       initStoreBranding();
       initHeroCarousel();
       renderCategoryPills();
       renderMenu();
     });
 
-    // VERIFIKASI DEKRIPSI LISENSI SANGAT KETAT
+    // VERIFIKASI LISENSI
     function verifyLicenseToken() {
-      // Jika token belum pernah dibuat di system-console, lewati lockdown sementara untuk demo awal
+      // Jika token belum ada tapi ada data kontrak manual, langsung validasi tanggalnya
+      if (!activeConfig.encryptedToken && activeConfig.contract?.expiryDate) {
+        return checkExpiryDate(activeConfig.contract.expiryDate, activeConfig.contract.status);
+      }
+
       if (!activeConfig.encryptedToken) return true;
 
       try {
@@ -227,23 +231,32 @@
         const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
         const license = JSON.parse(decryptedText);
 
-        const today = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
-
-        // Cek apakah Expiry Date sudah terlewat atau status bukan active
-        if (today > license.expiryDate || license.status !== 'active') {
-          lockStoreFront("Subscription Expired. Please contact TargetedScripts.com to renew contract.");
-          return false;
-        }
-
-        return true;
+        return checkExpiryDate(license.expiryDate, license.status);
       } catch (e) {
-        // Terjadi jika file lisensi/JS diedit manual oleh orang yang tidak berhak
         lockStoreFront("Tampered or Invalid License Token. Access Suspended.");
         return false;
       }
     }
 
-    // TAMPILAN LOCKDOWN JIKA LISENSI INVALID / EXPIRED
+    // PEMBANDING TANGGAL PRESISI ISO YYYY-MM-DD
+    function checkExpiryDate(expiryDateStr, status) {
+      if (status !== 'active') {
+        lockStoreFront("Subscription Status Inactive. Please contact TargetedScripts.com.");
+        return false;
+      }
+
+      const today = new Date();
+      const todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+
+      if (todayStr > expiryDateStr) {
+        lockStoreFront("Subscription Expired on " + expiryDateStr + ". Please contact TargetedScripts.com to renew contract.");
+        return false;
+      }
+
+      return true;
+    }
+
+    // TAMPILAN LOCKDOWN
     function lockStoreFront(reason) {
       document.body.innerHTML = `
         <div class="bg-zinc-950 text-stone-100 min-h-screen flex flex-col items-center justify-center text-center p-6 font-sans">
@@ -353,7 +366,7 @@
                 
                 ${isSoldOut ? `<div class="absolute inset-0 bg-black/60 flex items-center justify-center"><span class="bg-red-800 text-white font-extrabold text-sm px-4 py-1.5 rounded-lg shadow-xl border border-red-500 tracking-wider uppercase">SOLD OUT</span></div>` : ''}
                 
-                ${promoTag && !isSoldOut ? `<div class="absolute top-3 left-3 bg-red-700 text-amber-300 font-black text-[10px] px-2.5 py-1 rounded-md shadow-md uppercase tracking-wider">${promoTag}</div>` : ''}
+                ${promoTag && !isSoldOut ? `<div class="absolute top-3 left-3 bg-red-700 text-amber-300 font-black text-[10px] px-2.5 py-1 rounded-md uppercase tracking-wider">${promoTag}</div>` : ''}
               </div>
 
               <div class="p-4">
