@@ -85,7 +85,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2 border-b border-zinc-800 pb-4">
       <div>
         <h2 id="menuMainTitle" class="text-2xl font-bold tracking-wide">Our Takeaway Menu</h2>
-        <p id="menuSubTitle" class="text-xs text-stone-400">Select a category below to browse items</p>
+        <p id="menuSubTitle" class="text-xs text-stone-400">Select a category or filter below to browse items</p>
       </div>
       
       <div class="flex items-center space-x-2">
@@ -97,6 +97,7 @@
       </div>
     </div>
 
+    <!-- CATEGORY PILLS + SPECIAL FILTERS (PROMO & FAVORITES) -->
     <div class="sticky top-[61px] z-30 bg-zinc-900/95 backdrop-blur-md py-3 -mx-4 px-4 shadow-lg mb-6 border-b border-zinc-800">
       <div id="categoryPills" class="flex space-x-2 overflow-x-auto no-scrollbar py-1"></div>
     </div>
@@ -335,7 +336,6 @@
                   <h3 class="font-extrabold text-stone-100 text-xl md:text-3xl leading-tight">${s.id}: ${s.title}</h3>
                   <p class="text-xs md:text-sm text-stone-300 line-clamp-2">${s.description}</p>
                   
-                  <!-- HARGA LAMA & BARU DI HERO BANNER -->
                   <div class="pt-2 flex items-center space-x-4">
                     ${hasPromo ? `
                       <span class="strike-red-diagonal text-xl md:text-2xl font-bold">$${s.price.toFixed(2)}</span>
@@ -421,15 +421,40 @@
       `).join('');
     }
 
+    /* CATEGORY PILLS WITH SPECIAL FILTERS: PROMO & FAVORITES */
     function renderCategoryPills() {
       if (!activeConfig.menuItems) return;
       const visibleItems = activeConfig.menuItems.filter(i => i.isAvailable !== false);
-      const categories = ['ALL', ...new Set(visibleItems.map(item => item.category))];
-      document.getElementById('categoryPills').innerHTML = categories.map(cat => `
-        <button onclick="filterCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${cat === currentCategory ? 'bg-amber-500 text-zinc-950 border-amber-500 shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">
-          ${cat}
+      const rawCategories = [...new Set(visibleItems.map(item => item.category))];
+
+      let pillsHTML = `
+        <!-- FILTER ALL -->
+        <button onclick="filterCategory('ALL')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${currentCategory === 'ALL' ? 'bg-amber-500 text-zinc-950 border-amber-500 shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">
+          ALL
         </button>
-      `).join('');
+
+        <!-- FILTER SPECIAL: PROMO / OFFERS -->
+        <button onclick="filterCategory('FILTER_PROMO')" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition border flex items-center space-x-1.5 ${currentCategory === 'FILTER_PROMO' ? 'bg-red-700 text-white border-red-500 shadow-md' : 'bg-red-950/80 text-amber-300 border-red-800/80 hover:bg-red-900'}">
+          <i class="fa-solid fa-fire text-amber-400"></i>
+          <span>PROMO & OFFERS</span>
+        </button>
+
+        <!-- FILTER SPECIAL: FAVORITES -->
+        <button onclick="filterCategory('FILTER_FAVORITES')" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition border flex items-center space-x-1.5 ${currentCategory === 'FILTER_FAVORITES' ? 'bg-amber-500 text-zinc-950 border-amber-500 shadow-md' : 'bg-zinc-800 text-amber-400 border-zinc-700 hover:bg-zinc-700'}">
+          <i class="fa-solid fa-star"></i>
+          <span>FAVORITES</span>
+        </button>
+      `;
+
+      rawCategories.forEach(cat => {
+        pillsHTML += `
+          <button onclick="filterCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${cat === currentCategory ? 'bg-amber-500 text-zinc-950 border-amber-500 shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">
+            ${cat}
+          </button>
+        `;
+      });
+
+      document.getElementById('categoryPills').innerHTML = pillsHTML;
     }
 
     function filterCategory(cat) { 
@@ -443,6 +468,7 @@
       renderMenuContentBox();
     }
 
+    /* LOGIK FILTERING MENU CONTENT BOX */
     function renderMenuContentBox() {
       if (!activeConfig.menuItems) return;
 
@@ -451,14 +477,30 @@
         btnText.innerText = activeLayoutMode === 'grid' ? 'Switch to Classic List' : 'Switch to Modern Grid';
       }
 
+      // Saring item berdasarkan Kategori biasa atau Special Filter
       const visibleItems = activeConfig.menuItems.filter(i => {
-        const matchesCategory = (currentCategory === 'ALL' || i.category === currentCategory);
         const isEnabled = i.isAvailable !== false;
-        return matchesCategory && isEnabled;
+        if (!isEnabled) return false;
+
+        if (currentCategory === 'ALL') return true;
+        if (currentCategory === 'FILTER_PROMO') return (i.promoPrice && i.promoPrice < i.price);
+        if (currentCategory === 'FILTER_FAVORITES') return (i.isFeatured === true);
+
+        return i.category === currentCategory;
       });
 
       const contentBox = document.getElementById('menuContentBox');
       const theme = activeConfig.theme || {};
+
+      if (visibleItems.length === 0) {
+        contentBox.innerHTML = `
+          <div class="text-center py-12 bg-zinc-900/50 rounded-2xl border border-zinc-800 space-y-2">
+            <i class="fa-solid fa-utensils text-3xl text-stone-600"></i>
+            <p class="text-stone-400 text-sm font-semibold">No menu items found in this section.</p>
+          </div>
+        `;
+        return;
+      }
 
       if (activeLayoutMode === 'classic') {
         contentBox.innerHTML = `
@@ -531,7 +573,6 @@
                       <div class="flex justify-between items-start gap-2">
                         <h3 class="font-bold text-stone-100 text-base leading-snug">${item.id}: ${item.name}</h3>
                         
-                        <!-- HARGA CARD DENGAN CORETAN MIRING MERAH -->
                         <div class="text-right flex-shrink-0">
                           ${hasPromo ? `
                             <div><span class="strike-red-diagonal text-sm font-bold">$${item.price.toFixed(2)}</span></div>
