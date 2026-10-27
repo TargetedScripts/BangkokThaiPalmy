@@ -18,7 +18,9 @@
 </head>
 <body class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen selection:bg-amber-500 selection:text-zinc-950">
 
-  <!-- HEADER -->
+  <!-- ========================================== -->
+  <!-- BLOK 1: HEADER & NAVIGATION (STATIK)      -->
+  <!-- ========================================== -->
   <header class="bg-red-800 text-white shadow-xl sticky top-0 z-50 border-b border-red-900">
     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center space-x-3">
@@ -46,8 +48,10 @@
     </div>
   </header>
 
-  <!-- HERO BANNER -->
-  <section class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden shadow-2xl">
+  <!-- ========================================== -->
+  <!-- BLOK 2: HERO BANNER CAROUSEL (STATIK)      -->
+  <!-- ========================================== -->
+  <section id="heroSection" class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden shadow-2xl">
     <div id="heroSlidesContainer" class="relative w-full h-full"></div>
 
     <div id="defaultHeroOverlay" class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/50 to-black/70 flex flex-col justify-center items-center text-center p-6 text-white transition-opacity duration-700 opacity-100 pointer-events-auto">
@@ -62,12 +66,16 @@
     </div>
   </section>
 
-  <!-- FEATURE HIGHLIGHTS BAR -->
+  <!-- ========================================== -->
+  <!-- BLOK 3: FEATURE HIGHLIGHTS BAR (STATIK)    -->
+  <!-- ========================================== -->
   <section id="highlightsSection" class="max-w-7xl mx-auto px-4 py-4 w-full">
     <div id="highlightsGrid"></div>
   </section>
 
-  <!-- MAIN MENU SECTION -->
+  <!-- ========================================== -->
+  <!-- BLOK 4: MAIN MENU & DYNAMIC CONTENT BOX    -->
+  <!-- ========================================== -->
   <section id="online-menu" class="max-w-7xl mx-auto px-4 py-4 w-full flex-grow">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2 border-b border-zinc-800 pb-4">
       <div>
@@ -75,26 +83,29 @@
         <p class="text-xs text-stone-400">Select a category below to browse items</p>
       </div>
       
-      <!-- USER LAYOUT SWITCHER BUTTON -->
+      <!-- TOGGLE CONTROL SWITCHER -->
       <div class="flex items-center space-x-2">
         <span class="text-xs text-stone-400">Layout Mode:</span>
-        <button onclick="toggleUserLayout()" id="layoutSwitchBtn" class="text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-amber-400 border border-zinc-700 px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition">
+        <button onclick="toggleUserLayout()" id="layoutSwitchBtn" class="text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-amber-400 border border-zinc-700 px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition shadow-sm">
           <i class="fa-solid fa-arrows-rotate"></i>
           <span id="layoutSwitchText">Switch View</span>
         </button>
       </div>
     </div>
 
-    <!-- CATEGORY NAVIGATION -->
+    <!-- CATEGORY PILLS -->
     <div class="sticky top-[61px] z-30 bg-zinc-900/95 backdrop-blur-md py-3 -mx-4 px-4 shadow-lg mb-6 border-b border-zinc-800">
       <div id="categoryPills" class="flex space-x-2 overflow-x-auto no-scrollbar py-1"></div>
     </div>
 
-    <!-- MENU CONTAINER (Dynamic Render: Grid or Classic List) -->
-    <div id="menuContainer"></div>
+    <!-- KOTAK KHUSUS DINAMIK (DEDICATED MENU CONTENT BOX) -->
+    <!-- Hanya kawasan dalam ID ini sahaja yang akan dikemaskini oleh JavaScript -->
+    <div id="menuContentBox" class="w-full"></div>
   </section>
 
-  <!-- CART ESTIMATOR MODAL -->
+  <!-- ========================================== -->
+  <!-- CART ESTIMATOR MODAL                       -->
+  <!-- ========================================== -->
   <div id="cartModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex justify-end">
     <div class="bg-zinc-900 w-full max-w-md h-full flex flex-col shadow-2xl border-l border-zinc-800">
       <div class="p-4 bg-red-800 text-white flex justify-between items-center shadow-md">
@@ -115,8 +126,10 @@
     </div>
   </div>
 
-  <!-- LOCATION & HOURS SECTION -->
-  <section class="bg-zinc-950 py-12 border-t border-zinc-800 mt-12">
+  <!-- ========================================== -->
+  <!-- BLOK 5: LOCATION & MAPS (STATIK)           -->
+  <!-- ========================================== -->
+  <section id="locationSection" class="bg-zinc-950 py-12 border-t border-zinc-800 mt-12">
     <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
       <div class="space-y-4">
         <h3 class="text-2xl font-bold text-stone-100">Bangkok Thai Takeaway</h3>
@@ -140,8 +153,10 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="bg-black text-stone-500 text-xs py-8 border-t border-zinc-900">
+  <!-- ========================================== -->
+  <!-- BLOK 6: FOOTER (STATIK)                    -->
+  <!-- ========================================== -->
+  <footer id="footerSection" class="bg-black text-stone-500 text-xs py-8 border-t border-zinc-900">
     <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
       <p id="footerStoreInfo">Bangkok Thai Takeaway | Palmerston North, NZ</p>
       <div class="flex justify-center space-x-4 pt-1">
@@ -152,8 +167,10 @@
     </div>
   </footer>
 
+  <!-- INTEGRASI ASSETS & JAYS CONFIG -->
   <script src="assets/js/bangkokthaipalmy.js"></script>
 
+  <!-- SCRIPT LOGIK UTAMA -->
   <script>
     const SECRET_KEY = "TargetedScripts-Master-Secret-2026!Key";
     let currentCategory = 'ALL';
@@ -161,7 +178,7 @@
     let heroIndex = 0;
     let activeConfig = {};
     let slidesDataGlobal = [];
-    let activeLayoutMode = 'grid'; // Default fallback
+    let activeLayoutMode = 'grid'; // Tetapan asas
 
     document.addEventListener('DOMContentLoaded', () => {
       const saved = localStorage.getItem('RESTOSYNC_WORKING_CONFIG');
@@ -173,14 +190,14 @@
 
       if (!verifyLicenseToken()) return;
 
-      // SET LAYOUT UTAMA Sesuai Pilihan Admin di admin.html
+      // Ambil susun atur lalai yang ditetapkan oleh admin (grid / classic)
       activeLayoutMode = activeConfig.store?.defaultLayout || 'grid';
 
       initStoreBranding();
       initHeroCarousel();
       renderHighlightsBar();
       renderCategoryPills();
-      renderMenu();
+      renderMenuContentBox();
     });
 
     function verifyLicenseToken() {
@@ -337,7 +354,6 @@
       }
 
       section.classList.remove('hidden');
-
       grid.className = `grid grid-cols-1 ${activeItems.length === 2 ? 'md:grid-cols-2' : activeItems.length >= 3 ? 'md:grid-cols-3' : ''} gap-3 text-center`;
 
       grid.innerHTML = activeItems.map(i => `
@@ -367,17 +383,17 @@
     function filterCategory(cat) { 
       currentCategory = cat; 
       renderCategoryPills(); 
-      renderMenu(); 
+      renderMenuContentBox(); 
     }
 
-    // FUNGSI BERGANTI TAMPILAN USER (Grid vs Classic)
+    // TERTUKAR SUSUN ATUR MOD DENGAN SELAMAT
     function toggleUserLayout() {
       activeLayoutMode = activeLayoutMode === 'grid' ? 'classic' : 'grid';
-      renderMenu();
+      renderMenuContentBox();
     }
 
-    // RENDER MENU DINAMIS (GRID VS CLASSIC)
-    function renderMenu() {
+    // HANYA MENGEMASKINI KANDUNGAN DALAM DYNAMIC BOX (#menuContentBox)
+    function renderMenuContentBox() {
       if (!activeConfig.menuItems) return;
 
       const btnText = document.getElementById('layoutSwitchText');
@@ -385,111 +401,118 @@
         btnText.innerText = activeLayoutMode === 'grid' ? 'Switch to Classic List' : 'Switch to Modern Grid';
       }
 
+      // TAPISAN HIRARKI VISIBILITI (Status Enabled sahaja)
       const visibleItems = activeConfig.menuItems.filter(i => {
         const matchesCategory = (currentCategory === 'ALL' || i.category === currentCategory);
         const isEnabled = i.isAvailable !== false;
         return matchesCategory && isEnabled;
       });
 
-      const container = document.getElementById('menuContainer');
+      const contentBox = document.getElementById('menuContentBox');
 
-      // 1. CLASSIC LIST VIEW
+      // 1. MOD CLASSIC LIST (RINGKAS & PADAT)
       if (activeLayoutMode === 'classic') {
-        container.className = "space-y-4 max-w-4xl mx-auto";
-        container.innerHTML = visibleItems.map(item => {
-          const isSoldOut = item.stock <= 0;
-          const hasPromo = item.promoPrice && item.promoPrice < item.price;
-          const finalPrice = hasPromo ? item.promoPrice : item.price;
-          const promoTag = item.promoTag || (hasPromo ? "SPECIAL OFFER" : "");
+        contentBox.innerHTML = `
+          <div class="space-y-4 max-w-4xl mx-auto">
+            ${visibleItems.map(item => {
+              const isSoldOut = item.stock <= 0;
+              const hasPromo = item.promoPrice && item.promoPrice < item.price;
+              const finalPrice = hasPromo ? item.promoPrice : item.price;
+              const promoTag = item.promoTag || (hasPromo ? "SPECIAL OFFER" : "");
 
-          return `
-            <div class="bg-zinc-800/90 rounded-xl p-4 border border-zinc-700/60 hover:border-zinc-600 transition space-y-3">
-              <div class="flex justify-between items-start gap-4">
-                <div class="space-y-1">
-                  <div class="flex items-center space-x-2">
-                    <h3 class="font-bold text-stone-100 text-base">${item.id}: ${item.name}</h3>
-                    ${isSoldOut ? `<span class="bg-red-800 text-white font-extrabold text-[9px] px-2 py-0.5 rounded shadow tracking-wider uppercase">SOLD OUT</span>` : ''}
-                    ${promoTag && !isSoldOut ? `<span class="bg-red-700 text-amber-300 font-bold text-[9px] px-2 py-0.5 rounded uppercase">${promoTag}</span>` : ''}
-                  </div>
-                  <p class="text-xs text-stone-400 leading-relaxed">${item.description}</p>
-                  ${getSpiceBadge(item.spiceLevel)}
-                </div>
+              return `
+                <div class="bg-zinc-800/90 rounded-xl p-4 border border-zinc-700/60 hover:border-zinc-600 transition space-y-3">
+                  <div class="flex justify-between items-start gap-4">
+                    <div class="space-y-1">
+                      <div class="flex items-center space-x-2">
+                        <h3 class="font-bold text-stone-100 text-base">${item.id}: ${item.name}</h3>
+                        ${isSoldOut ? `<span class="bg-red-800 text-white font-extrabold text-[9px] px-2 py-0.5 rounded shadow tracking-wider uppercase">SOLD OUT</span>` : ''}
+                        ${promoTag && !isSoldOut ? `<span class="bg-red-700 text-amber-300 font-bold text-[9px] px-2 py-0.5 rounded uppercase">${promoTag}</span>` : ''}
+                      </div>
+                      <p class="text-xs text-stone-400 leading-relaxed">${item.description}</p>
+                      ${getSpiceBadge(item.spiceLevel)}
+                    </div>
 
-                <div class="text-right flex-shrink-0">
-                  ${hasPromo ? `
-                    <div class="text-xs text-stone-500 line-through">$${item.price.toFixed(2)}</div>
-                    <div class="font-black text-amber-400 text-base">$${finalPrice.toFixed(2)}</div>
-                  ` : `
-                    <div class="font-black text-amber-400 text-base">$${item.price.toFixed(2)}</div>
-                  `}
-                </div>
-              </div>
-
-              <div class="pt-1 flex justify-end">
-                ${!isSoldOut 
-                  ? `<button onclick="addToCart('${item.id}')" class="bg-red-950/80 hover:bg-red-800 text-amber-300 hover:text-white font-semibold px-4 py-1.5 rounded-lg text-xs transition border border-red-700/50">
-                       + Add to Order
-                     </button>`
-                  : `<button disabled class="bg-zinc-950 text-stone-600 font-bold px-4 py-1.5 rounded-lg text-xs border border-zinc-800 cursor-not-allowed">
-                       Out of Stock
-                     </button>`
-                }
-              </div>
-            </div>
-          `;
-        }).join('');
-      } 
-      // 2. MODERN GRID VIEW (DEFAULT)
-      else {
-        container.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
-        container.innerHTML = visibleItems.map(item => {
-          const isSoldOut = item.stock <= 0;
-          const hasPromo = item.promoPrice && item.promoPrice < item.price;
-          const finalPrice = hasPromo ? item.promoPrice : item.price;
-          const promoTag = item.promoTag || (hasPromo ? "SPECIAL OFFER" : "");
-
-          return `
-            <div class="bg-zinc-800/90 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden border border-zinc-700/60 flex flex-col justify-between group relative">
-              <div>
-                <div class="relative overflow-hidden">
-                  ${item.image ? `<img src="${item.image}" alt="${item.name}" class="w-full h-48 object-cover group-hover:scale-105 transition duration-500 ${isSoldOut ? 'grayscale opacity-50' : ''}">` : `<div class="w-full h-36 bg-zinc-900 flex items-center justify-center text-stone-500 text-xs italic"><i class="fa-solid fa-utensils mr-2"></i> ${activeConfig.store.name}</div>`}
-                  
-                  ${isSoldOut ? `<div class="absolute inset-0 bg-black/60 flex items-center justify-center"><span class="bg-red-800 text-white font-extrabold text-sm px-4 py-1.5 rounded-lg shadow-xl border border-red-500 tracking-wider uppercase">SOLD OUT</span></div>` : ''}
-                  
-                  ${promoTag && !isSoldOut ? `<div class="absolute top-3 left-3 bg-red-700 text-amber-300 font-black text-[10px] px-2.5 py-1 rounded-md uppercase tracking-wider">${promoTag}</div>` : ''}
-                </div>
-
-                <div class="p-4">
-                  <div class="flex justify-between items-start gap-2">
-                    <h3 class="font-bold text-stone-100 text-base leading-snug">${item.id}: ${item.name}</h3>
                     <div class="text-right flex-shrink-0">
                       ${hasPromo ? `
                         <div class="text-xs text-stone-500 line-through">$${item.price.toFixed(2)}</div>
-                        <div class="font-extrabold text-amber-400 text-base">$${finalPrice.toFixed(2)}</div>
+                        <div class="font-black text-amber-400 text-base">$${finalPrice.toFixed(2)}</div>
                       ` : `
-                        <div class="font-extrabold text-amber-400 text-base">$${item.price.toFixed(2)}</div>
+                        <div class="font-black text-amber-400 text-base">$${item.price.toFixed(2)}</div>
                       `}
                     </div>
                   </div>
 
-                  <p class="text-xs text-stone-400 mt-1.5 line-clamp-2 leading-relaxed">${item.description}</p>
-                  ${getSpiceBadge(item.spiceLevel)}
+                  <div class="pt-1 flex justify-end">
+                    ${!isSoldOut 
+                      ? `<button onclick="addToCart('${item.id}')" class="bg-red-950/80 hover:bg-red-800 text-amber-300 hover:text-white font-semibold px-4 py-1.5 rounded-lg text-xs transition border border-red-700/50">
+                           + Add to Order
+                         </button>`
+                      : `<button disabled class="bg-zinc-950 text-stone-600 font-bold px-4 py-1.5 rounded-lg text-xs border border-zinc-800 cursor-not-allowed">
+                           Out of Stock
+                         </button>`
+                    }
+                  </div>
                 </div>
-              </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      } 
+      // 2. MOD MODERN GRID (KAD GAMBAR)
+      else {
+        contentBox.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            ${visibleItems.map(item => {
+              const isSoldOut = item.stock <= 0;
+              const hasPromo = item.promoPrice && item.promoPrice < item.price;
+              const finalPrice = hasPromo ? item.promoPrice : item.price;
+              const promoTag = item.promoTag || (hasPromo ? "SPECIAL OFFER" : "");
 
-              <div class="p-4 pt-0">
-                ${!isSoldOut 
-                  ? `<button onclick="addToCart('${item.id}')" class="w-full bg-red-950/60 hover:bg-red-800 text-amber-300 hover:text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 border border-red-700/50 shadow-sm">
-                       <i class="fa-solid fa-plus"></i> <span>Add to Order</span>
-                     </button>`
-                  : `<button disabled class="w-full bg-zinc-900 text-stone-600 font-bold py-2.5 rounded-xl text-xs text-center border border-zinc-800 cursor-not-allowed">
-                       Out of Stock
-                     </button>`
-                }
-              </div>
-            </div>
-          `;
-        }).join('');
+              return `
+                <div class="bg-zinc-800/90 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden border border-zinc-700/60 flex flex-col justify-between group relative">
+                  <div>
+                    <div class="relative overflow-hidden">
+                      ${item.image ? `<img src="${item.image}" alt="${item.name}" class="w-full h-48 object-cover group-hover:scale-105 transition duration-500 ${isSoldOut ? 'grayscale opacity-50' : ''}">` : `<div class="w-full h-36 bg-zinc-900 flex items-center justify-center text-stone-500 text-xs italic"><i class="fa-solid fa-utensils mr-2"></i> ${activeConfig.store.name}</div>`}
+                      
+                      ${isSoldOut ? `<div class="absolute inset-0 bg-black/60 flex items-center justify-center"><span class="bg-red-800 text-white font-extrabold text-sm px-4 py-1.5 rounded-lg shadow-xl border border-red-500 tracking-wider uppercase">SOLD OUT</span></div>` : ''}
+                      
+                      ${promoTag && !isSoldOut ? `<div class="absolute top-3 left-3 bg-red-700 text-amber-300 font-black text-[10px] px-2.5 py-1 rounded-md uppercase tracking-wider">${promoTag}</div>` : ''}
+                    </div>
+
+                    <div class="p-4">
+                      <div class="flex justify-between items-start gap-2">
+                        <h3 class="font-bold text-stone-100 text-base leading-snug">${item.id}: ${item.name}</h3>
+                        <div class="text-right flex-shrink-0">
+                          ${hasPromo ? `
+                            <div class="text-xs text-stone-500 line-through">$${item.price.toFixed(2)}</div>
+                            <div class="font-extrabold text-amber-400 text-base">$${finalPrice.toFixed(2)}</div>
+                          ` : `
+                            <div class="font-extrabold text-amber-400 text-base">$${item.price.toFixed(2)}</div>
+                          `}
+                        </div>
+                      </div>
+
+                      <p class="text-xs text-stone-400 mt-1.5 line-clamp-2 leading-relaxed">${item.description}</p>
+                      ${getSpiceBadge(item.spiceLevel)}
+                    </div>
+                  </div>
+
+                  <div class="p-4 pt-0">
+                    ${!isSoldOut 
+                      ? `<button onclick="addToCart('${item.id}')" class="w-full bg-red-950/60 hover:bg-red-800 text-amber-300 hover:text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 border border-red-700/50 shadow-sm">
+                           <i class="fa-solid fa-plus"></i> <span>Add to Order</span>
+                         </button>`
+                      : `<button disabled class="w-full bg-zinc-900 text-stone-600 font-bold py-2.5 rounded-xl text-xs text-center border border-zinc-800 cursor-not-allowed">
+                           Out of Stock
+                         </button>`
+                    }
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
       }
     }
 
