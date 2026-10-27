@@ -19,10 +19,10 @@
 <body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen selection:bg-amber-500 selection:text-zinc-950">
 
   <!-- ========================================== -->
-  <!-- BLOK 1: HEADER RESPONSIVE (ANTI-TABRAKAN)  -->
+  <!-- BLOK 1: HEADER CLEAN & RESPONSIVE          -->
   <!-- ========================================== -->
   <header id="mainHeader" class="bg-red-800 text-white shadow-xl sticky top-0 z-50 border-b border-red-900/40">
-    <div class="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2">
       
       <!-- LOGO AREA -->
       <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
@@ -30,18 +30,8 @@
         <span id="headerLogoText" class="hidden sm:inline-block font-bold text-lg sm:text-xl tracking-wider uppercase text-amber-300">Takeaway</span>
       </div>
       
-      <!-- NAV BUTTONS & CART -->
-      <div class="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
-        <a href="system-console.html" class="hidden md:flex px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-zinc-950/60 hover:bg-zinc-950 text-amber-400 border border-amber-500/30 transition items-center space-x-1">
-          <i class="fa-solid fa-terminal"></i>
-          <span>Console</span>
-        </a>
-
-        <a href="admin.html" class="hidden sm:flex px-3 py-2 text-xs font-semibold rounded-lg bg-amber-500/20 hover:bg-amber-500 hover:text-zinc-950 text-amber-300 border border-amber-500/40 transition items-center space-x-1.5">
-          <i class="fa-solid fa-user-gear"></i>
-          <span>Admin</span>
-        </a>
-
+      <!-- CART BUTTON ONLY -->
+      <div class="flex items-center shrink-0">
         <button onclick="toggleCartModal()" id="cartBtn" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 sm:space-x-2 transition shadow-lg shrink-0">
           <i class="fa-solid fa-basket-shopping"></i>
           <span>Cart</span>
@@ -53,7 +43,7 @@
   </header>
 
   <!-- ========================================== -->
-  <!-- BLOK 2: HERO BANNER CAROUSEL (STATIK)      -->
+  <!-- BLOK 2: HERO BANNER CAROUSEL               -->
   <!-- ========================================== -->
   <section id="heroSection" class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden shadow-2xl">
     <div id="heroSlidesContainer" class="relative w-full h-full"></div>
@@ -71,7 +61,7 @@
   </section>
 
   <!-- ========================================== -->
-  <!-- BLOK 3: FEATURE HIGHLIGHTS BAR (STATIK)    -->
+  <!-- BLOK 3: FEATURE HIGHLIGHTS BAR             -->
   <!-- ========================================== -->
   <section id="highlightsSection" class="max-w-7xl mx-auto px-4 py-4 w-full">
     <div id="highlightsGrid"></div>
@@ -130,7 +120,7 @@
   </div>
 
   <!-- ========================================== -->
-  <!-- BLOK 5: LOCATION & MAPS (STATIK)           -->
+  <!-- BLOK 5: LOCATION & MAPS                    -->
   <!-- ========================================== -->
   <section id="locationSection" class="bg-zinc-950 py-12 border-t border-zinc-800 mt-12">
     <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -157,7 +147,7 @@
   </section>
 
   <!-- ========================================== -->
-  <!-- BLOK 6: FOOTER (STATIK)                    -->
+  <!-- BLOK 6: FOOTER (DENGAN TAUTAN DEMO ADMIN)  -->
   <!-- ========================================== -->
   <footer id="footerSection" class="bg-black text-stone-500 text-xs py-8 border-t border-zinc-900">
     <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
