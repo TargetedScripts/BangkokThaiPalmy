@@ -8,6 +8,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- CryptoJS Library for AES Encryption -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body class="bg-zinc-950 text-stone-200 min-h-screen flex flex-col font-sans selection:bg-amber-500 selection:text-zinc-950">
 
@@ -28,9 +30,9 @@
         <a href="admin.html" target="_blank" class="text-xs font-semibold text-amber-400 hover:text-amber-300 transition border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 rounded-lg">
           <i class="fa-solid fa-user-gear mr-1"></i> Manager Portal
         </a>
-        <button onclick="exportSystemConfig()" class="bg-red-800 hover:bg-red-700 text-white font-bold px-4 py-1.5 rounded-lg text-xs shadow transition flex items-center space-x-1">
-          <i class="fa-solid fa-download"></i>
-          <span>Export Master Config</span>
+        <button onclick="generateAndExportLicense()" class="bg-red-800 hover:bg-red-700 text-white font-bold px-4 py-1.5 rounded-lg text-xs shadow transition flex items-center space-x-1">
+          <i class="fa-solid fa-key"></i>
+          <span>Generate Encrypted License</span>
         </button>
       </div>
     </div>
@@ -45,11 +47,11 @@
         <h1 class="text-2xl font-bold text-stone-100 flex items-center">
           <i class="fa-solid fa-gears text-amber-400 mr-3"></i> System Operator Console
         </h1>
-        <p class="text-xs text-stone-400 mt-1">Sistem manajemen lisensi tenant, tanggal kadaluarsa kontrak, dan modul sakelar fitur SaaS.</p>
+        <p class="text-xs text-stone-400 mt-1">Sistem manajemen lisensi terenkripsi AES-256, tanggal kadaluarsa kontrak, dan modul sakelar fitur SaaS.</p>
       </div>
       <button onclick="saveSystemChanges()" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-6 py-2.5 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-sm">
         <i class="fa-solid fa-floppy-disk"></i>
-        <span>Simpan Konfigurasi Sistem</span>
+        <span>Simpan Konfigurasi Lokal</span>
       </button>
     </div>
 
@@ -58,7 +60,7 @@
       <!-- LEFT COLUMN: TENANT & CONTRACT SUBSCRIPTION -->
       <div class="space-y-6">
         
-        <!-- 1. TENANT LICENSE & CONTRACT -->
+        <!-- TENANT LICENSE & CONTRACT -->
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
           <h2 class="font-bold text-base text-stone-100 flex items-center border-b border-zinc-800 pb-3">
             <i class="fa-solid fa-id-card text-amber-400 mr-2"></i> Tenant License & Contract
@@ -81,7 +83,7 @@
                 <i class="fa-solid fa-calendar-xmark mr-2 text-red-400"></i> Tanggal Kadaluarsa Kontrak (Expiry Date)
               </label>
               <input type="date" id="sysExpiryDate" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100 font-bold focus:outline-none focus:border-amber-400">
-              <span class="block text-[10px] text-stone-400">Setelah tanggal ini, sistem akan mengunci toko dan mewajibkan perpanjangan kontrak.</span>
+              <span class="block text-[10px] text-stone-400">Sistem akan otomatis terkunci (*Lockdown*) setelah tanggal ini jika belum diperpanjang.</span>
             </div>
 
             <div>
@@ -95,7 +97,7 @@
           </div>
         </div>
 
-        <!-- 2. INITIAL STORE PROFILE SETUP -->
+        <!-- INITIAL STORE PROFILE SETUP -->
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
           <h2 class="font-bold text-base text-stone-100 flex items-center border-b border-zinc-800 pb-3">
             <i class="fa-solid fa-store text-amber-400 mr-2"></i> Initial Store Profile
@@ -127,7 +129,7 @@
 
       </div>
 
-      <!-- RIGHT COLUMN: FEATURE TOGGLE MATRIX -->
+      <!-- RIGHT COLUMN: FEATURE TOGGLE MATRIX & ENCRYPTION -->
       <div class="lg:col-span-2 space-y-6">
         
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
@@ -141,7 +143,6 @@
           <!-- FEATURE TOGGLE GRID -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
             
-            <!-- Feature 1: Digital Menu & Website -->
             <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 flex items-center justify-between">
               <div>
                 <span class="block font-bold text-stone-100">Digital Menu & Online Website</span>
@@ -150,7 +151,6 @@
               <input type="checkbox" id="ftDigitalMenu" class="w-5 h-5 accent-amber-500 rounded cursor-pointer">
             </div>
 
-            <!-- Feature 2: Anti-Glare Theme Engine -->
             <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 flex items-center justify-between">
               <div>
                 <span class="block font-bold text-stone-100">Anti-Glare Theme Engine</span>
@@ -159,7 +159,6 @@
               <input type="checkbox" id="ftThemeEngine" class="w-5 h-5 accent-amber-500 rounded cursor-pointer">
             </div>
 
-            <!-- Feature 3: Hero Promo Showcase -->
             <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 flex items-center justify-between">
               <div>
                 <span class="block font-bold text-stone-100">Hero Promo Showcase</span>
@@ -168,7 +167,6 @@
               <input type="checkbox" id="ftHeroShowcase" class="w-5 h-5 accent-amber-500 rounded cursor-pointer">
             </div>
 
-            <!-- Feature 4: Cart Estimator -->
             <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 flex items-center justify-between">
               <div>
                 <span class="block font-bold text-stone-100">Cart Estimator Modal</span>
@@ -177,7 +175,6 @@
               <input type="checkbox" id="ftCartEstimator" class="w-5 h-5 accent-amber-500 rounded cursor-pointer">
             </div>
 
-            <!-- Feature 5: Multi-Device POS (DISABLED FOR BANGKOK THAI) -->
             <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 flex items-center justify-between opacity-60">
               <div>
                 <span class="block font-bold text-stone-300">Multi-Device POS Terminal</span>
@@ -186,7 +183,6 @@
               <input type="checkbox" id="ftMultiPOS" class="w-5 h-5 accent-amber-500 rounded cursor-pointer">
             </div>
 
-            <!-- Feature 6: Staff Roster & Shifts (DISABLED) -->
             <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 flex items-center justify-between opacity-60">
               <div>
                 <span class="block font-bold text-stone-300">Staff Roster & Shift Management</span>
@@ -195,24 +191,20 @@
               <input type="checkbox" id="ftStaffRoster" class="w-5 h-5 accent-amber-500 rounded cursor-pointer">
             </div>
 
-            <!-- Feature 7: Table Floor Plan (DISABLED) -->
-            <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 flex items-center justify-between opacity-60">
-              <div>
-                <span class="block font-bold text-stone-300">Table Floor Plan & Dining</span>
-                <span class="block text-[10px] text-stone-500">Denah meja interaktif untuk dine-in.</span>
-              </div>
-              <input type="checkbox" id="ftTableFloor" class="w-5 h-5 accent-amber-500 rounded cursor-pointer">
-            </div>
+          </div>
+        </div>
 
-            <!-- Feature 8: Recipe Costing & Inventory (DISABLED) -->
-            <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 flex items-center justify-between opacity-60">
-              <div>
-                <span class="block font-bold text-stone-300">Recipe Costing & Raw Inventory</span>
-                <span class="block text-[10px] text-stone-500">Kalkulasi modal resep & stok bahan mentah.</span>
-              </div>
-              <input type="checkbox" id="ftRecipeCosting" class="w-5 h-5 accent-amber-500 rounded cursor-pointer">
-            </div>
-
+        <!-- ENCRYPTED LICENSE TOKEN PREVIEW -->
+        <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-3">
+          <h2 class="font-bold text-base text-stone-100 flex items-center border-b border-zinc-800 pb-3">
+            <i class="fa-solid fa-lock text-amber-400 mr-2"></i> Encrypted AES-256 License Token
+          </h2>
+          <textarea id="encryptedOutput" rows="3" readonly class="w-full bg-zinc-950 border border-zinc-800 rounded-xl p-3 text-amber-400 text-[11px] font-mono focus:outline-none" placeholder="Encrypted license token will appear here..."></textarea>
+          <div class="flex justify-end">
+            <button onclick="generateAndExportLicense()" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-5 py-2 rounded-xl text-xs transition flex items-center space-x-1.5">
+              <i class="fa-solid fa-file-export"></i>
+              <span>Export JS Config dengan Enkripsi</span>
+            </button>
           </div>
         </div>
 
@@ -225,6 +217,8 @@
   <script src="assets/js/bangkokthaipalmy.js"></script>
 
   <script>
+    // Secret Key Rahasia Operator (Hanya Pak Tedy & Core Engine yang tahu)
+    const SECRET_KEY = "TargetedScripts-Master-Secret-2026!Key";
     let activeConfig = {};
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -251,7 +245,6 @@
       document.getElementById('sysStorePhone').value = activeConfig.store.phone || '';
       document.getElementById('sysGstRate').value = activeConfig.store.gstRate || 0.15;
 
-      // Populate Features Toggle
       const ft = activeConfig.features || {};
       document.getElementById('ftDigitalMenu').checked = ft.digitalMenuAndWebsite !== false;
       document.getElementById('ftThemeEngine').checked = ft.themeEngine !== false;
@@ -259,8 +252,6 @@
       document.getElementById('ftCartEstimator').checked = ft.cartEstimator !== false;
       document.getElementById('ftMultiPOS').checked = ft.multiDevicePOS === true;
       document.getElementById('ftStaffRoster').checked = ft.staffRoster === true;
-      document.getElementById('ftTableFloor').checked = ft.tableFloorPlan === true;
-      document.getElementById('ftRecipeCosting').checked = ft.recipeCosting === true;
     }
 
     function saveSystemChanges() {
@@ -283,16 +274,25 @@
       activeConfig.features.cartEstimator = document.getElementById('ftCartEstimator').checked;
       activeConfig.features.multiDevicePOS = document.getElementById('ftMultiPOS').checked;
       activeConfig.features.staffRoster = document.getElementById('ftStaffRoster').checked;
-      activeConfig.features.tableFloorPlan = document.getElementById('ftTableFloor').checked;
-      activeConfig.features.recipeCosting = document.getElementById('ftRecipeCosting').checked;
+
+      // Encrypt sensitive contract payload
+      const licensePayload = {
+        tenantId: activeConfig.store.id,
+        expiryDate: activeConfig.contract.expiryDate,
+        status: activeConfig.contract.status,
+        features: activeConfig.features
+      };
+
+      activeConfig.encryptedToken = CryptoJS.AES.encrypt(JSON.stringify(licensePayload), SECRET_KEY).toString();
+      document.getElementById('encryptedOutput').value = activeConfig.encryptedToken;
 
       localStorage.setItem('RESTOSYNC_WORKING_CONFIG', JSON.stringify(activeConfig));
-      alert('Konfigurasi Sistem berhasil disimpan!');
+      alert('Konfigurasi sistem & Token Lisensi Terenkripsi berhasil dibuat!');
     }
 
-    function exportSystemConfig() {
+    function generateAndExportLicense() {
       saveSystemChanges();
-      const fileContent = `/**\n * RestoSync SaaS - Store Configuration\n * Tenant: ${activeConfig.store.name}\n */\n\nconst RESTOSYNC_CONFIG = ${JSON.stringify(activeConfig, null, 2)};\n`;
+      const fileContent = `/**\n * RestoSync SaaS - Store Configuration & Encrypted License\n * Tenant: ${activeConfig.store.name}\n */\n\nconst RESTOSYNC_CONFIG = ${JSON.stringify(activeConfig, null, 2)};\n`;
       const blob = new Blob([fileContent], { type: 'text/javascript' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
