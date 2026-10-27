@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bangkok Thai - Menu (Classic Book Demo)</title>
+  <title>Bangkok Thai Takeaway - Classic Menu View</title>
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome Icons -->
@@ -13,96 +13,229 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-neutral-900 text-amber-50 flex flex-col min-h-screen selection:bg-orange-700 selection:text-white">
+<body class="bg-zinc-950 text-stone-200 flex flex-col min-h-screen font-sans selection:bg-amber-500 selection:text-zinc-950">
 
-  <!-- HEADER (Spice Terracotta Header) -->
-  <header class="bg-orange-800 text-white shadow-xl sticky top-0 z-40 border-b border-orange-900">
-    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+  <!-- HEADER -->
+  <header class="bg-red-800 text-white shadow-xl sticky top-0 z-50 border-b border-red-900">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <a href="index.html" class="flex items-center space-x-3 hover:opacity-90 transition">
-          <img id="storeLogo" src="" alt="Logo" class="h-10 w-auto object-contain drop-shadow">
-          <span class="font-bold text-xl tracking-wider text-amber-200 uppercase">Takeaway</span>
-        </a>
+        <img id="storeLogo" src="" alt="Logo" class="h-10 w-auto object-contain drop-shadow">
+        <span class="font-bold text-xl tracking-wider text-amber-300 uppercase">Takeaway</span>
       </div>
       
-      <div class="flex items-center space-x-3">
-        <a href="page2-grid.html" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-orange-950 hover:bg-black text-amber-100 border border-orange-700/50 transition flex items-center space-x-1.5">
-          <i class="fa-solid fa-border-all text-amber-300"></i>
-          <span class="hidden sm:inline">Try Modern Grid</span>
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        <a href="index.html" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-red-900 hover:bg-red-950 text-amber-300 border border-red-700/50 transition flex items-center space-x-1.5">
+          <i class="fa-solid fa-border-all"></i>
+          <span>Modern Grid View</span>
         </a>
+
+        <button onclick="toggleCartModal()" class="relative bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-4 py-2 rounded-lg text-sm flex items-center space-x-2 transition shadow-lg">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span>Cart</span>
+          <span id="cartCount" class="bg-zinc-950 text-amber-400 font-bold text-xs px-2 py-0.5 rounded-full">0</span>
+        </button>
       </div>
     </div>
   </header>
 
-  <main class="max-w-4xl mx-auto px-4 py-8 flex-grow w-full">
-    <!-- CLASSIC BOOK HEADER BANNER -->
-    <div class="text-center mb-8 pb-6 border-b border-orange-900/60">
-      <h2 class="text-3xl font-serif font-bold text-amber-100 tracking-wider">TAKEOUT & DINING MENU</h2>
-      <p class="text-xs text-amber-400 mt-1.5 uppercase tracking-widest font-medium">Authentic Thai Dishes Cooked Fresh Daily</p>
-    </div>
+  <!-- TITLE HERO -->
+  <section class="py-8 bg-zinc-900 border-b border-zinc-800 text-center px-4">
+    <h1 class="text-2xl md:text-4xl font-extrabold text-amber-400 tracking-wider uppercase">TAKEOUT & DINING MENU</h1>
+    <p class="text-xs md:text-sm text-stone-400 mt-1 font-light">AUTHENTIC THAI DISHES COOKED FRESH DAILY</p>
+  </section>
 
-    <!-- CATEGORY PILLS -->
-    <div class="sticky top-[61px] z-30 bg-neutral-900/95 backdrop-blur-md py-3 mb-6 border-b border-neutral-800">
-      <div id="categoryPills" class="flex space-x-2 overflow-x-auto no-scrollbar py-1 justify-center"></div>
+  <!-- MAIN MENU SECTION -->
+  <main class="max-w-5xl mx-auto px-4 py-8 w-full flex-grow space-y-6">
+    <!-- CATEGORY NAVIGATION PILLS -->
+    <div class="sticky top-[61px] z-30 bg-zinc-950/90 backdrop-blur-md py-3 -mx-4 px-4 border-b border-zinc-800">
+      <div id="categoryPills" class="flex space-x-2 overflow-x-auto no-scrollbar py-1"></div>
     </div>
 
     <!-- CLASSIC LIST CONTAINER -->
-    <div id="menuContainer" class="space-y-4"></div>
+    <div id="classicMenuContainer" class="space-y-4"></div>
   </main>
 
+  <!-- CART MODAL -->
+  <div id="cartModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex justify-end">
+    <div class="bg-zinc-900 w-full max-w-md h-full flex flex-col shadow-2xl border-l border-zinc-800">
+      <div class="p-4 bg-red-800 text-white flex justify-between items-center shadow-md">
+        <h3 class="font-bold text-lg flex items-center"><i class="fa-solid fa-cart-shopping mr-2 text-amber-400"></i> Your Order</h3>
+        <button onclick="toggleCartModal()" class="text-stone-300 hover:text-white text-2xl font-bold transition">&times;</button>
+      </div>
+      <div id="cartItemsList" class="flex-grow p-4 overflow-y-auto space-y-4 divide-y divide-zinc-800">
+        <p class="text-center text-stone-500 py-8">Your cart is empty.</p>
+      </div>
+      <div class="p-4 border-t border-zinc-800 bg-zinc-950 space-y-3">
+        <div class="flex justify-between text-sm text-stone-400"><span>Subtotal</span><span id="cartSubtotal" class="text-stone-200">$0.00</span></div>
+        <div class="flex justify-between text-sm text-stone-400"><span>GST (15% Included)</span><span id="cartGST" class="text-stone-200">$0.00</span></div>
+        <div class="flex justify-between text-lg font-bold text-stone-100 pt-2 border-t border-zinc-800"><span>Total (NZD)</span><span id="cartTotal" class="text-amber-400">$0.00</span></div>
+        <button onclick="alert('Order submitted to Bangkok Thai Takeaway!')" class="w-full bg-red-700 hover:bg-red-800 text-white py-3.5 rounded-xl font-bold text-center transition shadow-xl border border-red-500/30">
+          Proceed to Checkout
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- FOOTER -->
-  <footer class="bg-black text-neutral-500 text-xs py-8 mt-auto border-t border-neutral-900">
+  <footer class="bg-black text-stone-500 text-xs py-8 border-t border-zinc-900">
     <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
       <p id="footerStoreInfo">Bangkok Thai Takeaway | Palmerston North, NZ</p>
-      <p>Powered by <strong class="text-neutral-400">RestoSync SaaS</strong> &copy; 2026 TargetedScripts.com</p>
+      <p>Powered by <strong class="text-stone-400">RestoSync SaaS</strong> &copy; 2026 TargetedScripts.com</p>
     </div>
   </footer>
 
   <script src="assets/js/bangkokthaipalmy.js"></script>
+
   <script>
     let currentCategory = 'ALL';
+    let cart = [];
+    let activeConfig = {};
 
     document.addEventListener('DOMContentLoaded', () => {
-      if (typeof RESTOSYNC_CONFIG === 'undefined') return;
-      document.getElementById('storeLogo').src = RESTOSYNC_CONFIG.branding.logo;
-      document.getElementById('footerStoreInfo').innerText = `${RESTOSYNC_CONFIG.store.name} | ${RESTOSYNC_CONFIG.store.address} | Phone: ${RESTOSYNC_CONFIG.store.phone}`;
+      const saved = localStorage.getItem('RESTOSYNC_WORKING_CONFIG');
+      if (saved) {
+        try { activeConfig = JSON.parse(saved); } catch(e) { activeConfig = RESTOSYNC_CONFIG; }
+      } else {
+        activeConfig = typeof RESTOSYNC_CONFIG !== 'undefined' ? RESTOSYNC_CONFIG : {};
+      }
+
+      if (activeConfig.branding?.logo) {
+        document.getElementById('storeLogo').src = activeConfig.branding.logo;
+      }
+      if (activeConfig.store) {
+        document.getElementById('footerStoreInfo').innerText = `${activeConfig.store.name} | ${activeConfig.store.address} | Phone: ${activeConfig.store.phone}`;
+      }
+
       renderCategoryPills();
-      renderMenu();
+      renderClassicMenu();
     });
 
     function renderCategoryPills() {
-      const categories = ['ALL', ...new Set(RESTOSYNC_CONFIG.menuItems.map(item => item.category))];
+      if (!activeConfig.menuItems) return;
+      const categories = ['ALL', ...new Set(activeConfig.menuItems.map(item => item.category))];
       document.getElementById('categoryPills').innerHTML = categories.map(cat => `
-        <button onclick="filterCategory('${cat}')" class="px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition border ${cat === currentCategory ? 'bg-orange-700 text-white border-orange-600 shadow-md font-bold' : 'bg-neutral-800 text-amber-200/80 border-neutral-700 hover:bg-neutral-700'}">
+        <button onclick="filterCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${cat === currentCategory ? 'bg-amber-500 text-zinc-950 border-amber-500 shadow-md font-bold' : 'bg-zinc-900 text-stone-300 border-zinc-800 hover:bg-zinc-800'}">
           ${cat}
         </button>
       `).join('');
     }
 
-    function filterCategory(cat) { currentCategory = cat; renderCategoryPills(); renderMenu(); }
+    function filterCategory(cat) {
+      currentCategory = cat;
+      renderCategoryPills();
+      renderClassicMenu();
+    }
 
-    function renderMenu() {
-      const items = currentCategory === 'ALL' ? RESTOSYNC_CONFIG.menuItems : RESTOSYNC_CONFIG.menuItems.filter(i => i.category === currentCategory);
-      document.getElementById('menuContainer').innerHTML = items.map(item => `
-        <div class="bg-neutral-800/80 p-4 rounded-xl border border-neutral-700/60 shadow-md flex justify-between items-center hover:border-orange-500/60 transition group">
-          <div class="pr-4">
-            <div class="flex items-center space-x-2">
-              <span class="font-bold text-amber-100 text-sm group-hover:text-amber-300 transition">${item.id}: ${item.name}</span>
-              ${getSpiceBadge(item.spiceLevel)}
+    function renderClassicMenu() {
+      if (!activeConfig.menuItems) return;
+
+      // HANYA TAMPILKAN MENU YANG isAvailable !== false (Status Available)
+      const items = activeConfig.menuItems.filter(i => {
+        const matchesCategory = (currentCategory === 'ALL' || i.category === currentCategory);
+        const isEnabled = i.isAvailable !== false;
+        return matchesCategory && isEnabled;
+      });
+
+      document.getElementById('classicMenuContainer').innerHTML = items.map(item => {
+        const isSoldOut = item.stock <= 0;
+        const hasPromo = item.promoPrice && item.promoPrice < item.price;
+        const finalPrice = hasPromo ? item.promoPrice : item.price;
+        const promoTag = item.promoTag || (hasPromo ? "SPECIAL OFFER" : "");
+
+        return `
+          <div class="bg-zinc-900/90 rounded-xl p-4 border border-zinc-800 hover:border-zinc-700 transition space-y-3">
+            <div class="flex justify-between items-start gap-4">
+              <div class="space-y-1">
+                <div class="flex items-center space-x-2">
+                  <h3 class="font-bold text-stone-100 text-base">${item.id}: ${item.name}</h3>
+                  ${isSoldOut ? `<span class="bg-red-800 text-white font-extrabold text-[9px] px-2 py-0.5 rounded shadow tracking-wider uppercase">SOLD OUT</span>` : ''}
+                  ${promoTag && !isSoldOut ? `<span class="bg-red-700 text-amber-300 font-bold text-[9px] px-2 py-0.5 rounded uppercase">${promoTag}</span>` : ''}
+                </div>
+                <p class="text-xs text-stone-400 leading-relaxed">${item.description}</p>
+                ${getSpiceBadge(item.spiceLevel)}
+              </div>
+
+              <div class="text-right flex-shrink-0">
+                ${hasPromo ? `
+                  <div class="text-xs text-stone-500 line-through">$${item.price.toFixed(2)}</div>
+                  <div class="font-black text-amber-400 text-base">$${finalPrice.toFixed(2)}</div>
+                ` : `
+                  <div class="font-black text-amber-400 text-base">$${item.price.toFixed(2)}</div>
+                `}
+              </div>
             </div>
-            <p class="text-xs text-neutral-400 mt-1 leading-relaxed">${item.description}</p>
+
+            <div class="pt-2 flex justify-end">
+              ${!isSoldOut 
+                ? `<button onclick="addToCart('${item.id}')" class="bg-red-950/80 hover:bg-red-800 text-amber-300 hover:text-white font-semibold px-4 py-1.5 rounded-lg text-xs transition border border-red-700/50">
+                     + Add to Order
+                   </button>`
+                : `<button disabled class="bg-zinc-950 text-stone-600 font-bold px-4 py-1.5 rounded-lg text-xs border border-zinc-800 cursor-not-allowed">
+                     Out of Stock
+                   </button>`
+              }
+            </div>
           </div>
-          <div class="flex items-center space-x-3 flex-shrink-0">
-            <span class="font-extrabold text-orange-400 text-base">$${item.price.toFixed(2)}</span>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     function getSpiceBadge(level) {
       if (!level || level === 0) return '';
-      return `<span class="flex items-center space-x-0.5">${'<i class="fa-solid fa-pepper-hot text-orange-500 text-xs"></i>'.repeat(level)}</span>`;
+      return `<div class="mt-1 flex items-center space-x-1">${'<i class="fa-solid fa-pepper-hot text-red-500 text-[10px]"></i>'.repeat(level)}</div>`;
     }
+
+    function addToCart(id) {
+      const item = activeConfig.menuItems.find(i => i.id === id);
+      if (!item) return;
+      const effectivePrice = (item.promoPrice && item.promoPrice < item.price) ? item.promoPrice : item.price;
+      
+      const ex = cart.find(c => c.id === id);
+      if (ex) { ex.qty++; } else { cart.push({ ...item, price: effectivePrice, qty: 1 }); }
+      updateCartUI();
+    }
+
+    function updateCartQty(id, delta) {
+      const idx = cart.findIndex(c => c.id === id);
+      if (idx !== -1) {
+        cart[idx].qty += delta;
+        if (cart[idx].qty <= 0) cart.splice(idx, 1);
+      }
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      document.getElementById('cartCount').innerText = cart.reduce((s,i)=>s+i.qty,0);
+      const subtotal = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+      const gstRate = activeConfig.store?.gstRate || 0.15;
+      const gst = subtotal * gstRate;
+
+      document.getElementById('cartSubtotal').innerText = `$${subtotal.toFixed(2)}`;
+      document.getElementById('cartGST').innerText = `$${gst.toFixed(2)}`;
+      document.getElementById('cartTotal').innerText = `$${subtotal.toFixed(2)}`;
+
+      const itemsList = document.getElementById('cartItemsList');
+      if (cart.length === 0) {
+        itemsList.innerHTML = `<p class="text-center text-stone-500 py-8">Your cart is empty.</p>`;
+      } else {
+        itemsList.innerHTML = cart.map(i => `
+          <div class="pt-3 flex justify-between items-center text-stone-200">
+            <div>
+              <h4 class="font-semibold text-sm">${i.id}: ${i.name}</h4>
+              <p class="text-xs text-stone-400">$${i.price.toFixed(2)} each</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="updateCartQty('${i.id}', -1)" class="w-6 h-6 bg-zinc-800 text-stone-300 rounded flex items-center justify-center font-bold text-xs hover:bg-zinc-700">-</button>
+              <span class="text-xs font-bold px-1">${i.qty}</span>
+              <button onclick="updateCartQty('${i.id}', 1)" class="w-6 h-6 bg-zinc-800 text-stone-300 rounded flex items-center justify-center font-bold text-xs hover:bg-zinc-700">+</button>
+              <span class="text-sm font-bold text-amber-400 w-12 text-right">$${(i.price * i.qty).toFixed(2)}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function toggleCartModal() { document.getElementById('cartModal').classList.toggle('hidden'); }
   </script>
 </body>
 </html>
