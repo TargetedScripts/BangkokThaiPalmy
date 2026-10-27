@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bangkok Thai - Menu (Modern Grid Demo)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 flex flex-col min-h-screen">
+
+  <!-- HEADER -->
+  <header class="bg-white shadow-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <a href="index.html"><img id="storeLogo" src="" alt="Logo" class="h-10 w-auto rounded object-cover"></a>
+        <div>
+          <h1 id="storeName" class="font-bold text-lg text-red-700 leading-tight">Bangkok Thai</h1>
+          <p class="text-xs text-gray-500">Layout Demo: <strong>Modern Grid</strong></p>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-3">
+        <!-- Switch to Option B -->
+        <a href="page3-classic.html" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-gray-200 hover:bg-red-50 hover:text-red-700 text-gray-700 transition flex items-center space-x-1">
+          <i class="fa-solid fa-book-open"></i>
+          <span class="hidden sm:inline">Try Classic View</span>
+        </a>
+        <button onclick="toggleCartModal()" class="relative bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center space-x-2 transition shadow">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span>Cart</span>
+          <span id="cartCount" class="bg-white text-red-700 font-bold text-xs px-2 py-0.5 rounded-full">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full">
+    <!-- CATEGORY PILLS -->
+    <div class="sticky top-[61px] z-30 bg-gray-100 py-3 -mx-4 px-4 shadow-sm mb-6">
+      <div id="categoryPills" class="flex space-x-2 overflow-x-auto no-scrollbar py-1"></div>
+    </div>
+
+    <!-- GRID CONTAINER -->
+    <div id="menuContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </main>
+
+  <!-- CART MODAL -->
+  <div id="cartModal" class="fixed inset-0 bg-black/50 z-50 hidden flex justify-end">
+    <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl">
+      <div class="p-4 bg-red-700 text-white flex justify-between items-center">
+        <h3 class="font-bold text-lg"><i class="fa-solid fa-cart-shopping mr-2"></i> Your Takeaway Order</h3>
+        <button onclick="toggleCartModal()" class="text-white text-xl font-bold">&times;</button>
+      </div>
+      <div id="cartItemsList" class="flex-grow p-4 overflow-y-auto space-y-4 divide-y divide-gray-100">
+        <p class="text-center text-gray-400 py-8">Your cart is empty.</p>
+      </div>
+      <div class="p-4 border-t bg-gray-50 space-y-3">
+        <div class="flex justify-between text-sm text-gray-600"><span>Subtotal</span><span id="cartSubtotal">$0.00</span></div>
+        <div class="flex justify-between text-sm text-gray-600"><span>GST (15% Included)</span><span id="cartGST">$0.00</span></div>
+        <div class="flex justify-between text-lg font-bold text-gray-900 pt-2 border-t"><span>Total (NZD)</span><span id="cartTotal" class="text-red-700">$0.00</span></div>
+        <button onclick="alert('Demo: Order submitted!')" class="w-full bg-red-700 text-white py-3 rounded-lg font-bold shadow">Submit Order</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/bangkokthaipalmy.js"></script>
+  <script>
+    let currentCategory = 'ALL';
+    let cart = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('storeName').innerText = RESTOSYNC_CONFIG.store.name;
+      document.getElementById('storeLogo').src = RESTOSYNC_CONFIG.branding.logo;
+      renderCategoryPills();
+      renderMenu();
+    });
+
+    function renderCategoryPills() {
+      const categories = ['ALL', ...new Set(RESTOSYNC_CONFIG.menuItems.map(item => item.category))];
+      document.getElementById('categoryPills').innerHTML = categories.map(cat => `
+        <button onclick="filterCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition shadow-sm ${cat === currentCategory ? 'bg-red-700 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}">
+          ${cat}
+        </button>
+      `).join('');
+    }
+
+    function filterCategory(cat) { currentCategory = cat; renderCategoryPills(); renderMenu(); }
+
+    function renderMenu() {
+      const items = currentCategory === 'ALL' ? RESTOSYNC_CONFIG.menuItems : RESTOSYNC_CONFIG.menuItems.filter(i => i.category === currentCategory);
+      document.getElementById('menuContainer').innerHTML = items.map(item => `
+        <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition overflow-hidden border border-gray-100 flex flex-col justify-between">
+          <div>
+            ${item.image ? `<img src="${item.image}" alt="${item.name}" class="w-full h-44 object-cover">` : `<div class="w-full h-32 bg-gray-100 flex items-center justify-center text-gray-400 text-xs italic"><i class="fa-solid fa-utensils mr-2"></i> ${RESTOSYNC_CONFIG.store.name}</div>`}
+            <div class="p-4">
+              <div class="flex justify-between items-start">
+                <h3 class="font-bold text-gray-900 text-base">${item.id}: ${item.name}</h3>
+                <span class="font-bold text-red-700 text-base">$${item.price.toFixed(2)}</span>
+              </div>
+              <p class="text-xs text-gray-500 mt-1 line-clamp-2">${item.description}</p>
+              ${getSpiceBadge(item.spiceLevel)}
+            </div>
+          </div>
+          <div class="p-4 pt-0">
+            <button onclick="addToCart('${item.id}')" class="w-full bg-red-50 hover:bg-red-700 text-red-700 hover:text-white font-semibold py-2 rounded-lg text-xs transition flex items-center justify-center space-x-1">
+              <i class="fa-solid fa-plus"></i> <span>Add to Order</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function getSpiceBadge(level) {
+      if (!level || level === 0) return '';
+      return `<div class="mt-2">${'<i class="fa-solid fa-pepper-hot text-red-500 text-xs mr-0.5"></i>'.repeat(level)}</div>`;
+    }
+
+    function addToCart(id) {
+      const item = RESTOSYNC_CONFIG.menuItems.find(i => i.id === id);
+      const ex = cart.find(c => c.id === id);
+      if (ex) ex.qty++; else cart.push({...item, qty:1});
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      document.getElementById('cartCount').innerText = cart.reduce((s,i)=>s+i.qty,0);
+      const subtotal = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+      document.getElementById('cartSubtotal').innerText = `$${subtotal.toFixed(2)}`;
+      document.getElementById('cartGST').innerText = `$${(subtotal*0.15).toFixed(2)}`;
+      document.getElementById('cartTotal').innerText = `$${subtotal.toFixed(2)}`;
+      document.getElementById('cartItemsList').innerHTML = cart.map(i => `
+        <div class="pt-2 flex justify-between text-xs">
+          <div><p class="font-bold">${i.id}: ${i.name}</p><p class="text-gray-500">$${i.price.toFixed(2)} x ${i.qty}</p></div>
+          <span class="font-bold">$${(i.price*i.qty).toFixed(2)}</span>
+        </div>
+      `).join('');
+    }
+    function toggleCartModal() { document.getElementById('cartModal').classList.toggle('hidden'); }
+  </script>
+</body>
+</html>
