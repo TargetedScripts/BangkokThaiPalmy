@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bangkok Thai - Menu (Classic Book Demo)</title>
+  <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -15,9 +17,12 @@
 
   <!-- HEADER -->
   <header class="bg-white shadow-md sticky top-0 z-40 border-b border-red-100">
-    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="max-w-5xl mx-auto px-4 py-2.5 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <a href="index.html"><img id="storeLogo" src="" alt="Logo" class="h-10 w-auto rounded object-cover"></a>
+        <!-- Logo Badge Merah Kontras -->
+        <a href="index.html" class="bg-red-700 p-2 rounded-xl shadow-inner flex items-center justify-center hover:bg-red-800 transition">
+          <img id="storeLogo" src="" alt="Logo" class="h-9 w-auto object-contain">
+        </a>
         <div>
           <h1 id="storeName" class="font-bold text-lg text-red-700 leading-tight">Bangkok Thai</h1>
           <p class="text-xs text-gray-500">Layout Demo: <strong>Classic Menu Book</strong></p>
@@ -25,7 +30,7 @@
       </div>
       
       <div class="flex items-center space-x-3">
-        <a href="page2-grid.html" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-gray-200 hover:bg-red-50 hover:text-red-700 text-gray-700 transition flex items-center space-x-1">
+        <a href="page2-grid.html" class="px-3 py-2 text-xs font-semibold rounded-lg bg-gray-100 hover:bg-red-50 hover:text-red-700 text-gray-700 transition flex items-center space-x-1">
           <i class="fa-solid fa-border-all"></i>
           <span class="hidden sm:inline">Try Modern Grid</span>
         </a>
@@ -49,13 +54,23 @@
     <div id="menuContainer" class="space-y-4"></div>
   </main>
 
+  <!-- FOOTER -->
+  <footer class="bg-gray-900 text-gray-400 text-xs py-8 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+      <p id="footerStoreInfo">Bangkok Thai Takeaway | Palmerston North, NZ</p>
+      <p>Powered by <strong>RestoSync SaaS</strong> &copy; 2026 TargetedScripts.com</p>
+    </div>
+  </footer>
+
   <script src="assets/js/bangkokthaipalmy.js"></script>
   <script>
     let currentCategory = 'ALL';
 
     document.addEventListener('DOMContentLoaded', () => {
+      if (typeof RESTOSYNC_CONFIG === 'undefined') return;
       document.getElementById('storeName').innerText = RESTOSYNC_CONFIG.store.name;
       document.getElementById('storeLogo').src = RESTOSYNC_CONFIG.branding.logo;
+      document.getElementById('footerStoreInfo').innerText = `${RESTOSYNC_CONFIG.store.name} | ${RESTOSYNC_CONFIG.store.address} | Phone: ${RESTOSYNC_CONFIG.store.phone}`;
       renderCategoryPills();
       renderMenu();
     });
