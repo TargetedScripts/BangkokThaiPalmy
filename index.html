@@ -15,7 +15,7 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* Efek Coretan Miring Merah Tebal */
+    /* Efek Coretan Miring Merah Tebal untuk Harga Promo */
     .strike-red-diagonal {
       position: relative;
       display: inline-block;
@@ -302,14 +302,15 @@
       }
     }
 
+    /* HERO CAROUSEL: Mengambil item yang di-toggle 'isHero' (atau fallback ke 'isFeatured') */
     function initHeroCarousel() {
       const container = document.getElementById('heroSlidesContainer');
       const baseImages = activeConfig.branding?.heroImages || [];
-      const featuredItems = activeConfig.menuItems?.filter(i => i.isFeatured && i.image && i.isAvailable !== false) || [];
+      const heroItems = activeConfig.menuItems?.filter(i => (i.isHero || (i.isHero === undefined && i.isFeatured)) && i.image && i.isAvailable !== false) || [];
 
       slidesDataGlobal = baseImages.map(img => ({ type: 'brand', src: img }));
       
-      featuredItems.forEach(item => {
+      heroItems.forEach(item => {
         slidesDataGlobal.push({
           type: 'food',
           src: item.image,
@@ -317,7 +318,7 @@
           description: item.description,
           price: item.price,
           promoPrice: item.promoPrice,
-          promoTag: item.promoTag || "CHEF'S SPECIAL",
+          promoTag: item.promoTag || (item.promoPrice ? "SPECIAL OFFER" : "CHEF'S RECOMMENDATION"),
           id: item.id
         });
       });
@@ -421,25 +422,22 @@
       `).join('');
     }
 
-    /* CATEGORY PILLS WITH SPECIAL FILTERS: PROMO & FAVORITES */
+    /* RENDERING CATEGORY PILLS */
     function renderCategoryPills() {
       if (!activeConfig.menuItems) return;
       const visibleItems = activeConfig.menuItems.filter(i => i.isAvailable !== false);
       const rawCategories = [...new Set(visibleItems.map(item => item.category))];
 
       let pillsHTML = `
-        <!-- FILTER ALL -->
         <button onclick="filterCategory('ALL')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${currentCategory === 'ALL' ? 'bg-amber-500 text-zinc-950 border-amber-500 shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">
           ALL
         </button>
 
-        <!-- FILTER SPECIAL: PROMO / OFFERS -->
         <button onclick="filterCategory('FILTER_PROMO')" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition border flex items-center space-x-1.5 ${currentCategory === 'FILTER_PROMO' ? 'bg-red-700 text-white border-red-500 shadow-md' : 'bg-red-950/80 text-amber-300 border-red-800/80 hover:bg-red-900'}">
           <i class="fa-solid fa-fire text-amber-400"></i>
           <span>PROMO & OFFERS</span>
         </button>
 
-        <!-- FILTER SPECIAL: FAVORITES -->
         <button onclick="filterCategory('FILTER_FAVORITES')" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition border flex items-center space-x-1.5 ${currentCategory === 'FILTER_FAVORITES' ? 'bg-amber-500 text-zinc-950 border-amber-500 shadow-md' : 'bg-zinc-800 text-amber-400 border-zinc-700 hover:bg-zinc-700'}">
           <i class="fa-solid fa-star"></i>
           <span>FAVORITES</span>
@@ -468,7 +466,7 @@
       renderMenuContentBox();
     }
 
-    /* LOGIK FILTERING MENU CONTENT BOX */
+    /* LOGIK FILTERING MENU CONTENT BOX (FIXED FAVORITE) */
     function renderMenuContentBox() {
       if (!activeConfig.menuItems) return;
 
@@ -477,14 +475,16 @@
         btnText.innerText = activeLayoutMode === 'grid' ? 'Switch to Classic List' : 'Switch to Modern Grid';
       }
 
-      // Saring item berdasarkan Kategori biasa atau Special Filter
+      // Saring item berdasarkan Kategori atau Special Filter
       const visibleItems = activeConfig.menuItems.filter(i => {
         const isEnabled = i.isAvailable !== false;
         if (!isEnabled) return false;
 
         if (currentCategory === 'ALL') return true;
         if (currentCategory === 'FILTER_PROMO') return (i.promoPrice && i.promoPrice < i.price);
-        if (currentCategory === 'FILTER_FAVORITES') return (i.isFeatured === true);
+        
+        // MEMERIKSA ATRIBUT isFavorite SECARA PRESISI
+        if (currentCategory === 'FILTER_FAVORITES') return (i.isFavorite === true);
 
         return i.category === currentCategory;
       });
@@ -517,6 +517,7 @@
                     <div class="space-y-1">
                       <div class="flex items-center space-x-2">
                         <h3 class="font-bold text-stone-100 text-base">${item.id}: ${item.name}</h3>
+                        ${item.isFavorite ? `<i class="fa-solid fa-star text-amber-400 text-xs" title="Favorite Dish"></i>` : ''}
                         ${isSoldOut ? `<span class="bg-red-800 text-white font-extrabold text-[9px] px-2 py-0.5 rounded shadow tracking-wider uppercase">SOLD OUT</span>` : ''}
                         ${promoTag && !isSoldOut ? `<span class="bg-red-700 text-amber-300 font-bold text-[9px] px-2 py-0.5 rounded uppercase">${promoTag}</span>` : ''}
                       </div>
@@ -567,6 +568,8 @@
                       ${isSoldOut ? `<div class="absolute inset-0 bg-black/60 flex items-center justify-center"><span class="bg-red-800 text-white font-extrabold text-sm px-4 py-1.5 rounded-lg shadow-xl border border-red-500 tracking-wider uppercase">SOLD OUT</span></div>` : ''}
                       
                       ${promoTag && !isSoldOut ? `<div class="absolute top-3 left-3 bg-red-700 text-amber-300 font-black text-[10px] px-2.5 py-1 rounded-md uppercase tracking-wider">${promoTag}</div>` : ''}
+
+                      ${item.isFavorite ? `<div class="absolute top-3 right-3 bg-zinc-950/80 text-amber-400 p-1.5 rounded-full border border-amber-500/40 shadow-md" title="Favorite Dish"><i class="fa-solid fa-star text-xs"></i></div>` : ''}
                     </div>
 
                     <div class="p-4">
