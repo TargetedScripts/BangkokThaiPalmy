@@ -18,35 +18,43 @@
 </head>
 <body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen selection:bg-amber-500 selection:text-zinc-950">
 
-  <!-- HEADER -->
+  <!-- ========================================== -->
+  <!-- BLOK 1: HEADER RESPONSIVE (ANTI-TABRAKAN)  -->
+  <!-- ========================================== -->
   <header id="mainHeader" class="bg-red-800 text-white shadow-xl sticky top-0 z-50 border-b border-red-900/40">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain drop-shadow" style="height: 40px;">
-        <span id="headerLogoText" class="font-bold text-xl tracking-wider uppercase">Takeaway</span>
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2">
+      
+      <!-- LOGO AREA -->
+      <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
+        <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain drop-shadow max-h-8 sm:max-h-10">
+        <span id="headerLogoText" class="hidden sm:inline-block font-bold text-lg sm:text-xl tracking-wider uppercase text-amber-300">Takeaway</span>
       </div>
       
-      <div class="flex items-center space-x-2 sm:space-x-3">
-        <a href="system-console.html" class="px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-zinc-950/60 hover:bg-zinc-950 text-amber-400 border border-amber-500/30 transition flex items-center space-x-1">
+      <!-- NAV BUTTONS & CART -->
+      <div class="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
+        <a href="system-console.html" class="hidden md:flex px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-zinc-950/60 hover:bg-zinc-950 text-amber-400 border border-amber-500/30 transition items-center space-x-1">
           <i class="fa-solid fa-terminal"></i>
-          <span class="hidden md:inline">Console</span>
+          <span>Console</span>
         </a>
 
-        <a href="admin.html" class="px-3 py-2 text-xs font-semibold rounded-lg bg-amber-500/20 hover:bg-amber-500 hover:text-zinc-950 text-amber-300 border border-amber-500/40 transition flex items-center space-x-1.5">
+        <a href="admin.html" class="hidden sm:flex px-3 py-2 text-xs font-semibold rounded-lg bg-amber-500/20 hover:bg-amber-500 hover:text-zinc-950 text-amber-300 border border-amber-500/40 transition items-center space-x-1.5">
           <i class="fa-solid fa-user-gear"></i>
-          <span class="hidden md:inline">Admin Portal</span>
+          <span>Admin</span>
         </a>
 
-        <button onclick="toggleCartModal()" id="cartBtn" class="relative bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-4 py-2 rounded-lg text-sm flex items-center space-x-2 transition shadow-lg">
+        <button onclick="toggleCartModal()" id="cartBtn" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 sm:space-x-2 transition shadow-lg shrink-0">
           <i class="fa-solid fa-basket-shopping"></i>
           <span>Cart</span>
-          <span id="cartCount" class="bg-zinc-950 text-amber-400 font-bold text-xs px-2 py-0.5 rounded-full">0</span>
+          <span id="cartCount" class="bg-zinc-950 text-amber-400 font-bold text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full">0</span>
         </button>
       </div>
+
     </div>
   </header>
 
-  <!-- HERO BANNER CAROUSEL -->
+  <!-- ========================================== -->
+  <!-- BLOK 2: HERO BANNER CAROUSEL (STATIK)      -->
+  <!-- ========================================== -->
   <section id="heroSection" class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden shadow-2xl">
     <div id="heroSlidesContainer" class="relative w-full h-full"></div>
 
@@ -62,12 +70,16 @@
     </div>
   </section>
 
-  <!-- FEATURE HIGHLIGHTS BAR -->
+  <!-- ========================================== -->
+  <!-- BLOK 3: FEATURE HIGHLIGHTS BAR (STATIK)    -->
+  <!-- ========================================== -->
   <section id="highlightsSection" class="max-w-7xl mx-auto px-4 py-4 w-full">
     <div id="highlightsGrid"></div>
   </section>
 
-  <!-- MAIN MENU SECTION -->
+  <!-- ========================================== -->
+  <!-- BLOK 4: MAIN MENU & DYNAMIC CONTENT BOX    -->
+  <!-- ========================================== -->
   <section id="online-menu" class="max-w-7xl mx-auto px-4 py-4 w-full flex-grow">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2 border-b border-zinc-800 pb-4">
       <div>
@@ -90,11 +102,13 @@
       <div id="categoryPills" class="flex space-x-2 overflow-x-auto no-scrollbar py-1"></div>
     </div>
 
-    <!-- DYNAMIC MENU CONTENT BOX -->
+    <!-- KOTAK KHUSUS DINAMIK (DEDICATED MENU CONTENT BOX) -->
     <div id="menuContentBox" class="w-full"></div>
   </section>
 
-  <!-- CART ESTIMATOR MODAL -->
+  <!-- ========================================== -->
+  <!-- CART ESTIMATOR MODAL                       -->
+  <!-- ========================================== -->
   <div id="cartModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex justify-end">
     <div class="bg-zinc-900 w-full max-w-md h-full flex flex-col shadow-2xl border-l border-zinc-800">
       <div class="p-4 bg-red-800 text-white flex justify-between items-center shadow-md">
@@ -115,7 +129,9 @@
     </div>
   </div>
 
-  <!-- LOCATION & MAPS -->
+  <!-- ========================================== -->
+  <!-- BLOK 5: LOCATION & MAPS (STATIK)           -->
+  <!-- ========================================== -->
   <section id="locationSection" class="bg-zinc-950 py-12 border-t border-zinc-800 mt-12">
     <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
       <div class="space-y-4">
@@ -140,7 +156,9 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- ========================================== -->
+  <!-- BLOK 6: FOOTER (STATIK)                    -->
+  <!-- ========================================== -->
   <footer id="footerSection" class="bg-black text-stone-500 text-xs py-8 border-t border-zinc-900">
     <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
       <p id="footerStoreInfo">Bangkok Thai Takeaway | Palmerston North, NZ</p>
@@ -176,7 +194,7 @@
       activeLayoutMode = activeConfig.store?.defaultLayout || 'grid';
 
       initStoreBranding();
-      applyCustomTheme(); // FUNGSI BARU: Menerapkan Warna & Ukuran Logo
+      applyCustomTheme();
       initHeroCarousel();
       renderHighlightsBar();
       renderCategoryPills();
@@ -229,18 +247,15 @@
       `;
     }
 
-    // FUNGSI UTAMA UNTUK MENERAPKAN WARNA DAN UKURAN LOGO
     function applyCustomTheme() {
       const theme = activeConfig.theme || {};
       const branding = activeConfig.branding || {};
 
-      // 1. Terapkan Ukuran Logo Dinamis hasil dari tombol (+ / -) di admin.html
       const logoImg = document.getElementById('storeLogo');
       if (logoImg && branding.logoHeight) {
         logoImg.style.height = `${branding.logoHeight}px`;
       }
 
-      // 2. Header Colors
       const header = document.getElementById('mainHeader');
       if (header && theme.headerBg) {
         header.style.backgroundColor = theme.headerBg;
@@ -250,13 +265,11 @@
         logoText.style.color = theme.headerText;
       }
 
-      // 3. Body Background
       const body = document.getElementById('mainBody');
       if (body && theme.bodyBg) {
         body.style.backgroundColor = theme.bodyBg;
       }
 
-      // 4. Title Colors
       const title1 = document.getElementById('menuMainTitle');
       const heroTagTitle = document.getElementById('heroTaglineTitle');
       if (theme.title1) {
@@ -269,14 +282,12 @@
         title2.style.color = theme.title2;
       }
 
-      // 5. Button Colors
       const exploreBtn = document.getElementById('exploreBtn');
       if (exploreBtn && theme.btnBg) {
         exploreBtn.style.backgroundColor = theme.btnBg;
         if (theme.btnText) exploreBtn.style.color = theme.btnText;
       }
 
-      // 6. Footer Colors
       const footer = document.getElementById('footerSection');
       if (footer && theme.footerBg) {
         footer.style.backgroundColor = theme.footerBg;
@@ -446,7 +457,6 @@
       const contentBox = document.getElementById('menuContentBox');
       const theme = activeConfig.theme || {};
 
-      // 1. CLASSIC LIST VIEW
       if (activeLayoutMode === 'classic') {
         contentBox.innerHTML = `
           <div class="space-y-4 max-w-4xl mx-auto">
@@ -494,9 +504,7 @@
             }).join('')}
           </div>
         `;
-      } 
-      // 2. MODERN GRID VIEW
-      else {
+      } else {
         contentBox.innerHTML = `
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             ${visibleItems.map(item => {
