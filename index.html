@@ -14,21 +14,40 @@
     .hero-slide { transition: opacity 1s ease-in-out; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Efek Coretan Miring Merah Tebal */
+    .strike-red-diagonal {
+      position: relative;
+      display: inline-block;
+      color: #a1a1aa;
+      font-weight: 700;
+    }
+    .strike-red-diagonal::after {
+      content: "";
+      position: absolute;
+      left: -3px;
+      right: -3px;
+      top: 50%;
+      height: 3px;
+      background: #ef4444;
+      transform: translateY(-50%) rotate(-12deg);
+      pointer-events: none;
+    }
   </style>
 </head>
 <body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen selection:bg-amber-500 selection:text-zinc-950">
 
-  <!-- HEADER FULL-WIDTH & RESPONSIVE (ANTI-TABRAKAN) -->
+  <!-- HEADER FULL-WIDTH -->
   <header id="mainHeader" class="bg-red-800 text-white shadow-xl sticky top-0 z-50 border-b border-red-900/40 w-full">
     <div class="w-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-4">
       
-      <!-- LOGO AREA WITH RESPONSIVE TAKEAWAY TEXT -->
+      <!-- LOGO AREA -->
       <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
         <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain drop-shadow max-h-8 sm:max-h-10">
         <span id="headerLogoText" class="hidden sm:inline-block font-bold text-lg sm:text-xl tracking-wider uppercase text-amber-300 whitespace-nowrap">Takeaway</span>
       </div>
       
-      <!-- CART BUTTON ONLY -->
+      <!-- CART BUTTON -->
       <div class="flex items-center shrink-0">
         <button onclick="toggleCartModal()" id="cartBtn" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 sm:space-x-2 transition shadow-lg shrink-0">
           <i class="fa-solid fa-basket-shopping"></i>
@@ -139,13 +158,7 @@
         <a href="admin.html" class="text-amber-400/80 hover:text-amber-300 underline"><i class="fa-solid fa-user-gear mr-1"></i> Manager Portal (Admin Demo)</a>
         <a href="system-console.html" class="text-stone-400 hover:text-white underline"><i class="fa-solid fa-terminal mr-1"></i> System Console</a>
       </div>
-      
-      <!-- LOGO RS DI-INVERT PUTIH & UKURAN KECIL INLINE -->
-      <p class="flex items-center justify-center space-x-1.5 pt-1">
-        <span>Powered by</span>
-        <img src="assets/images/RS Logo.png" alt="RestoSync Logo" class="h-4 w-auto object-contain invert brightness-200 inline-block">
-        <span>SaaS &copy; 2026 TargetedScripts.com</span>
-      </p>
+      <p>Powered by <strong class="text-stone-300 font-bold">RestoSync SaaS</strong> &copy; 2026 TargetedScripts.com</p>
     </div>
   </footer>
 
@@ -219,10 +232,8 @@
           </div>
           <h1 class="text-2xl font-bold text-red-500 mb-2">Store Access Suspended</h1>
           <p class="text-xs text-stone-400 max-w-md leading-relaxed mb-6">${reason}</p>
-          <div class="bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-[11px] text-amber-400 font-medium flex items-center justify-center space-x-1.5">
-            <span>Powered by</span>
-            <img src="assets/images/RS Logo.png" alt="RestoSync Logo" class="h-3.5 w-auto object-contain invert brightness-200">
-            <span>SaaS &copy; TargetedScripts.com</span>
+          <div class="bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-[11px] text-amber-400 font-medium">
+            Powered by RestoSync SaaS &copy; TargetedScripts.com
           </div>
         </div>
       `;
@@ -303,7 +314,8 @@
           src: item.image,
           title: item.name,
           description: item.description,
-          price: item.promoPrice || item.price,
+          price: item.price,
+          promoPrice: item.promoPrice,
           promoTag: item.promoTag || "CHEF'S SPECIAL",
           id: item.id
         });
@@ -311,27 +323,37 @@
 
       if (slidesDataGlobal.length === 0) return;
 
-      container.innerHTML = slidesDataGlobal.map((s, idx) => `
-        <div class="hero-slide absolute inset-0 w-full h-full ${idx === 0 ? 'opacity-100' : 'opacity-0'}">
-          <img src="${s.src}" class="w-full h-full object-cover">
-          ${s.type === 'food' ? `
-            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/60 flex flex-col justify-end p-6 md:p-10 text-left">
-              <div class="max-w-xl space-y-2">
-                <span class="bg-red-700 text-amber-300 text-[10px] md:text-xs font-black px-3 py-1 rounded-md uppercase tracking-wider inline-block shadow-md">${s.promoTag}</span>
-                <h3 class="font-extrabold text-stone-100 text-xl md:text-3xl leading-tight">${s.id}: ${s.title}</h3>
-                <p class="text-xs md:text-sm text-stone-300 line-clamp-2">${s.description}</p>
-                <div class="pt-2 flex items-center space-x-4">
-                  <span class="font-black text-amber-400 text-2xl md:text-3xl">$${s.price.toFixed(2)}</span>
-                  <button onclick="addToCart('${s.id}')" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-5 py-2.5 rounded-xl text-xs md:text-sm shadow-xl transition flex items-center space-x-2">
-                    <i class="fa-solid fa-plus"></i>
-                    <span>Add to Order</span>
-                  </button>
+      container.innerHTML = slidesDataGlobal.map((s, idx) => {
+        const hasPromo = s.promoPrice && s.promoPrice < s.price;
+        return `
+          <div class="hero-slide absolute inset-0 w-full h-full ${idx === 0 ? 'opacity-100' : 'opacity-0'}">
+            <img src="${s.src}" class="w-full h-full object-cover">
+            ${s.type === 'food' ? `
+              <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/60 flex flex-col justify-end p-6 md:p-10 text-left">
+                <div class="max-w-xl space-y-2">
+                  <span class="bg-red-700 text-amber-300 text-[10px] md:text-xs font-black px-3 py-1 rounded-md uppercase tracking-wider inline-block shadow-md">${s.promoTag}</span>
+                  <h3 class="font-extrabold text-stone-100 text-xl md:text-3xl leading-tight">${s.id}: ${s.title}</h3>
+                  <p class="text-xs md:text-sm text-stone-300 line-clamp-2">${s.description}</p>
+                  
+                  <!-- HARGA LAMA & BARU DI HERO BANNER -->
+                  <div class="pt-2 flex items-center space-x-4">
+                    ${hasPromo ? `
+                      <span class="strike-red-diagonal text-xl md:text-2xl font-bold">$${s.price.toFixed(2)}</span>
+                      <span class="font-black text-amber-400 text-2xl md:text-4xl">$${s.promoPrice.toFixed(2)}</span>
+                    ` : `
+                      <span class="font-black text-amber-400 text-2xl md:text-3xl">$${s.price.toFixed(2)}</span>
+                    `}
+                    <button onclick="addToCart('${s.id}')" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-5 py-2.5 rounded-xl text-xs md:text-sm shadow-xl transition flex items-center space-x-2">
+                      <i class="fa-solid fa-plus"></i>
+                      <span>Add to Order</span>
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ` : ''}
-        </div>
-      `).join('');
+            ` : ''}
+          </div>
+        `;
+      }).join('');
 
       updateOverlayVisibility(0);
 
@@ -462,7 +484,7 @@
 
                     <div class="text-right flex-shrink-0">
                       ${hasPromo ? `
-                        <div class="text-xs text-stone-500 line-through">$${item.price.toFixed(2)}</div>
+                        <div class="strike-red-diagonal text-sm font-bold">$${item.price.toFixed(2)}</div>
                         <div class="font-black text-amber-400 text-base">$${finalPrice.toFixed(2)}</div>
                       ` : `
                         <div class="font-black text-amber-400 text-base">$${item.price.toFixed(2)}</div>
@@ -508,12 +530,14 @@
                     <div class="p-4">
                       <div class="flex justify-between items-start gap-2">
                         <h3 class="font-bold text-stone-100 text-base leading-snug">${item.id}: ${item.name}</h3>
+                        
+                        <!-- HARGA CARD DENGAN CORETAN MIRING MERAH -->
                         <div class="text-right flex-shrink-0">
                           ${hasPromo ? `
-                            <div class="text-xs text-stone-500 line-through">$${item.price.toFixed(2)}</div>
-                            <div class="font-extrabold text-amber-400 text-base">$${finalPrice.toFixed(2)}</div>
+                            <div><span class="strike-red-diagonal text-sm font-bold">$${item.price.toFixed(2)}</span></div>
+                            <div class="font-black text-amber-400 text-lg">$${finalPrice.toFixed(2)}</div>
                           ` : `
-                            <div class="font-extrabold text-amber-400 text-base">$${item.price.toFixed(2)}</div>
+                            <div class="font-black text-amber-400 text-lg">$${item.price.toFixed(2)}</div>
                           `}
                         </div>
                       </div>
