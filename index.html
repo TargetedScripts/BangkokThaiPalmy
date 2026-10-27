@@ -56,12 +56,14 @@
   <!-- HERO BANNER -->
   <section class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden shadow-2xl">
     <div id="heroSlidesContainer" class="relative w-full h-full"></div>
-    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/50 to-black/70 flex flex-col justify-center items-center text-center p-6 text-white pointer-events-none">
+
+    <!-- BRANDING OVERLAY DEFAULT (Akan otomatis fade out jika slide menu promo tampil) -->
+    <div id="defaultHeroOverlay" class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/50 to-black/70 flex flex-col justify-center items-center text-center p-6 text-white transition-opacity duration-700 opacity-100 pointer-events-auto">
       <img id="heroLogo" src="" alt="Bangkok Thai Logo" class="h-20 md:h-28 w-auto object-contain mb-3 filter drop-shadow-lg">
       <h2 class="text-2xl md:text-3xl font-extrabold tracking-widest text-amber-400 uppercase mb-2">Takeaway</h2>
       <p id="bannerTagline" class="text-sm md:text-lg text-stone-300 max-w-xl mb-6 font-light">Authentic Thai flavours cooked fresh to order in Palmerston North.</p>
       
-      <a href="#online-menu" class="pointer-events-auto bg-red-700 hover:bg-red-800 text-white font-bold px-8 py-3.5 rounded-xl shadow-2xl transition flex items-center space-x-2 text-base border border-red-500/30 hover:scale-105 transform">
+      <a href="#online-menu" class="bg-red-700 hover:bg-red-800 text-white font-bold px-8 py-3.5 rounded-xl shadow-2xl transition flex items-center space-x-2 text-base border border-red-500/30 hover:scale-105 transform">
         <i class="fa-solid fa-utensils"></i>
         <span>Explore Menu & Order</span>
       </a>
@@ -195,9 +197,9 @@
     let cart = [];
     let heroIndex = 0;
     let activeConfig = {};
+    let slidesDataGlobal = [];
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Prioritaskan config dari localStorage atau fallback ke file JS
       const saved = localStorage.getItem('RESTOSYNC_WORKING_CONFIG');
       if (saved) {
         try { activeConfig = JSON.parse(saved); } catch(e) { activeConfig = RESTOSYNC_CONFIG; }
@@ -205,21 +207,15 @@
         activeConfig = typeof RESTOSYNC_CONFIG !== 'undefined' ? RESTOSYNC_CONFIG : {};
       }
 
-      // 1. VERIFIKASI LISENSI SANGAT PRESISI
-      if (!verifyLicenseToken()) {
-        return; // Hentikan eksekusi jika lisensi kedaluwarsa atau tidak valid
-      }
+      if (!verifyLicenseToken()) return;
 
-      // 2. INISIALISASI TAMPILAN
       initStoreBranding();
       initHeroCarousel();
       renderCategoryPills();
       renderMenu();
     });
 
-    // VERIFIKASI LISENSI
     function verifyLicenseToken() {
-      // Jika token belum ada tapi ada data kontrak manual, langsung validasi tanggalnya
       if (!activeConfig.encryptedToken && activeConfig.contract?.expiryDate) {
         return checkExpiryDate(activeConfig.contract.expiryDate, activeConfig.contract.status);
       }
@@ -238,7 +234,6 @@
       }
     }
 
-    // PEMBANDING TANGGAL PRESISI ISO YYYY-MM-DD
     function checkExpiryDate(expiryDateStr, status) {
       if (status !== 'active') {
         lockStoreFront("Subscription Status Inactive. Please contact TargetedScripts.com.");
@@ -256,7 +251,6 @@
       return true;
     }
 
-    // TAMPILAN LOCKDOWN
     function lockStoreFront(reason) {
       document.body.innerHTML = `
         <div class="bg-zinc-950 text-stone-100 min-h-screen flex flex-col items-center justify-center text-center p-6 font-sans">
@@ -286,47 +280,78 @@
       }
     }
 
+    // LOGIKA HERO CAROUSEL DENGAN DYNAMIC OVERLAY SWITCHING
     function initHeroCarousel() {
       const container = document.getElementById('heroSlidesContainer');
+      const defaultOverlay = document.getElementById('defaultHeroOverlay');
       const baseImages = activeConfig.branding?.heroImages || [];
       const featuredItems = activeConfig.menuItems?.filter(i => i.isFeatured && i.image && i.isAvailable !== false) || [];
 
-      let slidesData = baseImages.map(img => ({ type: 'brand', src: img }));
+      slidesDataGlobal = baseImages.map(img => ({ type: 'brand', src: img }));
       
       featuredItems.forEach(item => {
-        slidesData.push({
+        slidesDataGlobal.push({
           type: 'food',
           src: item.image,
           title: item.name,
+          description: item.description,
           price: item.promoPrice || item.price,
           promoTag: item.promoTag || "CHEF'S SPECIAL",
           id: item.id
         });
       });
 
-      if (slidesData.length === 0) return;
+      if (slidesDataGlobal.length === 0) return;
 
-      container.innerHTML = slidesData.map((s, idx) => `
+      container.innerHTML = slidesDataGlobal.map((s, idx) => `
         <div class="hero-slide absolute inset-0 w-full h-full ${idx === 0 ? 'opacity-100' : 'opacity-0'}">
           <img src="${s.src}" class="w-full h-full object-cover">
           ${s.type === 'food' ? `
-            <div class="absolute bottom-6 left-6 bg-black/80 backdrop-blur-md p-4 rounded-2xl border border-amber-500/50 text-left max-w-xs shadow-2xl">
-              <span class="bg-red-700 text-amber-300 text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider">${s.promoTag}</span>
-              <h4 class="font-bold text-stone-100 text-base mt-2">${s.id}: ${s.title}</h4>
-              <p class="font-extrabold text-amber-400 text-lg">$${s.price.toFixed(2)}</p>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/60 flex flex-col justify-end p-6 md:p-10 text-left">
+              <div class="max-w-xl space-y-2">
+                <span class="bg-red-700 text-amber-300 text-[10px] md:text-xs font-black px-3 py-1 rounded-md uppercase tracking-wider inline-block shadow-md">${s.promoTag}</span>
+                <h3 class="font-extrabold text-stone-100 text-xl md:text-3xl leading-tight">${s.id}: ${s.title}</h3>
+                <p class="text-xs md:text-sm text-stone-300 line-clamp-2">${s.description}</p>
+                <div class="pt-2 flex items-center space-x-4">
+                  <span class="font-black text-amber-400 text-2xl md:text-3xl">$${s.price.toFixed(2)}</span>
+                  <button onclick="addToCart('${s.id}')" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-5 py-2.5 rounded-xl text-xs md:text-sm shadow-xl transition flex items-center space-x-2">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Add to Order</span>
+                  </button>
+                </div>
+              </div>
             </div>
           ` : ''}
         </div>
       `).join('');
 
-      if (slidesData.length > 1) {
+      // Set Overlay Pertama Sesuai Tipe Slide 0
+      updateOverlayVisibility(0);
+
+      if (slidesDataGlobal.length > 1) {
         setInterval(() => {
           const slides = container.querySelectorAll('.hero-slide');
           if (!slides || slides.length === 0) return;
           slides[heroIndex].classList.replace('opacity-100', 'opacity-0');
           heroIndex = (heroIndex + 1) % slides.length;
           slides[heroIndex].classList.replace('opacity-0', 'opacity-100');
+          
+          updateOverlayVisibility(heroIndex);
         }, 4000);
+      }
+    }
+
+    // SEMBUNYIKAN BRANDING LOGO JIKA SLIDE MAKANAN PROMO MUNCUL
+    function updateOverlayVisibility(index) {
+      const defaultOverlay = document.getElementById('defaultHeroOverlay');
+      if (!defaultOverlay || !slidesDataGlobal[index]) return;
+
+      if (slidesDataGlobal[index].type === 'food') {
+        defaultOverlay.classList.replace('opacity-100', 'opacity-0');
+        defaultOverlay.classList.replace('pointer-events-auto', 'pointer-events-none');
+      } else {
+        defaultOverlay.classList.replace('opacity-0', 'opacity-100');
+        defaultOverlay.classList.replace('pointer-events-none', 'pointer-events-auto');
       }
     }
 
