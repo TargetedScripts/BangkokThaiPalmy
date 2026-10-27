@@ -1,101 +1,602 @@
-// Dynamic Hero Carousel (Brand Slides + Custom Promo Featured Slides)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bangkok Thai Takeaway - Authentic Thai Cuisine</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- CryptoJS Library for AES Decryption -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <style>
+    .hero-slide { transition: opacity 1s ease-in-out; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen selection:bg-amber-500 selection:text-zinc-950">
+
+  <!-- HEADER CLEAN & RESPONSIVE -->
+  <header id="mainHeader" class="bg-red-800 text-white shadow-xl sticky top-0 z-50 border-b border-red-900/40">
+    <div class="max-w-7xl mx-auto px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2">
+      
+      <!-- LOGO AREA WITH RESTORED "TAKEAWAY" TEXT -->
+      <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
+        <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain drop-shadow max-h-8 sm:max-h-10">
+        <span id="headerLogoText" class="hidden sm:inline-block font-bold text-lg sm:text-xl tracking-wider uppercase text-amber-300">Takeaway</span>
+      </div>
+      
+      <!-- CART BUTTON ONLY -->
+      <div class="flex items-center shrink-0">
+        <button onclick="toggleCartModal()" id="cartBtn" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 sm:space-x-2 transition shadow-lg shrink-0">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span>Cart</span>
+          <span id="cartCount" class="bg-zinc-950 text-amber-400 font-bold text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full">0</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- HERO BANNER CAROUSEL -->
+  <section id="heroSection" class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden shadow-2xl">
+    <div id="heroSlidesContainer" class="relative w-full h-full"></div>
+
+    <div id="defaultHeroOverlay" class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/50 to-black/70 flex flex-col justify-center items-center text-center p-6 text-white transition-opacity duration-700 opacity-100 pointer-events-auto">
+      <img id="heroLogo" src="" alt="Bangkok Thai Logo" class="w-auto object-contain mb-3 filter drop-shadow-lg" style="height: 80px;">
+      <h2 id="heroTaglineTitle" class="text-2xl md:text-3xl font-extrabold tracking-widest uppercase mb-2">Takeaway</h2>
+      <p id="bannerTagline" class="text-sm md:text-lg text-stone-300 max-w-xl mb-6 font-light">Authentic Thai flavours cooked fresh to order in Palmerston North.</p>
+      
+      <a href="#online-menu" id="exploreBtn" class="bg-red-700 hover:bg-red-800 text-white font-bold px-8 py-3.5 rounded-xl shadow-2xl transition flex items-center space-x-2 text-base border border-red-500/30 hover:scale-105 transform">
+        <i class="fa-solid fa-utensils"></i>
+        <span>Explore Menu & Order</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- FEATURE HIGHLIGHTS BAR -->
+  <section id="highlightsSection" class="max-w-7xl mx-auto px-4 py-4 w-full">
+    <div id="highlightsGrid"></div>
+  </section>
+
+  <!-- MAIN MENU SECTION -->
+  <section id="online-menu" class="max-w-7xl mx-auto px-4 py-4 w-full flex-grow">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2 border-b border-zinc-800 pb-4">
+      <div>
+        <h2 id="menuMainTitle" class="text-2xl font-bold tracking-wide">Our Takeaway Menu</h2>
+        <p id="menuSubTitle" class="text-xs text-stone-400">Select a category below to browse items</p>
+      </div>
+      
+      <div class="flex items-center space-x-2">
+        <span class="text-xs text-stone-400">Layout Mode:</span>
+        <button onclick="toggleUserLayout()" id="layoutSwitchBtn" class="text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-amber-400 border border-zinc-700 px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition shadow-sm">
+          <i class="fa-solid fa-arrows-rotate"></i>
+          <span id="layoutSwitchText">Switch View</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sticky top-[61px] z-30 bg-zinc-900/95 backdrop-blur-md py-3 -mx-4 px-4 shadow-lg mb-6 border-b border-zinc-800">
+      <div id="categoryPills" class="flex space-x-2 overflow-x-auto no-scrollbar py-1"></div>
+    </div>
+
+    <div id="menuContentBox" class="w-full"></div>
+  </section>
+
+  <!-- CART ESTIMATOR MODAL -->
+  <div id="cartModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex justify-end">
+    <div class="bg-zinc-900 w-full max-w-md h-full flex flex-col shadow-2xl border-l border-zinc-800">
+      <div class="p-4 bg-red-800 text-white flex justify-between items-center shadow-md">
+        <h3 class="font-bold text-lg flex items-center"><i class="fa-solid fa-cart-shopping mr-2 text-amber-400"></i> Your Order</h3>
+        <button onclick="toggleCartModal()" class="text-stone-300 hover:text-white text-2xl font-bold transition">&times;</button>
+      </div>
+      <div id="cartItemsList" class="flex-grow p-4 overflow-y-auto space-y-4 divide-y divide-zinc-800">
+        <p class="text-center text-stone-500 py-8">Your cart is empty.</p>
+      </div>
+      <div class="p-4 border-t border-zinc-800 bg-zinc-950 space-y-3">
+        <div class="flex justify-between text-sm text-stone-400"><span>Subtotal</span><span id="cartSubtotal" class="text-stone-200">$0.00</span></div>
+        <div class="flex justify-between text-sm text-stone-400"><span>GST (15% Included)</span><span id="cartGST" class="text-stone-200">$0.00</span></div>
+        <div class="flex justify-between text-lg font-bold text-stone-100 pt-2 border-t border-zinc-800"><span>Total (NZD)</span><span id="cartTotal" class="text-amber-400">$0.00</span></div>
+        <button onclick="alert('Order submitted to Bangkok Thai Takeaway!')" class="w-full bg-red-700 hover:bg-red-800 text-white py-3.5 rounded-xl font-bold text-center transition shadow-xl border border-red-500/30">
+          Proceed to Checkout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOCATION & MAPS -->
+  <section id="locationSection" class="bg-zinc-950 py-12 border-t border-zinc-800 mt-12">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <div class="space-y-4">
+        <h3 class="text-2xl font-bold text-stone-100">Bangkok Thai Takeaway</h3>
+        <p id="storeAddress" class="text-stone-300 flex items-center">
+          <i class="fa-solid fa-location-dot text-amber-400 mr-3 text-lg"></i> Loading address...
+        </p>
+        <p id="storePhone" class="text-stone-300 flex items-center">
+          <i class="fa-solid fa-phone text-amber-400 mr-3 text-lg"></i> Loading phone...
+        </p>
+        <div class="pt-2">
+          <h4 class="font-semibold text-stone-200 mb-2">Opening Hours:</h4>
+          <ul class="text-sm text-stone-400 space-y-1">
+            <li class="flex justify-between max-w-xs"><span>Monday - Saturday:</span> <span class="font-medium text-stone-200">4:30 PM - 9:00 PM</span></li>
+            <li class="flex justify-between max-w-xs"><span>Sunday:</span> <span class="font-medium text-stone-200">Closed</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="bg-zinc-900 border border-zinc-800/80 rounded-2xl h-64 flex items-center justify-center text-stone-400 font-medium shadow-inner overflow-hidden">
+        <iframe id="googleMapsIframe" class="w-full h-full border-0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2975.234567890123!2d175.609!3d-40.355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d4043f29a0a0000%3A0x0!2s287%20Main%20St%2C%20Palmerston%20North%20Central%2C%20Palmerston%20North%204410!5e0!3m2!1sen!2snz!4v1700000000000!5m2!1sen!2snz"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="footerSection" class="bg-black text-stone-500 text-xs py-8 border-t border-zinc-900">
+    <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
+      <p id="footerStoreInfo">Bangkok Thai Takeaway | Palmerston North, NZ</p>
+      <div class="flex justify-center space-x-4 pt-1">
+        <a href="admin.html" class="text-amber-400/80 hover:text-amber-300 underline"><i class="fa-solid fa-user-gear mr-1"></i> Manager Portal (Admin Demo)</a>
+        <a href="system-console.html" class="text-stone-400 hover:text-white underline"><i class="fa-solid fa-terminal mr-1"></i> System Console</a>
+      </div>
+      
+      <!-- LOGO RS DI-INVERT PUTIH & UKURAN KECIL INLINE -->
+      <p class="flex items-center justify-center space-x-1.5 pt-1">
+        <span>Powered by</span>
+        <img src="assets/images/RS Logo.png" alt="RestoSync Logo" class="h-4 w-auto object-contain invert brightness-200 inline-block">
+        <span>SaaS &copy; 2026 TargetedScripts.com</span>
+      </p>
+    </div>
+  </footer>
+
+  <script src="assets/js/bangkokthaipalmy.js"></script>
+
+  <script>
+    const SECRET_KEY = "TargetedScripts-Master-Secret-2026!Key";
+    let currentCategory = 'ALL';
+    let cart = [];
+    let heroIndex = 0;
+    let activeConfig = {};
+    let slidesDataGlobal = [];
+    let activeLayoutMode = 'grid';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('RESTOSYNC_WORKING_CONFIG');
+      if (saved) {
+        try { activeConfig = JSON.parse(saved); } catch(e) { activeConfig = RESTOSYNC_CONFIG; }
+      } else {
+        activeConfig = typeof RESTOSYNC_CONFIG !== 'undefined' ? RESTOSYNC_CONFIG : {};
+      }
+
+      if (!verifyLicenseToken()) return;
+
+      activeLayoutMode = activeConfig.store?.defaultLayout || 'grid';
+
+      initStoreBranding();
+      applyCustomTheme();
+      initHeroCarousel();
+      renderHighlightsBar();
+      renderCategoryPills();
+      renderMenuContentBox();
+    });
+
+    function verifyLicenseToken() {
+      if (!activeConfig.encryptedToken && activeConfig.contract?.expiryDate) {
+        return checkExpiryDate(activeConfig.contract.expiryDate, activeConfig.contract.status);
+      }
+      if (!activeConfig.encryptedToken) return true;
+
+      try {
+        const bytes = CryptoJS.AES.decrypt(activeConfig.encryptedToken, SECRET_KEY);
+        const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
+        const license = JSON.parse(decryptedText);
+        return checkExpiryDate(license.expiryDate, license.status);
+      } catch (e) {
+        lockStoreFront("Tampered or Invalid License Token. Access Suspended.");
+        return false;
+      }
+    }
+
+    function checkExpiryDate(expiryDateStr, status) {
+      if (status !== 'active') {
+        lockStoreFront("Subscription Status Inactive. Please contact TargetedScripts.com.");
+        return false;
+      }
+      const today = new Date();
+      const todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+      if (todayStr > expiryDateStr) {
+        lockStoreFront("Subscription Expired on " + expiryDateStr + ". Please contact TargetedScripts.com to renew contract.");
+        return false;
+      }
+      return true;
+    }
+
+    function lockStoreFront(reason) {
+      document.body.innerHTML = `
+        <div class="bg-zinc-950 text-stone-100 min-h-screen flex flex-col items-center justify-center text-center p-6 font-sans">
+          <div class="w-16 h-16 bg-red-950/80 text-red-500 rounded-full flex items-center justify-center text-2xl border border-red-800 mb-4 shadow-2xl">
+            <i class="fa-solid fa-lock"></i>
+          </div>
+          <h1 class="text-2xl font-bold text-red-500 mb-2">Store Access Suspended</h1>
+          <p class="text-xs text-stone-400 max-w-md leading-relaxed mb-6">${reason}</p>
+          <div class="bg-zinc-900 border border-zinc-800 px-4 py-2 rounded-xl text-[11px] text-amber-400 font-medium flex items-center justify-center space-x-1.5">
+            <span>Powered by</span>
+            <img src="assets/images/RS Logo.png" alt="RestoSync Logo" class="h-3.5 w-auto object-contain invert brightness-200">
+            <span>SaaS &copy; TargetedScripts.com</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function applyCustomTheme() {
+      const theme = activeConfig.theme || {};
+      const branding = activeConfig.branding || {};
+
+      const logoImg = document.getElementById('storeLogo');
+      if (logoImg && branding.logoHeight) {
+        logoImg.style.height = `${branding.logoHeight}px`;
+      }
+
+      const header = document.getElementById('mainHeader');
+      if (header && theme.headerBg) {
+        header.style.backgroundColor = theme.headerBg;
+      }
+      const logoText = document.getElementById('headerLogoText');
+      if (logoText && theme.headerText) {
+        logoText.style.color = theme.headerText;
+      }
+
+      const body = document.getElementById('mainBody');
+      if (body && theme.bodyBg) {
+        body.style.backgroundColor = theme.bodyBg;
+      }
+
+      const title1 = document.getElementById('menuMainTitle');
+      const heroTagTitle = document.getElementById('heroTaglineTitle');
+      if (theme.title1) {
+        if (title1) title1.style.color = theme.title1;
+        if (heroTagTitle) heroTagTitle.style.color = theme.title1;
+      }
+
+      const title2 = document.getElementById('menuSubTitle');
+      if (title2 && theme.title2) {
+        title2.style.color = theme.title2;
+      }
+
+      const exploreBtn = document.getElementById('exploreBtn');
+      if (exploreBtn && theme.btnBg) {
+        exploreBtn.style.backgroundColor = theme.btnBg;
+        if (theme.btnText) exploreBtn.style.color = theme.btnText;
+      }
+
+      const footer = document.getElementById('footerSection');
+      if (footer && theme.footerBg) {
+        footer.style.backgroundColor = theme.footerBg;
+        if (theme.footerText) footer.style.color = theme.footerText;
+      }
+    }
+
+    function initStoreBranding() {
+      if (!activeConfig.store) return;
+      document.getElementById('bannerTagline').innerText = activeConfig.store.tagline || '';
+      document.getElementById('storeAddress').innerHTML = `<i class="fa-solid fa-location-dot text-amber-400 mr-3 text-lg"></i> ${activeConfig.store.address || ''}`;
+      document.getElementById('storePhone').innerHTML = `<i class="fa-solid fa-phone text-amber-400 mr-3 text-lg"></i> ${activeConfig.store.phone || ''}`;
+      document.getElementById('storeLogo').src = activeConfig.branding?.logo || '';
+      document.getElementById('heroLogo').src = activeConfig.branding?.logo || '';
+      document.getElementById('footerStoreInfo').innerText = `${activeConfig.store.name} | ${activeConfig.store.address} | Phone: ${activeConfig.store.phone}`;
+      
+      if (activeConfig.store.googleMapsEmbedUrl) {
+        document.getElementById('googleMapsIframe').src = activeConfig.store.googleMapsEmbedUrl;
+      }
+    }
+
     function initHeroCarousel() {
       const container = document.getElementById('heroSlidesContainer');
       const baseImages = activeConfig.branding?.heroImages || [];
       const featuredItems = activeConfig.menuItems?.filter(i => i.isFeatured && i.image && i.isAvailable !== false) || [];
 
-      let slidesData = baseImages.map(img => ({ type: 'brand', src: img }));
+      slidesDataGlobal = baseImages.map(img => ({ type: 'brand', src: img }));
       
       featuredItems.forEach(item => {
-        slidesData.push({
+        slidesDataGlobal.push({
           type: 'food',
           src: item.image,
           title: item.name,
+          description: item.description,
           price: item.promoPrice || item.price,
           promoTag: item.promoTag || "CHEF'S SPECIAL",
           id: item.id
         });
       });
 
-      if (slidesData.length === 0) return;
+      if (slidesDataGlobal.length === 0) return;
 
-      container.innerHTML = slidesData.map((s, idx) => `
+      container.innerHTML = slidesDataGlobal.map((s, idx) => `
         <div class="hero-slide absolute inset-0 w-full h-full ${idx === 0 ? 'opacity-100' : 'opacity-0'}">
           <img src="${s.src}" class="w-full h-full object-cover">
           ${s.type === 'food' ? `
-            <div class="absolute bottom-6 left-6 bg-black/80 backdrop-blur-md p-4 rounded-2xl border border-amber-500/50 text-left max-w-xs shadow-2xl">
-              <span class="bg-red-700 text-amber-300 text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider">${s.promoTag}</span>
-              <h4 class="font-bold text-stone-100 text-base mt-2">${s.id}: ${s.title}</h4>
-              <p class="font-extrabold text-amber-400 text-lg">$${s.price.toFixed(2)}</p>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/60 flex flex-col justify-end p-6 md:p-10 text-left">
+              <div class="max-w-xl space-y-2">
+                <span class="bg-red-700 text-amber-300 text-[10px] md:text-xs font-black px-3 py-1 rounded-md uppercase tracking-wider inline-block shadow-md">${s.promoTag}</span>
+                <h3 class="font-extrabold text-stone-100 text-xl md:text-3xl leading-tight">${s.id}: ${s.title}</h3>
+                <p class="text-xs md:text-sm text-stone-300 line-clamp-2">${s.description}</p>
+                <div class="pt-2 flex items-center space-x-4">
+                  <span class="font-black text-amber-400 text-2xl md:text-3xl">$${s.price.toFixed(2)}</span>
+                  <button onclick="addToCart('${s.id}')" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-5 py-2.5 rounded-xl text-xs md:text-sm shadow-xl transition flex items-center space-x-2">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Add to Order</span>
+                  </button>
+                </div>
+              </div>
             </div>
           ` : ''}
         </div>
       `).join('');
 
-      if (slidesData.length > 1) {
+      updateOverlayVisibility(0);
+
+      if (slidesDataGlobal.length > 1) {
         setInterval(() => {
           const slides = container.querySelectorAll('.hero-slide');
+          if (!slides || slides.length === 0) return;
           slides[heroIndex].classList.replace('opacity-100', 'opacity-0');
           heroIndex = (heroIndex + 1) % slides.length;
           slides[heroIndex].classList.replace('opacity-0', 'opacity-100');
+          updateOverlayVisibility(heroIndex);
         }, 4000);
       }
     }
 
-    // Render Menu Grid dengan Custom Promo Tag Badge
-    function renderMenu() {
+    function updateOverlayVisibility(index) {
+      const defaultOverlay = document.getElementById('defaultHeroOverlay');
+      if (!defaultOverlay || !slidesDataGlobal[index]) return;
+
+      if (slidesDataGlobal[index].type === 'food') {
+        defaultOverlay.classList.replace('opacity-100', 'opacity-0');
+        defaultOverlay.classList.replace('pointer-events-auto', 'pointer-events-none');
+      } else {
+        defaultOverlay.classList.replace('opacity-0', 'opacity-100');
+        defaultOverlay.classList.replace('pointer-events-none', 'pointer-events-auto');
+      }
+    }
+
+    function renderHighlightsBar() {
+      const section = document.getElementById('highlightsSection');
+      const grid = document.getElementById('highlightsGrid');
+      const hl = activeConfig.highlights || {};
+
+      if (hl.enabled === false) {
+        section.classList.add('hidden');
+        return;
+      }
+
+      const allItems = [
+        hl.item1 || { enabled: true, title: "Authentic Recipes", sub: "Traditional Thai wok stir-fry" },
+        hl.item2 || { enabled: true, title: "Fast Online Pickup", sub: "Order in seconds" },
+        hl.item3 || { enabled: true, title: "Custom Spice & Veggie", sub: "Tailored spice levels" }
+      ];
+
+      const activeItems = allItems.filter(i => i.enabled !== false);
+
+      if (activeItems.length === 0) {
+        section.classList.add('hidden');
+        return;
+      }
+
+      section.classList.remove('hidden');
+      grid.className = `grid grid-cols-1 ${activeItems.length === 2 ? 'md:grid-cols-2' : activeItems.length >= 3 ? 'md:grid-cols-3' : ''} gap-3 text-center`;
+
+      grid.innerHTML = activeItems.map(i => `
+        <div class="bg-zinc-800/80 px-3.5 py-2.5 rounded-xl border border-zinc-700/60 flex items-center space-x-3 shadow-md">
+          <div class="w-8 h-8 bg-red-950/80 text-amber-400 rounded-lg flex items-center justify-center flex-shrink-0 text-sm border border-red-800/60">
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <div class="text-left">
+            <h4 class="font-bold text-xs text-stone-100 leading-tight">${i.title}</h4>
+            <p class="text-[10px] text-stone-400 leading-tight">${i.sub}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderCategoryPills() {
       if (!activeConfig.menuItems) return;
-      const items = currentCategory === 'ALL' 
-        ? activeConfig.menuItems 
-        : activeConfig.menuItems.filter(i => i.category === currentCategory);
+      const visibleItems = activeConfig.menuItems.filter(i => i.isAvailable !== false);
+      const categories = ['ALL', ...new Set(visibleItems.map(item => item.category))];
+      document.getElementById('categoryPills').innerHTML = categories.map(cat => `
+        <button onclick="filterCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${cat === currentCategory ? 'bg-amber-500 text-zinc-950 border-amber-500 shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">
+          ${cat}
+        </button>
+      `).join('');
+    }
 
-      document.getElementById('menuContainer').innerHTML = items.map(item => {
-        const isSoldOut = item.isAvailable === false || item.stock <= 0;
-        const hasPromo = item.promoPrice && item.promoPrice < item.price;
-        const finalPrice = hasPromo ? item.promoPrice : item.price;
-        const promoTag = item.promoTag || (hasPromo ? "SPECIAL OFFER" : "");
+    function filterCategory(cat) { 
+      currentCategory = cat; 
+      renderCategoryPills(); 
+      renderMenuContentBox(); 
+    }
 
-        return `
-          <div class="bg-zinc-800/90 rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden border border-zinc-700/60 flex flex-col justify-between group relative">
-            <div>
-              <div class="relative overflow-hidden">
-                ${item.image ? `<img src="${item.image}" alt="${item.name}" class="w-full h-48 object-cover group-hover:scale-105 transition duration-500 ${isSoldOut ? 'grayscale opacity-50' : ''}">` : `<div class="w-full h-36 bg-zinc-900 flex items-center justify-center text-stone-500 text-xs italic"><i class="fa-solid fa-utensils mr-2"></i> ${activeConfig.store.name}</div>`}
-                
-                ${isSoldOut ? `<div class="absolute inset-0 bg-black/60 flex items-center justify-center"><span class="bg-red-800 text-white font-extrabold text-sm px-4 py-1.5 rounded-lg shadow-xl border border-red-500 tracking-wider uppercase">SOLD OUT</span></div>` : ''}
-                
-                ${promoTag && !isSoldOut ? `<div class="absolute top-3 left-3 bg-red-700 text-amber-300 font-black text-[10px] px-2.5 py-1 rounded-md shadow-md uppercase tracking-wider">${promoTag}</div>` : ''}
-              </div>
+    function toggleUserLayout() {
+      activeLayoutMode = activeLayoutMode === 'grid' ? 'classic' : 'grid';
+      renderMenuContentBox();
+    }
 
-              <div class="p-4">
-                <div class="flex justify-between items-start gap-2">
-                  <h3 class="font-bold text-stone-100 text-base leading-snug">${item.id}: ${item.name}</h3>
-                  <div class="text-right flex-shrink-0">
-                    ${hasPromo ? `
-                      <div class="text-xs text-stone-500 line-through">$${item.price.toFixed(2)}</div>
-                      <div class="font-extrabold text-amber-400 text-base">$${finalPrice.toFixed(2)}</div>
-                    ` : `
-                      <div class="font-extrabold text-amber-400 text-base">$${item.price.toFixed(2)}</div>
-                    `}
+    function renderMenuContentBox() {
+      if (!activeConfig.menuItems) return;
+
+      const btnText = document.getElementById('layoutSwitchText');
+      if (btnText) {
+        btnText.innerText = activeLayoutMode === 'grid' ? 'Switch to Classic List' : 'Switch to Modern Grid';
+      }
+
+      const visibleItems = activeConfig.menuItems.filter(i => {
+        const matchesCategory = (currentCategory === 'ALL' || i.category === currentCategory);
+        const isEnabled = i.isAvailable !== false;
+        return matchesCategory && isEnabled;
+      });
+
+      const contentBox = document.getElementById('menuContentBox');
+      const theme = activeConfig.theme || {};
+
+      if (activeLayoutMode === 'classic') {
+        contentBox.innerHTML = `
+          <div class="space-y-4 max-w-4xl mx-auto">
+            ${visibleItems.map(item => {
+              const isSoldOut = item.stock <= 0;
+              const hasPromo = item.promoPrice && item.promoPrice < item.price;
+              const finalPrice = hasPromo ? item.promoPrice : item.price;
+              const promoTag = item.promoTag || (hasPromo ? "SPECIAL OFFER" : "");
+
+              return `
+                <div class="rounded-xl p-4 border border-zinc-700/60 hover:border-zinc-600 transition space-y-3" style="background-color: ${theme.cardBg || '#27272a'};">
+                  <div class="flex justify-between items-start gap-4">
+                    <div class="space-y-1">
+                      <div class="flex items-center space-x-2">
+                        <h3 class="font-bold text-stone-100 text-base">${item.id}: ${item.name}</h3>
+                        ${isSoldOut ? `<span class="bg-red-800 text-white font-extrabold text-[9px] px-2 py-0.5 rounded shadow tracking-wider uppercase">SOLD OUT</span>` : ''}
+                        ${promoTag && !isSoldOut ? `<span class="bg-red-700 text-amber-300 font-bold text-[9px] px-2 py-0.5 rounded uppercase">${promoTag}</span>` : ''}
+                      </div>
+                      <p class="text-xs text-stone-400 leading-relaxed">${item.description}</p>
+                      ${getSpiceBadge(item.spiceLevel)}
+                    </div>
+
+                    <div class="text-right flex-shrink-0">
+                      ${hasPromo ? `
+                        <div class="text-xs text-stone-500 line-through">$${item.price.toFixed(2)}</div>
+                        <div class="font-black text-amber-400 text-base">$${finalPrice.toFixed(2)}</div>
+                      ` : `
+                        <div class="font-black text-amber-400 text-base">$${item.price.toFixed(2)}</div>
+                      `}
+                    </div>
+                  </div>
+
+                  <div class="pt-1 flex justify-end">
+                    ${!isSoldOut 
+                      ? `<button onclick="addToCart('${item.id}')" class="bg-red-950/80 hover:bg-red-800 text-amber-300 hover:text-white font-semibold px-4 py-1.5 rounded-lg text-xs transition border border-red-700/50">
+                           + Add to Order
+                         </button>`
+                      : `<button disabled class="bg-zinc-950 text-stone-600 font-bold px-4 py-1.5 rounded-lg text-xs border border-zinc-800 cursor-not-allowed">
+                           Out of Stock
+                         </button>`
+                    }
                   </div>
                 </div>
-
-                <p class="text-xs text-stone-400 mt-1.5 line-clamp-2 leading-relaxed">${item.description}</p>
-                ${getSpiceBadge(item.spiceLevel)}
-              </div>
-            </div>
-
-            <div class="p-4 pt-0">
-              ${!isSoldOut 
-                ? `<button onclick="addToCart('${item.id}')" class="w-full bg-red-950/60 hover:bg-red-800 text-amber-300 hover:text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 border border-red-700/50 shadow-sm">
-                     <i class="fa-solid fa-plus"></i> <span>Add to Order</span>
-                   </button>`
-                : `<button disabled class="w-full bg-zinc-900 text-stone-600 font-bold py-2.5 rounded-xl text-xs text-center border border-zinc-800 cursor-not-allowed">
-                     Out of Stock
-                   </button>`
-              }
-            </div>
+              `;
+            }).join('')}
           </div>
         `;
-      }).join('');
+      } else {
+        contentBox.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            ${visibleItems.map(item => {
+              const isSoldOut = item.stock <= 0;
+              const hasPromo = item.promoPrice && item.promoPrice < item.price;
+              const finalPrice = hasPromo ? item.promoPrice : item.price;
+              const promoTag = item.promoTag || (hasPromo ? "SPECIAL OFFER" : "");
+
+              return `
+                <div class="rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden border border-zinc-700/60 flex flex-col justify-between group relative" style="background-color: ${theme.cardBg || '#27272a'};">
+                  <div>
+                    <div class="relative overflow-hidden">
+                      ${item.image ? `<img src="${item.image}" alt="${item.name}" class="w-full h-48 object-cover group-hover:scale-105 transition duration-500 ${isSoldOut ? 'grayscale opacity-50' : ''}">` : `<div class="w-full h-36 bg-zinc-900 flex items-center justify-center text-stone-500 text-xs italic"><i class="fa-solid fa-utensils mr-2"></i> ${activeConfig.store.name}</div>`}
+                      
+                      ${isSoldOut ? `<div class="absolute inset-0 bg-black/60 flex items-center justify-center"><span class="bg-red-800 text-white font-extrabold text-sm px-4 py-1.5 rounded-lg shadow-xl border border-red-500 tracking-wider uppercase">SOLD OUT</span></div>` : ''}
+                      
+                      ${promoTag && !isSoldOut ? `<div class="absolute top-3 left-3 bg-red-700 text-amber-300 font-black text-[10px] px-2.5 py-1 rounded-md uppercase tracking-wider">${promoTag}</div>` : ''}
+                    </div>
+
+                    <div class="p-4">
+                      <div class="flex justify-between items-start gap-2">
+                        <h3 class="font-bold text-stone-100 text-base leading-snug">${item.id}: ${item.name}</h3>
+                        <div class="text-right flex-shrink-0">
+                          ${hasPromo ? `
+                            <div class="text-xs text-stone-500 line-through">$${item.price.toFixed(2)}</div>
+                            <div class="font-extrabold text-amber-400 text-base">$${finalPrice.toFixed(2)}</div>
+                          ` : `
+                            <div class="font-extrabold text-amber-400 text-base">$${item.price.toFixed(2)}</div>
+                          `}
+                        </div>
+                      </div>
+
+                      <p class="text-xs text-stone-400 mt-1.5 line-clamp-2 leading-relaxed">${item.description}</p>
+                      ${getSpiceBadge(item.spiceLevel)}
+                    </div>
+                  </div>
+
+                  <div class="p-4 pt-0">
+                    ${!isSoldOut 
+                      ? `<button onclick="addToCart('${item.id}')" class="w-full bg-red-950/60 hover:bg-red-800 text-amber-300 hover:text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 border border-red-700/50 shadow-sm">
+                           <i class="fa-solid fa-plus"></i> <span>Add to Order</span>
+                         </button>`
+                      : `<button disabled class="w-full bg-zinc-900 text-stone-600 font-bold py-2.5 rounded-xl text-xs text-center border border-zinc-800 cursor-not-allowed">
+                           Out of Stock
+                         </button>`
+                    }
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }
     }
-    
+
+    function getSpiceBadge(level) {
+      if (!level || level === 0) return '';
+      return `<div class="mt-2.5 flex items-center space-x-1">${'<i class="fa-solid fa-pepper-hot text-red-500 text-xs"></i>'.repeat(level)}</div>`;
+    }
+
+    function addToCart(id) {
+      const item = activeConfig.menuItems.find(i => i.id === id);
+      if (!item) return;
+      const effectivePrice = (item.promoPrice && item.promoPrice < item.price) ? item.promoPrice : item.price;
+      
+      const ex = cart.find(c => c.id === id);
+      if (ex) { ex.qty++; } else { cart.push({ ...item, price: effectivePrice, qty: 1 }); }
+      updateCartUI();
+    }
+
+    function updateCartQty(id, delta) {
+      const idx = cart.findIndex(c => c.id === id);
+      if (idx !== -1) {
+        cart[idx].qty += delta;
+        if (cart[idx].qty <= 0) cart.splice(idx, 1);
+      }
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      document.getElementById('cartCount').innerText = cart.reduce((s,i)=>s+i.qty,0);
+      const subtotal = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+      const gstRate = activeConfig.store?.gstRate || 0.15;
+      const gst = subtotal * gstRate;
+
+      document.getElementById('cartSubtotal').innerText = `$${subtotal.toFixed(2)}`;
+      document.getElementById('cartGST').innerText = `$${gst.toFixed(2)}`;
+      document.getElementById('cartTotal').innerText = `$${subtotal.toFixed(2)}`;
+
+      const itemsList = document.getElementById('cartItemsList');
+      if (cart.length === 0) {
+        itemsList.innerHTML = `<p class="text-center text-stone-500 py-8">Your cart is empty.</p>`;
+      } else {
+        itemsList.innerHTML = cart.map(i => `
+          <div class="pt-3 flex justify-between items-center text-stone-200">
+            <div>
+              <h4 class="font-semibold text-sm">${i.id}: ${i.name}</h4>
+              <p class="text-xs text-stone-400">$${i.price.toFixed(2)} each</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="updateCartQty('${i.id}', -1)" class="w-6 h-6 bg-zinc-800 text-stone-300 rounded flex items-center justify-center font-bold text-xs hover:bg-zinc-700">-</button>
+              <span class="text-xs font-bold px-1">${i.qty}</span>
+              <button onclick="updateCartQty('${i.id}', 1)" class="w-6 h-6 bg-zinc-800 text-stone-300 rounded flex items-center justify-center font-bold text-xs hover:bg-zinc-700">+</button>
+              <span class="text-sm font-bold text-amber-400 w-12 text-right">$${(i.price * i.qty).toFixed(2)}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function toggleCartModal() { document.getElementById('cartModal').classList.toggle('hidden'); }
+  </script>
+</body>
+</html>
