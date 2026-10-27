@@ -67,7 +67,7 @@
     </div>
   </section>
 
-  <!-- FEATURE HIGHLIGHTS BAR (COMPACT & DYNAMIC) -->
+  <!-- FEATURE HIGHLIGHTS BAR -->
   <section id="highlightsSection" class="max-w-7xl mx-auto px-4 py-4 w-full">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-center" id="highlightsGrid"></div>
   </section>
@@ -311,7 +311,6 @@
       }
     }
 
-    // RENDER HIGHLIGHTS BAR TIPIS & RINGKAS (Dinamis dari config admin)
     function renderHighlightsBar() {
       const section = document.getElementById('highlightsSection');
       const grid = document.getElementById('highlightsGrid');
@@ -345,7 +344,9 @@
 
     function renderCategoryPills() {
       if (!activeConfig.menuItems) return;
-      const categories = ['ALL', ...new Set(activeConfig.menuItems.map(item => item.category))];
+      // Filter kategori hanya dari item yang isAvailable !== false
+      const visibleItems = activeConfig.menuItems.filter(i => i.isAvailable !== false);
+      const categories = ['ALL', ...new Set(visibleItems.map(item => item.category))];
       document.getElementById('categoryPills').innerHTML = categories.map(cat => `
         <button onclick="filterCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${cat === currentCategory ? 'bg-amber-500 text-zinc-950 border-amber-500 shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">
           ${cat}
@@ -359,14 +360,20 @@
       renderMenu(); 
     }
 
+    // RENDER MENU GRID DENGAN HIRARKI VISIBILITY TERKONTROL
     function renderMenu() {
       if (!activeConfig.menuItems) return;
-      const items = currentCategory === 'ALL' 
-        ? activeConfig.menuItems 
-        : activeConfig.menuItems.filter(i => i.category === currentCategory);
 
-      document.getElementById('menuContainer').innerHTML = items.map(item => {
-        const isSoldOut = item.isAvailable === false || item.stock <= 0;
+      // HANYA AMBIL ITEM YANG isAvailable !== false (Hirarki Tertinggi: Status Available)
+      const visibleItems = activeConfig.menuItems.filter(i => {
+        const matchesCategory = (currentCategory === 'ALL' || i.category === currentCategory);
+        const isEnabled = i.isAvailable !== false;
+        return matchesCategory && isEnabled;
+      });
+
+      document.getElementById('menuContainer').innerHTML = visibleItems.map(item => {
+        // Hirarki Kedua: Cek Stock untuk penentuan SOLD OUT
+        const isSoldOut = item.stock <= 0;
         const hasPromo = item.promoPrice && item.promoPrice < item.price;
         const finalPrice = hasPromo ? item.promoPrice : item.price;
         const promoTag = item.promoTag || (hasPromo ? "SPECIAL OFFER" : "");
@@ -426,11 +433,7 @@
       const effectivePrice = (item.promoPrice && item.promoPrice < item.price) ? item.promoPrice : item.price;
       
       const ex = cart.find(c => c.id === id);
-      if (ex) {
-        ex.qty++;
-      } else {
-        cart.push({ ...item, price: effectivePrice, qty: 1 });
-      }
+      if (ex) { ex.qty++; } else { cart.push({ ...item, price: effectivePrice, qty: 1 }); }
       updateCartUI();
     }
 
@@ -474,9 +477,7 @@
       }
     }
 
-    function toggleCartModal() { 
-      document.getElementById('cartModal').classList.toggle('hidden'); 
-    }
+    function toggleCartModal() { document.getElementById('cartModal').classList.toggle('hidden'); }
   </script>
 </body>
 </html>
