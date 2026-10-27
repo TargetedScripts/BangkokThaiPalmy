@@ -18,7 +18,7 @@
         <div class="bg-red-800 text-amber-300 font-black px-3 py-1 rounded-lg text-sm tracking-wider">
           RESTOSYNC
         </div>
-        <span class="text-xs text-stone-400 border-l border-zinc-700 pl-3">Store Admin & Theme Engine</span>
+        <span class="text-xs text-stone-400 border-l border-zinc-700 pl-3">Store Admin & Theme Studio</span>
       </div>
       <div class="flex items-center space-x-3">
         <a href="index.html" target="_blank" class="text-xs font-semibold text-amber-400 hover:text-amber-300 transition flex items-center space-x-1 border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 rounded-lg">
@@ -387,7 +387,7 @@
 
       // Load Theme Color Palette
       const theme = activeConfig.theme || {};
-      document.getElementById('themeHeaderBg').value = theme.headerBg || '#991b1b';
+      document.getElementById('themeHeaderBg').value = theme.headerBg || '#000000';
       document.getElementById('themeHeaderText').value = theme.headerText || '#fef3c7';
       document.getElementById('themeBodyBg').value = theme.bodyBg || '#18181b';
       document.getElementById('themeCardBg').value = theme.cardBg || '#27272a';
@@ -423,7 +423,6 @@
       reader.onload = function(e) {
         const img = new Image();
         img.onload = function() {
-          // Compress logo via Canvas
           const canvas = document.createElement('canvas');
           const maxDim = 300;
           let width = img.width;
@@ -461,7 +460,7 @@
     }
 
     function resetDefaultColors() {
-      document.getElementById('themeHeaderBg').value = '#991b1b';
+      document.getElementById('themeHeaderBg').value = '#000000';
       document.getElementById('themeHeaderText').value = '#fef3c7';
       document.getElementById('themeBodyBg').value = '#18181b';
       document.getElementById('themeCardBg').value = '#27272a';
