@@ -13,25 +13,21 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+<body class="bg-neutral-900 text-amber-50 flex flex-col min-h-screen selection:bg-orange-700 selection:text-white">
 
-  <!-- HEADER -->
-  <header class="bg-white shadow-md sticky top-0 z-40 border-b border-red-100">
-    <div class="max-w-5xl mx-auto px-4 py-2.5 flex items-center justify-between">
+  <!-- HEADER (Spice Terracotta Header) -->
+  <header class="bg-orange-800 text-white shadow-xl sticky top-0 z-40 border-b border-orange-900">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <!-- Logo Badge Merah Kontras -->
-        <a href="index.html" class="bg-red-700 p-2 rounded-xl shadow-inner flex items-center justify-center hover:bg-red-800 transition">
-          <img id="storeLogo" src="" alt="Logo" class="h-9 w-auto object-contain">
+        <a href="index.html" class="flex items-center space-x-3 hover:opacity-90 transition">
+          <img id="storeLogo" src="" alt="Logo" class="h-10 w-auto object-contain drop-shadow">
+          <span class="font-bold text-xl tracking-wider text-amber-200 uppercase">Takeaway</span>
         </a>
-        <div>
-          <h1 id="storeName" class="font-bold text-lg text-red-700 leading-tight">Bangkok Thai</h1>
-          <p class="text-xs text-gray-500">Layout Demo: <strong>Classic Menu Book</strong></p>
-        </div>
       </div>
       
       <div class="flex items-center space-x-3">
-        <a href="page2-grid.html" class="px-3 py-2 text-xs font-semibold rounded-lg bg-gray-100 hover:bg-red-50 hover:text-red-700 text-gray-700 transition flex items-center space-x-1">
-          <i class="fa-solid fa-border-all"></i>
+        <a href="page2-grid.html" class="px-3.5 py-2 text-xs font-semibold rounded-lg bg-orange-950 hover:bg-black text-amber-100 border border-orange-700/50 transition flex items-center space-x-1.5">
+          <i class="fa-solid fa-border-all text-amber-300"></i>
           <span class="hidden sm:inline">Try Modern Grid</span>
         </a>
       </div>
@@ -40,13 +36,13 @@
 
   <main class="max-w-4xl mx-auto px-4 py-8 flex-grow w-full">
     <!-- CLASSIC BOOK HEADER BANNER -->
-    <div class="text-center mb-8 pb-6 border-b border-red-200">
-      <h2 class="text-3xl font-serif font-bold text-gray-900">TAKEOUT & DINING MENU</h2>
-      <p class="text-xs text-gray-500 mt-1 uppercase tracking-widest">Authentic Thai Dishes Cooked Fresh Daily</p>
+    <div class="text-center mb-8 pb-6 border-b border-orange-900/60">
+      <h2 class="text-3xl font-serif font-bold text-amber-100 tracking-wider">TAKEOUT & DINING MENU</h2>
+      <p class="text-xs text-amber-400 mt-1.5 uppercase tracking-widest font-medium">Authentic Thai Dishes Cooked Fresh Daily</p>
     </div>
 
     <!-- CATEGORY PILLS -->
-    <div class="sticky top-[61px] z-30 bg-gray-50 py-3 mb-6">
+    <div class="sticky top-[61px] z-30 bg-neutral-900/95 backdrop-blur-md py-3 mb-6 border-b border-neutral-800">
       <div id="categoryPills" class="flex space-x-2 overflow-x-auto no-scrollbar py-1 justify-center"></div>
     </div>
 
@@ -55,10 +51,10 @@
   </main>
 
   <!-- FOOTER -->
-  <footer class="bg-gray-900 text-gray-400 text-xs py-8 mt-auto">
+  <footer class="bg-black text-neutral-500 text-xs py-8 mt-auto border-t border-neutral-900">
     <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
       <p id="footerStoreInfo">Bangkok Thai Takeaway | Palmerston North, NZ</p>
-      <p>Powered by <strong>RestoSync SaaS</strong> &copy; 2026 TargetedScripts.com</p>
+      <p>Powered by <strong class="text-neutral-400">RestoSync SaaS</strong> &copy; 2026 TargetedScripts.com</p>
     </div>
   </footer>
 
@@ -68,7 +64,6 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       if (typeof RESTOSYNC_CONFIG === 'undefined') return;
-      document.getElementById('storeName').innerText = RESTOSYNC_CONFIG.store.name;
       document.getElementById('storeLogo').src = RESTOSYNC_CONFIG.branding.logo;
       document.getElementById('footerStoreInfo').innerText = `${RESTOSYNC_CONFIG.store.name} | ${RESTOSYNC_CONFIG.store.address} | Phone: ${RESTOSYNC_CONFIG.store.phone}`;
       renderCategoryPills();
@@ -78,7 +73,7 @@
     function renderCategoryPills() {
       const categories = ['ALL', ...new Set(RESTOSYNC_CONFIG.menuItems.map(item => item.category))];
       document.getElementById('categoryPills').innerHTML = categories.map(cat => `
-        <button onclick="filterCategory('${cat}')" class="px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition border ${cat === currentCategory ? 'bg-red-700 text-white border-red-700' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}">
+        <button onclick="filterCategory('${cat}')" class="px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition border ${cat === currentCategory ? 'bg-orange-700 text-white border-orange-600 shadow-md font-bold' : 'bg-neutral-800 text-amber-200/80 border-neutral-700 hover:bg-neutral-700'}">
           ${cat}
         </button>
       `).join('');
@@ -89,16 +84,16 @@
     function renderMenu() {
       const items = currentCategory === 'ALL' ? RESTOSYNC_CONFIG.menuItems : RESTOSYNC_CONFIG.menuItems.filter(i => i.category === currentCategory);
       document.getElementById('menuContainer').innerHTML = items.map(item => `
-        <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm flex justify-between items-center hover:border-red-400 transition">
+        <div class="bg-neutral-800/80 p-4 rounded-xl border border-neutral-700/60 shadow-md flex justify-between items-center hover:border-orange-500/60 transition group">
           <div class="pr-4">
             <div class="flex items-center space-x-2">
-              <span class="font-bold text-gray-900 text-sm">${item.id}: ${item.name}</span>
+              <span class="font-bold text-amber-100 text-sm group-hover:text-amber-300 transition">${item.id}: ${item.name}</span>
               ${getSpiceBadge(item.spiceLevel)}
             </div>
-            <p class="text-xs text-gray-500 mt-1">${item.description}</p>
+            <p class="text-xs text-neutral-400 mt-1 leading-relaxed">${item.description}</p>
           </div>
           <div class="flex items-center space-x-3 flex-shrink-0">
-            <span class="font-bold text-red-700 text-base">$${item.price.toFixed(2)}</span>
+            <span class="font-extrabold text-orange-400 text-base">$${item.price.toFixed(2)}</span>
           </div>
         </div>
       `).join('');
@@ -106,7 +101,7 @@
 
     function getSpiceBadge(level) {
       if (!level || level === 0) return '';
-      return `<span>${'<i class="fa-solid fa-pepper-hot text-red-500 text-xs"></i>'.repeat(level)}</span>`;
+      return `<span class="flex items-center space-x-0.5">${'<i class="fa-solid fa-pepper-hot text-orange-500 text-xs"></i>'.repeat(level)}</span>`;
     }
   </script>
 </body>
