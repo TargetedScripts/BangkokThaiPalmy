@@ -96,23 +96,44 @@
             </div>
           </div>
 
-          <p class="text-[11px] text-stone-400">Customize 3 feature badges on homepage (e.g. Liquor Licensed, Halal, BYO, etc.).</p>
+          <p class="text-[11px] text-stone-400">Customize feature badges on homepage (e.g. Liquor Licensed, Halal, BYO, etc.). Toggle each badge individually.</p>
 
           <div class="space-y-3 text-xs">
+            <!-- Badge 1 -->
             <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 space-y-2">
-              <span class="block text-amber-400 font-bold">Badge 1</span>
+              <div class="flex justify-between items-center">
+                <span class="block text-amber-400 font-bold">Badge 1</span>
+                <label class="flex items-center space-x-1.5 text-[10px] text-stone-400 cursor-pointer">
+                  <span>Enable Badge</span>
+                  <input type="checkbox" id="hlEnabled1" class="w-3.5 h-3.5 accent-amber-500 rounded">
+                </label>
+              </div>
               <input type="text" id="hlTitle1" placeholder="Title (e.g. Liquor Licensed)" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2.5 py-1.5 text-stone-100">
               <input type="text" id="hlSub1" placeholder="Subtitle (e.g. Beer & Wine Available)" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2.5 py-1.5 text-stone-400 text-[11px]">
             </div>
 
+            <!-- Badge 2 -->
             <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 space-y-2">
-              <span class="block text-amber-400 font-bold">Badge 2</span>
+              <div class="flex justify-between items-center">
+                <span class="block text-amber-400 font-bold">Badge 2</span>
+                <label class="flex items-center space-x-1.5 text-[10px] text-stone-400 cursor-pointer">
+                  <span>Enable Badge</span>
+                  <input type="checkbox" id="hlEnabled2" class="w-3.5 h-3.5 accent-amber-500 rounded">
+                </label>
+              </div>
               <input type="text" id="hlTitle2" placeholder="Title (e.g. Fast Online Pickup)" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2.5 py-1.5 text-stone-100">
               <input type="text" id="hlSub2" placeholder="Subtitle (e.g. Order in seconds)" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2.5 py-1.5 text-stone-400 text-[11px]">
             </div>
 
+            <!-- Badge 3 -->
             <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 space-y-2">
-              <span class="block text-amber-400 font-bold">Badge 3</span>
+              <div class="flex justify-between items-center">
+                <span class="block text-amber-400 font-bold">Badge 3</span>
+                <label class="flex items-center space-x-1.5 text-[10px] text-stone-400 cursor-pointer">
+                  <span>Enable Badge</span>
+                  <input type="checkbox" id="hlEnabled3" class="w-3.5 h-3.5 accent-amber-500 rounded">
+                </label>
+              </div>
               <input type="text" id="hlTitle3" placeholder="Title (e.g. Custom Spice & Veggie)" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2.5 py-1.5 text-stone-100">
               <input type="text" id="hlSub3" placeholder="Subtitle (e.g. Tailored spice levels)" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2.5 py-1.5 text-stone-400 text-[11px]">
             </div>
@@ -269,10 +290,16 @@
 
       const hl = activeConfig.highlights || {};
       document.getElementById('cfgShowHighlights').checked = hl.enabled !== false;
+
+      document.getElementById('hlEnabled1').checked = hl.item1?.enabled !== false;
       document.getElementById('hlTitle1').value = hl.item1?.title || "Authentic Recipes";
       document.getElementById('hlSub1').value = hl.item1?.sub || "Traditional Thai wok stir-fry";
+
+      document.getElementById('hlEnabled2').checked = hl.item2?.enabled !== false;
       document.getElementById('hlTitle2').value = hl.item2?.title || "Fast Online Pickup";
       document.getElementById('hlSub2').value = hl.item2?.sub || "Order in seconds for collection";
+
+      document.getElementById('hlEnabled3').checked = hl.item3?.enabled !== false;
       document.getElementById('hlTitle3').value = hl.item3?.title || "Custom Spice & Veggie";
       document.getElementById('hlSub3').value = hl.item3?.sub || "Tailored spice & vegetarian options";
     }
@@ -353,9 +380,22 @@
 
       if (!activeConfig.highlights) activeConfig.highlights = {};
       activeConfig.highlights.enabled = document.getElementById('cfgShowHighlights').checked;
-      activeConfig.highlights.item1 = { title: document.getElementById('hlTitle1').value, sub: document.getElementById('hlSub1').value };
-      activeConfig.highlights.item2 = { title: document.getElementById('hlTitle2').value, sub: document.getElementById('hlSub2').value };
-      activeConfig.highlights.item3 = { title: document.getElementById('hlTitle3').value, sub: document.getElementById('hlSub3').value };
+
+      activeConfig.highlights.item1 = {
+        enabled: document.getElementById('hlEnabled1').checked,
+        title: document.getElementById('hlTitle1').value,
+        sub: document.getElementById('hlSub1').value
+      };
+      activeConfig.highlights.item2 = {
+        enabled: document.getElementById('hlEnabled2').checked,
+        title: document.getElementById('hlTitle2').value,
+        sub: document.getElementById('hlSub2').value
+      };
+      activeConfig.highlights.item3 = {
+        enabled: document.getElementById('hlEnabled3').checked,
+        title: document.getElementById('hlTitle3').value,
+        sub: document.getElementById('hlSub3').value
+      };
 
       localStorage.setItem('RESTOSYNC_WORKING_CONFIG', JSON.stringify(activeConfig));
       alert('All changes saved successfully!');
