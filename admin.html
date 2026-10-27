@@ -42,7 +42,7 @@
         <h1 class="text-2xl font-bold text-stone-100 flex items-center">
           <i class="fa-solid fa-sliders text-amber-400 mr-3"></i> RestoSync Manager Dashboard
         </h1>
-        <p class="text-xs text-stone-400 mt-1">Manage store profile, promo pricing, custom promo tags, and feature highlights bar.</p>
+        <p class="text-xs text-stone-400 mt-1">Manage store profile, layout modes, promo pricing, custom promo tags, and feature highlights bar.</p>
       </div>
       <button onclick="saveAllChanges()" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-6 py-2.5 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-sm">
         <i class="fa-solid fa-floppy-disk"></i>
@@ -55,10 +55,10 @@
       <!-- LEFT COLUMN: STORE INFO & HIGHLIGHTS CONTROL -->
       <div class="space-y-6">
         
-        <!-- STORE PROFILE -->
+        <!-- STORE PROFILE & LAYOUT SELECTOR -->
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
           <h2 class="font-bold text-base text-stone-100 flex items-center border-b border-zinc-800 pb-3">
-            <i class="fa-solid fa-store text-amber-400 mr-2"></i> Store Profile
+            <i class="fa-solid fa-store text-amber-400 mr-2"></i> Store Profile & Layout Settings
           </h2>
           
           <div class="space-y-3 text-xs">
@@ -70,6 +70,18 @@
             <div>
               <label class="block text-stone-400 mb-1 font-medium">Tagline / Slogan</label>
               <input type="text" id="cfgTagline" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100 focus:outline-none focus:border-amber-400">
+            </div>
+
+            <!-- MENU LAYOUT MODE SELECTOR -->
+            <div class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl space-y-1.5">
+              <label class="block text-amber-300 font-bold flex items-center">
+                <i class="fa-solid fa-table-cells-large mr-2"></i> Preferred Menu Layout Mode
+              </label>
+              <select id="cfgDefaultLayout" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100 font-semibold focus:outline-none focus:border-amber-400">
+                <option value="grid">Modern Grid View (Cards with Images)</option>
+                <option value="classic">Classic List/Book View (Compact Text List)</option>
+              </select>
+              <span class="block text-[10px] text-stone-400">Choose how the menu displays on the homepage right after the hero banner.</span>
             </div>
 
             <div>
@@ -287,6 +299,9 @@
       document.getElementById('cfgTagline').value = activeConfig.store.tagline || '';
       document.getElementById('cfgPhone').value = activeConfig.store.phone || '';
       document.getElementById('cfgAddress').value = activeConfig.store.address || '';
+      
+      // Load Preferred Layout Mode
+      document.getElementById('cfgDefaultLayout').value = activeConfig.store.defaultLayout || 'grid';
 
       const hl = activeConfig.highlights || {};
       document.getElementById('cfgShowHighlights').checked = hl.enabled !== false;
@@ -377,6 +392,7 @@
       activeConfig.store.tagline = document.getElementById('cfgTagline').value;
       activeConfig.store.phone = document.getElementById('cfgPhone').value;
       activeConfig.store.address = document.getElementById('cfgAddress').value;
+      activeConfig.store.defaultLayout = document.getElementById('cfgDefaultLayout').value;
 
       if (!activeConfig.highlights) activeConfig.highlights = {};
       activeConfig.highlights.enabled = document.getElementById('cfgShowHighlights').checked;
