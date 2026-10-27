@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bangkok Thai Takeaway - Authentic Thai Cuisine in Palmerston North</title>
+  <title>Bangkok Thai Takeaway - Authentic Thai Cuisine</title>
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome Icons -->
@@ -14,105 +14,102 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+<body class="bg-zinc-900 text-stone-100 flex flex-col min-h-screen">
 
-  <!-- HEADER -->
-  <header class="bg-white shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-2.5 flex items-center justify-between">
+  <!-- HEADER (Aksen Merah Thai Penuh) -->
+  <header class="bg-red-800 text-white shadow-lg sticky top-0 z-50 border-b border-red-900">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <!-- Logo + Teks Takeaway Saja -->
       <div class="flex items-center space-x-3">
-        <!-- Logo Badge Merah Kontras untuk Logo Putih Transparan -->
-        <div class="bg-red-700 p-2 rounded-xl shadow-inner flex items-center justify-center">
-          <img id="storeLogo" src="" alt="Logo" class="h-9 w-auto object-contain">
-        </div>
-        <div>
-          <h1 id="storeName" class="font-bold text-lg text-red-700 leading-tight">Bangkok Thai Takeaway</h1>
-          <p id="storeTagline" class="text-xs text-gray-500">Palmerston North Central</p>
-        </div>
+        <img id="storeLogo" src="" alt="Logo" class="h-10 w-auto object-contain">
+        <span class="font-bold text-xl tracking-wider text-amber-300 uppercase">Takeaway</span>
       </div>
       
       <!-- Navigasi & Cart Trigger -->
       <div class="flex items-center space-x-3">
-        <a href="page3-classic.html" class="hidden sm:flex px-3 py-2 text-xs font-semibold rounded-lg bg-gray-100 hover:bg-red-50 hover:text-red-700 text-gray-700 transition items-center space-x-1">
+        <a href="page3-classic.html" class="hidden sm:flex px-3.5 py-2 text-xs font-semibold rounded-lg bg-red-900 hover:bg-red-950 text-stone-200 border border-red-700/50 transition items-center space-x-1.5">
           <i class="fa-solid fa-book-open"></i>
           <span>Classic Book View</span>
         </a>
-        <button onclick="toggleCartModal()" class="relative bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded-lg font-medium text-sm flex items-center space-x-2 transition shadow">
+        <button onclick="toggleCartModal()" class="relative bg-amber-500 hover:bg-amber-600 text-zinc-950 font-bold px-4 py-2 rounded-lg text-sm flex items-center space-x-2 transition shadow-md">
           <i class="fa-solid fa-basket-shopping"></i>
           <span>Cart</span>
-          <span id="cartCount" class="bg-white text-red-700 font-bold text-xs px-2 py-0.5 rounded-full">0</span>
+          <span id="cartCount" class="bg-zinc-900 text-amber-400 font-bold text-xs px-2 py-0.5 rounded-full">0</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- HERO SECTION WITH SLIDING CAROUSEL -->
-  <section class="relative w-full h-[360px] md:h-[450px] bg-gray-900 overflow-hidden shadow-lg">
+  <!-- HERO BANNER (Gambar Logo di Tengah + Takeaway + Tagline) -->
+  <section class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden shadow-2xl">
     <div id="heroSlidesContainer" class="relative w-full h-full"></div>
-    <div class="absolute inset-0 bg-black/50 flex flex-col justify-center items-center text-center p-6 text-white">
-      <h2 id="bannerStoreName" class="text-3xl md:text-5xl font-extrabold drop-shadow mb-3">Bangkok Thai Takeaway</h2>
-      <p id="bannerTagline" class="text-base md:text-xl text-gray-200 max-w-2xl mb-6">Authentic Thai flavours cooked fresh to order in Palmerston North.</p>
+    <div class="absolute inset-0 bg-black/60 flex flex-col justify-center items-center text-center p-6 text-white">
+      <!-- Logo Gambar di Hero -->
+      <img id="heroLogo" src="" alt="Bangkok Thai Logo" class="h-16 md:h-24 w-auto object-contain mb-2 drop-shadow-lg">
+      <h2 class="text-2xl md:text-3xl font-extrabold tracking-widest text-amber-400 uppercase mb-2">Takeaway</h2>
+      <p id="bannerTagline" class="text-sm md:text-lg text-stone-300 max-w-xl mb-6 font-light">Authentic Thai flavours cooked fresh to order in Palmerston North.</p>
       
-      <a href="#online-menu" class="bg-red-700 hover:bg-red-800 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg transition flex items-center space-x-2 text-base">
+      <a href="#online-menu" class="bg-red-700 hover:bg-red-800 text-white font-bold px-8 py-3.5 rounded-xl shadow-xl transition flex items-center space-x-2 text-base border border-red-500/30">
         <i class="fa-solid fa-utensils"></i>
         <span>Explore Menu & Order</span>
       </a>
     </div>
   </section>
 
-  <!-- FEATURE HIGHLIGHTS -->
+  <!-- FEATURE HIGHLIGHTS (Kartu Gelap Harmonis) -->
   <section class="max-w-7xl mx-auto px-4 py-8 w-full">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center space-x-4">
-        <div class="w-12 h-12 bg-red-100 text-red-700 rounded-full flex items-center justify-center flex-shrink-0 text-xl">
+      <div class="bg-zinc-800 p-5 rounded-2xl shadow-md border border-zinc-700/50 flex items-center space-x-4">
+        <div class="w-12 h-12 bg-red-900/60 text-amber-400 rounded-full flex items-center justify-center flex-shrink-0 text-xl border border-red-700/40">
           <i class="fa-solid fa-fire"></i>
         </div>
         <div class="text-left">
-          <h3 class="font-bold text-sm text-gray-900">Authentic Recipes</h3>
-          <p class="text-xs text-gray-500">Traditional Thai wok stir-fry & fresh herbs.</p>
+          <h3 class="font-bold text-sm text-stone-100">Authentic Recipes</h3>
+          <p class="text-xs text-stone-400">Traditional Thai wok stir-fry & fresh herbs.</p>
         </div>
       </div>
 
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center space-x-4">
-        <div class="w-12 h-12 bg-red-100 text-red-700 rounded-full flex items-center justify-center flex-shrink-0 text-xl">
+      <div class="bg-zinc-800 p-5 rounded-2xl shadow-md border border-zinc-700/50 flex items-center space-x-4">
+        <div class="w-12 h-12 bg-red-900/60 text-amber-400 rounded-full flex items-center justify-center flex-shrink-0 text-xl border border-red-700/40">
           <i class="fa-solid fa-bag-shopping"></i>
         </div>
         <div class="text-left">
-          <h3 class="font-bold text-sm text-gray-900">Fast Online Pickup</h3>
-          <p class="text-xs text-gray-500">Order online in seconds for easy collection.</p>
+          <h3 class="font-bold text-sm text-stone-100">Fast Online Pickup</h3>
+          <p class="text-xs text-stone-400">Order online in seconds for easy collection.</p>
         </div>
       </div>
 
-      <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center space-x-4">
-        <div class="w-12 h-12 bg-red-100 text-red-700 rounded-full flex items-center justify-center flex-shrink-0 text-xl">
+      <div class="bg-zinc-800 p-5 rounded-2xl shadow-md border border-zinc-700/50 flex items-center space-x-4">
+        <div class="w-12 h-12 bg-red-900/60 text-amber-400 rounded-full flex items-center justify-center flex-shrink-0 text-xl border border-red-700/40">
           <i class="fa-solid fa-leaf"></i>
         </div>
         <div class="text-left">
-          <h3 class="font-bold text-sm text-gray-900">Custom Spice & Veggie</h3>
-          <p class="text-xs text-gray-500">Tailored spice levels & vegetarian options.</p>
+          <h3 class="font-bold text-sm text-stone-100">Custom Spice & Veggie</h3>
+          <p class="text-xs text-stone-400">Tailored spice levels & vegetarian options.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- MAIN MENU SECTION (MODERN GRID) -->
+  <!-- MAIN MENU SECTION (MODERN GRID - DARK THEME) -->
   <section id="online-menu" class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
     
     <!-- Section Title & Switcher -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2 border-b pb-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2 border-b border-zinc-800 pb-4">
       <div>
-        <h2 class="text-2xl font-bold text-gray-900">Our Takeaway Menu</h2>
-        <p class="text-xs text-gray-500">Select a category below to browse items</p>
+        <h2 class="text-2xl font-bold text-stone-100">Our Takeaway Menu</h2>
+        <p class="text-xs text-stone-400">Select a category below to browse items</p>
       </div>
       <div class="flex items-center space-x-2">
-        <span class="text-xs text-gray-500">Prefer list view?</span>
-        <a href="page3-classic.html" class="text-xs font-bold text-red-700 hover:underline flex items-center space-x-1">
+        <span class="text-xs text-stone-400">Prefer list view?</span>
+        <a href="page3-classic.html" class="text-xs font-bold text-amber-400 hover:text-amber-300 flex items-center space-x-1">
           <i class="fa-solid fa-book-open"></i> <span>Switch to Classic Book</span>
         </a>
       </div>
     </div>
 
     <!-- CATEGORY NAVIGATION (STICKY PILLS) -->
-    <div class="sticky top-[61px] z-30 bg-gray-50 py-3 -mx-4 px-4 shadow-sm mb-6">
+    <div class="sticky top-[61px] z-30 bg-zinc-900 py-3 -mx-4 px-4 shadow-md mb-6">
       <div id="categoryPills" class="flex space-x-2 overflow-x-auto no-scrollbar py-1"></div>
     </div>
 
@@ -121,20 +118,20 @@
   </section>
 
   <!-- CART ESTIMATOR MODAL -->
-  <div id="cartModal" class="fixed inset-0 bg-black/50 z-50 hidden flex justify-end">
-    <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl">
-      <div class="p-4 bg-red-700 text-white flex justify-between items-center">
+  <div id="cartModal" class="fixed inset-0 bg-black/75 z-50 hidden flex justify-end">
+    <div class="bg-zinc-900 w-full max-w-md h-full flex flex-col shadow-2xl border-l border-zinc-800">
+      <div class="p-4 bg-red-800 text-white flex justify-between items-center">
         <h3 class="font-bold text-lg"><i class="fa-solid fa-cart-shopping mr-2"></i> Your Order</h3>
-        <button onclick="toggleCartModal()" class="text-white text-xl font-bold">&times;</button>
+        <button onclick="toggleCartModal()" class="text-stone-300 hover:text-white text-xl font-bold">&times;</button>
       </div>
-      <div id="cartItemsList" class="flex-grow p-4 overflow-y-auto space-y-4 divide-y divide-gray-100">
-        <p class="text-center text-gray-400 py-8">Your cart is empty.</p>
+      <div id="cartItemsList" class="flex-grow p-4 overflow-y-auto space-y-4 divide-y divide-zinc-800">
+        <p class="text-center text-stone-500 py-8">Your cart is empty.</p>
       </div>
-      <div class="p-4 border-t bg-gray-50 space-y-3">
-        <div class="flex justify-between text-sm text-gray-600"><span>Subtotal</span><span id="cartSubtotal">$0.00</span></div>
-        <div class="flex justify-between text-sm text-gray-600"><span>GST (15% Included)</span><span id="cartGST">$0.00</span></div>
-        <div class="flex justify-between text-lg font-bold text-gray-900 pt-2 border-t"><span>Total (NZD)</span><span id="cartTotal" class="text-red-700">$0.00</span></div>
-        <button onclick="alert('Order submitted to Bangkok Thai Takeaway!')" class="w-full bg-red-700 hover:bg-red-800 text-white py-3 rounded-lg font-bold text-center transition shadow">
+      <div class="p-4 border-t border-zinc-800 bg-zinc-950 space-y-3">
+        <div class="flex justify-between text-sm text-stone-400"><span>Subtotal</span><span id="cartSubtotal">$0.00</span></div>
+        <div class="flex justify-between text-sm text-stone-400"><span>GST (15% Included)</span><span id="cartGST">$0.00</span></div>
+        <div class="flex justify-between text-lg font-bold text-stone-100 pt-2 border-t border-zinc-800"><span>Total (NZD)</span><span id="cartTotal" class="text-amber-400">$0.00</span></div>
+        <button onclick="alert('Order submitted to Bangkok Thai Takeaway!')" class="w-full bg-red-700 hover:bg-red-800 text-white py-3 rounded-lg font-bold text-center transition shadow-lg">
           Proceed to Checkout
         </button>
       </div>
@@ -142,35 +139,35 @@
   </div>
 
   <!-- LOCATION & HOURS SECTION -->
-  <section class="bg-gray-100 py-12 border-t mt-12">
+  <section class="bg-zinc-950 py-12 border-t border-zinc-800 mt-12">
     <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
       <div class="space-y-4">
-        <h3 class="text-2xl font-bold text-gray-900">Bangkok Thai Takeaway</h3>
-        <p id="storeAddress" class="text-gray-600 flex items-center">
-          <i class="fa-solid fa-location-dot text-red-700 mr-3 text-lg"></i> Loading address...
+        <h3 class="text-2xl font-bold text-stone-100">Bangkok Thai Takeaway</h3>
+        <p id="storeAddress" class="text-stone-300 flex items-center">
+          <i class="fa-solid fa-location-dot text-amber-400 mr-3 text-lg"></i> Loading address...
         </p>
-        <p id="storePhone" class="text-gray-600 flex items-center">
-          <i class="fa-solid fa-phone text-red-700 mr-3 text-lg"></i> Loading phone...
+        <p id="storePhone" class="text-stone-300 flex items-center">
+          <i class="fa-solid fa-phone text-amber-400 mr-3 text-lg"></i> Loading phone...
         </p>
         <div class="pt-2">
-          <h4 class="font-semibold text-gray-900 mb-2">Opening Hours:</h4>
-          <ul class="text-sm text-gray-600 space-y-1">
-            <li class="flex justify-between max-w-xs"><span>Monday - Saturday:</span> <span class="font-medium text-gray-800">4:30 PM - 9:00 PM</span></li>
-            <li class="flex justify-between max-w-xs"><span>Sunday:</span> <span class="font-medium text-gray-800">Closed</span></li>
+          <h4 class="font-semibold text-stone-200 mb-2">Opening Hours:</h4>
+          <ul class="text-sm text-stone-400 space-y-1">
+            <li class="flex justify-between max-w-xs"><span>Monday - Saturday:</span> <span class="font-medium text-stone-200">4:30 PM - 9:00 PM</span></li>
+            <li class="flex justify-between max-w-xs"><span>Sunday:</span> <span class="font-medium text-stone-200">Closed</span></li>
           </ul>
         </div>
       </div>
-      <div class="bg-gray-300 rounded-2xl h-64 flex items-center justify-center text-gray-500 font-medium shadow-inner">
-        <i class="fa-solid fa-map-location-dot text-4xl mr-3 text-gray-400"></i> Palmerston North Central
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl h-64 flex items-center justify-center text-stone-400 font-medium shadow-inner">
+        <i class="fa-solid fa-map-location-dot text-4xl mr-3 text-amber-500"></i> Palmerston North Central
       </div>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer class="bg-gray-900 text-gray-400 text-xs py-8">
+  <footer class="bg-black text-stone-500 text-xs py-8">
     <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
       <p id="footerStoreInfo">Bangkok Thai Takeaway | Palmerston North, NZ</p>
-      <p>Powered by <strong>RestoSync SaaS</strong> &copy; 2026 TargetedScripts.com</p>
+      <p>Powered by <strong class="text-stone-400">RestoSync SaaS</strong> &copy; 2026 TargetedScripts.com</p>
     </div>
   </footer>
 
@@ -193,13 +190,11 @@
     // 1. Branding Initialization
     function initStoreBranding() {
       if (typeof RESTOSYNC_CONFIG === 'undefined') return;
-      document.getElementById('storeName').innerText = RESTOSYNC_CONFIG.store.name;
-      document.getElementById('bannerStoreName').innerText = RESTOSYNC_CONFIG.store.name;
-      document.getElementById('storeTagline').innerText = RESTOSYNC_CONFIG.store.tagline;
       document.getElementById('bannerTagline').innerText = RESTOSYNC_CONFIG.store.tagline;
-      document.getElementById('storeAddress').innerHTML = `<i class="fa-solid fa-location-dot text-red-700 mr-3 text-lg"></i> ${RESTOSYNC_CONFIG.store.address}`;
-      document.getElementById('storePhone').innerHTML = `<i class="fa-solid fa-phone text-red-700 mr-3 text-lg"></i> ${RESTOSYNC_CONFIG.store.phone}`;
+      document.getElementById('storeAddress').innerHTML = `<i class="fa-solid fa-location-dot text-amber-400 mr-3 text-lg"></i> ${RESTOSYNC_CONFIG.store.address}`;
+      document.getElementById('storePhone').innerHTML = `<i class="fa-solid fa-phone text-amber-400 mr-3 text-lg"></i> ${RESTOSYNC_CONFIG.store.phone}`;
       document.getElementById('storeLogo').src = RESTOSYNC_CONFIG.branding.logo;
+      document.getElementById('heroLogo').src = RESTOSYNC_CONFIG.branding.logo;
       document.getElementById('footerStoreInfo').innerText = `${RESTOSYNC_CONFIG.store.name} | ${RESTOSYNC_CONFIG.store.address} | Phone: ${RESTOSYNC_CONFIG.store.phone}`;
     }
 
@@ -230,7 +225,7 @@
     function renderCategoryPills() {
       const categories = ['ALL', ...new Set(RESTOSYNC_CONFIG.menuItems.map(item => item.category))];
       document.getElementById('categoryPills').innerHTML = categories.map(cat => `
-        <button onclick="filterCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition shadow-sm ${cat === currentCategory ? 'bg-red-700 text-white' : 'bg-white text-gray-700 hover:bg-gray-200'}">
+        <button onclick="filterCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${cat === currentCategory ? 'bg-amber-500 text-zinc-950 border-amber-500' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">
           ${cat}
         </button>
       `).join('');
@@ -249,20 +244,20 @@
         : RESTOSYNC_CONFIG.menuItems.filter(i => i.category === currentCategory);
 
       document.getElementById('menuContainer').innerHTML = items.map(item => `
-        <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition overflow-hidden border border-gray-100 flex flex-col justify-between">
+        <div class="bg-zinc-800 rounded-xl shadow-md hover:shadow-lg transition overflow-hidden border border-zinc-700/60 flex flex-col justify-between">
           <div>
-            ${item.image ? `<img src="${item.image}" alt="${item.name}" class="w-full h-44 object-cover">` : `<div class="w-full h-36 bg-gray-100 flex items-center justify-center text-gray-400 text-xs italic"><i class="fa-solid fa-utensils mr-2"></i> ${RESTOSYNC_CONFIG.store.name}</div>`}
+            ${item.image ? `<img src="${item.image}" alt="${item.name}" class="w-full h-44 object-cover">` : `<div class="w-full h-36 bg-zinc-900 flex items-center justify-center text-stone-500 text-xs italic"><i class="fa-solid fa-utensils mr-2"></i> ${RESTOSYNC_CONFIG.store.name}</div>`}
             <div class="p-4">
               <div class="flex justify-between items-start">
-                <h3 class="font-bold text-gray-900 text-base">${item.id}: ${item.name}</h3>
-                <span class="font-bold text-red-700 text-base">$${item.price.toFixed(2)}</span>
+                <h3 class="font-bold text-stone-100 text-base">${item.id}: ${item.name}</h3>
+                <span class="font-bold text-amber-400 text-base">$${item.price.toFixed(2)}</span>
               </div>
-              <p class="text-xs text-gray-500 mt-1 line-clamp-2">${item.description}</p>
+              <p class="text-xs text-stone-400 mt-1 line-clamp-2">${item.description}</p>
               ${getSpiceBadge(item.spiceLevel)}
             </div>
           </div>
           <div class="p-4 pt-0">
-            <button onclick="addToCart('${item.id}')" class="w-full bg-red-50 hover:bg-red-700 text-red-700 hover:text-white font-semibold py-2 rounded-lg text-xs transition flex items-center justify-center space-x-1">
+            <button onclick="addToCart('${item.id}')" class="w-full bg-red-900/60 hover:bg-red-800 text-amber-300 hover:text-white font-semibold py-2 rounded-lg text-xs transition flex items-center justify-center space-x-1 border border-red-700/50">
               <i class="fa-solid fa-plus"></i> <span>Add to Order</span>
             </button>
           </div>
@@ -304,19 +299,19 @@
 
       const itemsList = document.getElementById('cartItemsList');
       if (cart.length === 0) {
-        itemsList.innerHTML = `<p class="text-center text-gray-400 py-8">Your cart is empty.</p>`;
+        itemsList.innerHTML = `<p class="text-center text-stone-500 py-8">Your cart is empty.</p>`;
       } else {
         itemsList.innerHTML = cart.map(i => `
-          <div class="pt-3 flex justify-between items-center">
+          <div class="pt-3 flex justify-between items-center text-stone-200">
             <div>
-              <h4 class="font-semibold text-sm text-gray-800">${i.id}: ${i.name}</h4>
-              <p class="text-xs text-gray-500">$${i.price.toFixed(2)} each</p>
+              <h4 class="font-semibold text-sm">${i.id}: ${i.name}</h4>
+              <p class="text-xs text-stone-400">$${i.price.toFixed(2)} each</p>
             </div>
             <div class="flex items-center space-x-2">
-              <button onclick="updateCartQty('${i.id}', -1)" class="w-6 h-6 bg-gray-200 text-gray-700 rounded flex items-center justify-center font-bold text-xs">-</button>
+              <button onclick="updateCartQty('${i.id}', -1)" class="w-6 h-6 bg-zinc-800 text-stone-300 rounded flex items-center justify-center font-bold text-xs">-</button>
               <span class="text-xs font-bold px-1">${i.qty}</span>
-              <button onclick="updateCartQty('${i.id}', 1)" class="w-6 h-6 bg-gray-200 text-gray-700 rounded flex items-center justify-center font-bold text-xs">+</button>
-              <span class="text-sm font-bold text-gray-900 w-12 text-right">$${(i.price * i.qty).toFixed(2)}</span>
+              <button onclick="updateCartQty('${i.id}', 1)" class="w-6 h-6 bg-zinc-800 text-stone-300 rounded flex items-center justify-center font-bold text-xs">+</button>
+              <span class="text-sm font-bold text-amber-400 w-12 text-right">$${(i.price * i.qty).toFixed(2)}</span>
             </div>
           </div>
         `).join('');
