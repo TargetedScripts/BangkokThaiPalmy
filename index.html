@@ -18,9 +18,7 @@
 </head>
 <body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen selection:bg-amber-500 selection:text-zinc-950">
 
-  <!-- ========================================== -->
-  <!-- BLOK 1: HEADER CLEAN & RESPONSIVE          -->
-  <!-- ========================================== -->
+  <!-- HEADER CLEAN & PERMANENTLY FIXED -->
   <header id="mainHeader" class="bg-red-800 text-white shadow-xl sticky top-0 z-50 border-b border-red-900/40">
     <div class="max-w-7xl mx-auto px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2">
       
@@ -42,9 +40,7 @@
     </div>
   </header>
 
-  <!-- ========================================== -->
-  <!-- BLOK 2: HERO BANNER CAROUSEL               -->
-  <!-- ========================================== -->
+  <!-- HERO BANNER CAROUSEL -->
   <section id="heroSection" class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden shadow-2xl">
     <div id="heroSlidesContainer" class="relative w-full h-full"></div>
 
@@ -60,16 +56,12 @@
     </div>
   </section>
 
-  <!-- ========================================== -->
-  <!-- BLOK 3: FEATURE HIGHLIGHTS BAR             -->
-  <!-- ========================================== -->
+  <!-- FEATURE HIGHLIGHTS BAR -->
   <section id="highlightsSection" class="max-w-7xl mx-auto px-4 py-4 w-full">
     <div id="highlightsGrid"></div>
   </section>
 
-  <!-- ========================================== -->
-  <!-- BLOK 4: MAIN MENU & DYNAMIC CONTENT BOX    -->
-  <!-- ========================================== -->
+  <!-- MAIN MENU SECTION -->
   <section id="online-menu" class="max-w-7xl mx-auto px-4 py-4 w-full flex-grow">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2 border-b border-zinc-800 pb-4">
       <div>
@@ -77,7 +69,6 @@
         <p id="menuSubTitle" class="text-xs text-stone-400">Select a category below to browse items</p>
       </div>
       
-      <!-- TOGGLE CONTROL SWITCHER -->
       <div class="flex items-center space-x-2">
         <span class="text-xs text-stone-400">Layout Mode:</span>
         <button onclick="toggleUserLayout()" id="layoutSwitchBtn" class="text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-amber-400 border border-zinc-700 px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition shadow-sm">
@@ -87,18 +78,14 @@
       </div>
     </div>
 
-    <!-- CATEGORY PILLS -->
     <div class="sticky top-[61px] z-30 bg-zinc-900/95 backdrop-blur-md py-3 -mx-4 px-4 shadow-lg mb-6 border-b border-zinc-800">
       <div id="categoryPills" class="flex space-x-2 overflow-x-auto no-scrollbar py-1"></div>
     </div>
 
-    <!-- KOTAK KHUSUS DINAMIK (DEDICATED MENU CONTENT BOX) -->
     <div id="menuContentBox" class="w-full"></div>
   </section>
 
-  <!-- ========================================== -->
-  <!-- CART ESTIMATOR MODAL                       -->
-  <!-- ========================================== -->
+  <!-- CART ESTIMATOR MODAL -->
   <div id="cartModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex justify-end">
     <div class="bg-zinc-900 w-full max-w-md h-full flex flex-col shadow-2xl border-l border-zinc-800">
       <div class="p-4 bg-red-800 text-white flex justify-between items-center shadow-md">
@@ -119,9 +106,7 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- BLOK 5: LOCATION & MAPS                    -->
-  <!-- ========================================== -->
+  <!-- LOCATION & MAPS -->
   <section id="locationSection" class="bg-zinc-950 py-12 border-t border-zinc-800 mt-12">
     <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
       <div class="space-y-4">
@@ -146,9 +131,7 @@
     </div>
   </section>
 
-  <!-- ========================================== -->
-  <!-- BLOK 6: FOOTER (DENGAN TAUTAN DEMO ADMIN)  -->
-  <!-- ========================================== -->
+  <!-- FOOTER (WITH DEMO LINKS) -->
   <footer id="footerSection" class="bg-black text-stone-500 text-xs py-8 border-t border-zinc-900">
     <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
       <p id="footerStoreInfo">Bangkok Thai Takeaway | Palmerston North, NZ</p>
