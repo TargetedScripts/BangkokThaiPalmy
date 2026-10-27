@@ -67,9 +67,9 @@
     </div>
   </section>
 
-  <!-- FEATURE HIGHLIGHTS BAR -->
+  <!-- FEATURE HIGHLIGHTS BAR (COMPACT & INDIVIDUAL TOGGLE CONTROL) -->
   <section id="highlightsSection" class="max-w-7xl mx-auto px-4 py-4 w-full">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-center" id="highlightsGrid"></div>
+    <div id="highlightsGrid"></div>
   </section>
 
   <!-- MAIN MENU SECTION -->
@@ -311,25 +311,38 @@
       }
     }
 
+    // RENDER HIGHLIGHTS BAR DINAMIS BERDASARKAN INDIVIDUAL CHECKBOX ADMIN
     function renderHighlightsBar() {
       const section = document.getElementById('highlightsSection');
       const grid = document.getElementById('highlightsGrid');
       const hl = activeConfig.highlights || {};
 
+      // Cek Sakelar Master Global
       if (hl.enabled === false) {
+        section.classList.add('hidden');
+        return;
+      }
+
+      const allItems = [
+        hl.item1 || { enabled: true, title: "Authentic Recipes", sub: "Traditional Thai wok stir-fry" },
+        hl.item2 || { enabled: true, title: "Fast Online Pickup", sub: "Order in seconds" },
+        hl.item3 || { enabled: true, title: "Custom Spice & Veggie", sub: "Tailored spice levels" }
+      ];
+
+      // Saring hanya badge yang di-check (enabled !== false)
+      const activeItems = allItems.filter(i => i.enabled !== false);
+
+      if (activeItems.length === 0) {
         section.classList.add('hidden');
         return;
       }
 
       section.classList.remove('hidden');
 
-      const items = [
-        hl.item1 || { title: "Authentic Recipes", sub: "Traditional Thai wok stir-fry" },
-        hl.item2 || { title: "Fast Online Pickup", sub: "Order in seconds" },
-        hl.item3 || { title: "Custom Spice & Veggie", sub: "Tailored spice levels" }
-      ];
+      // Sesuaikan Grid Column secara otomatis (1, 2, atau 3 kolom)
+      grid.className = `grid grid-cols-1 ${activeItems.length === 2 ? 'md:grid-cols-2' : activeItems.length >= 3 ? 'md:grid-cols-3' : ''} gap-3 text-center`;
 
-      grid.innerHTML = items.map(i => `
+      grid.innerHTML = activeItems.map(i => `
         <div class="bg-zinc-800/80 px-3.5 py-2.5 rounded-xl border border-zinc-700/60 flex items-center space-x-3 shadow-md">
           <div class="w-8 h-8 bg-red-950/80 text-amber-400 rounded-lg flex items-center justify-center flex-shrink-0 text-sm border border-red-800/60">
             <i class="fa-solid fa-star"></i>
@@ -344,7 +357,6 @@
 
     function renderCategoryPills() {
       if (!activeConfig.menuItems) return;
-      // Filter kategori hanya dari item yang isAvailable !== false
       const visibleItems = activeConfig.menuItems.filter(i => i.isAvailable !== false);
       const categories = ['ALL', ...new Set(visibleItems.map(item => item.category))];
       document.getElementById('categoryPills').innerHTML = categories.map(cat => `
@@ -360,11 +372,10 @@
       renderMenu(); 
     }
 
-    // RENDER MENU GRID DENGAN HIRARKI VISIBILITY TERKONTROL
     function renderMenu() {
       if (!activeConfig.menuItems) return;
 
-      // HANYA AMBIL ITEM YANG isAvailable !== false (Hirarki Tertinggi: Status Available)
+      // HANYA AMBIL ITEM YANG isAvailable !== false (Hirarki Status Available)
       const visibleItems = activeConfig.menuItems.filter(i => {
         const matchesCategory = (currentCategory === 'ALL' || i.category === currentCategory);
         const isEnabled = i.isAvailable !== false;
@@ -372,7 +383,6 @@
       });
 
       document.getElementById('menuContainer').innerHTML = visibleItems.map(item => {
-        // Hirarki Kedua: Cek Stock untuk penentuan SOLD OUT
         const isSoldOut = item.stock <= 0;
         const hasPromo = item.promoPrice && item.promoPrice < item.price;
         const finalPrice = hasPromo ? item.promoPrice : item.price;
