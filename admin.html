@@ -132,7 +132,6 @@
 
           <!-- HOLIDAY SURCHARGE & TOTAL CLOSURE -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-zinc-800 text-xs">
-            <!-- Holiday Surcharge -->
             <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-3">
               <label class="flex items-center justify-between cursor-pointer">
                 <span class="font-bold text-amber-300">Enable Holiday Surcharge</span>
@@ -148,7 +147,6 @@
               </div>
             </div>
 
-            <!-- Total Closure / Vacation Notice -->
             <div class="bg-red-950/20 p-4 rounded-xl border border-red-900/40 space-y-3">
               <label class="flex items-center justify-between cursor-pointer">
                 <span class="font-bold text-red-400">Total Closure (Vacation / Holiday)</span>
@@ -160,7 +158,7 @@
               </div>
               <div>
                 <label class="block text-[10px] text-stone-400 mb-1">Notice Message</label>
-                <input type="text" id="cfgClosureMessage" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-stone-100">
+                <input type="text" id="cfgClosureMessage" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-stone-100">
               </div>
               <div>
                 <label class="block text-[10px] text-amber-400 font-semibold mb-1">Re-opening Date</label>
@@ -176,29 +174,51 @@
     <!-- TAB CONTENT 2: THEME & BRANDING -->
     <div id="tabContent-theme" class="tab-panel hidden space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Logo & Size Controller -->
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
           <h2 class="font-bold text-sm text-stone-100 border-b border-zinc-800 pb-3 flex items-center">
-            <i class="fa-solid fa-image text-amber-400 mr-2"></i> Logo Branding
+            <i class="fa-solid fa-image text-amber-400 mr-2"></i> Logo Branding & Compression Upload
           </h2>
           <div class="space-y-3 text-xs">
             <div>
-              <label class="block text-stone-400 mb-1">Logo URL / Path</label>
-              <input type="text" id="cfgLogoUrl" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100">
+              <label class="block text-stone-400 mb-1">Upload New Logo (Auto-Compressed)</label>
+              <input type="file" id="logoFileInput" accept="image/*" onchange="handleLogoUpload(event)" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-2 py-1.5 text-stone-300 file:mr-3 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-amber-500 file:text-zinc-950">
             </div>
             <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 flex flex-col items-center justify-center space-y-2">
               <span class="text-[10px] text-stone-500">LIVE PREVIEW</span>
               <img id="logoPreview" src="" alt="Logo Preview" class="object-contain" style="height: 48px;">
             </div>
+            <div class="flex items-center justify-between bg-zinc-950 p-3 rounded-xl border border-zinc-800">
+              <span class="text-stone-300 font-semibold">Logo Height:</span>
+              <div class="flex items-center space-x-2">
+                <button type="button" onclick="adjustLogoSize(-4)" class="w-7 h-7 bg-zinc-800 hover:bg-zinc-700 text-stone-200 font-bold rounded border border-zinc-700">-</button>
+                <span id="logoSizeDisplay" class="w-12 text-center font-mono font-bold text-amber-400">48px</span>
+                <button type="button" onclick="adjustLogoSize(4)" class="w-7 h-7 bg-zinc-800 hover:bg-zinc-700 text-stone-200 font-bold rounded border border-zinc-700">+</button>
+              </div>
+            </div>
           </div>
         </div>
 
+        <!-- Theme Colors & Sample Output Preview -->
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
           <h2 class="font-bold text-sm text-stone-100 border-b border-zinc-800 pb-3 flex items-center">
-            <i class="fa-solid fa-swatchbook text-amber-400 mr-2"></i> Theme Colors
+            <i class="fa-solid fa-swatchbook text-amber-400 mr-2"></i> Comprehensive Theme Colors & Sample Preview
           </h2>
           <div class="grid grid-cols-2 gap-3 text-xs">
-            <div><label class="block text-stone-400 mb-1">Header Bg</label><input type="color" id="themeHeaderBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
-            <div><label class="block text-amber-400 font-semibold mb-1">Primary Button Bg</label><input type="color" id="themeBtnBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+            <div><label class="block text-stone-400 mb-1">Header Bg</label><input type="color" id="themeHeaderBg" oninput="updateColorPreview()" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+            <div><label class="block text-stone-400 mb-1">Body Bg</label><input type="color" id="themeBodyBg" oninput="updateColorPreview()" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+            <div><label class="block text-stone-400 mb-1">Card Box Bg</label><input type="color" id="themeCardBg" oninput="updateColorPreview()" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+            <div><label class="block text-amber-400 font-semibold mb-1">Primary Button Bg</label><input type="color" id="themeBtnBg" oninput="updateColorPreview()" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+            <div><label class="block text-stone-400 mb-1">Footer Bg</label><input type="color" id="themeFooterBg" oninput="updateColorPreview()" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+          </div>
+
+          <!-- Live Sample Output Box -->
+          <div class="mt-4 pt-3 border-t border-zinc-800">
+            <span class="block text-[10px] text-stone-400 mb-2 font-semibold uppercase tracking-wider">Live Sample Output Preview:</span>
+            <div id="themeSampleBox" class="p-4 rounded-xl border border-zinc-700 shadow-inner transition-all space-y-2">
+              <div class="text-xs font-bold" id="sampleHeaderTxt">Sample Header Bar</div>
+              <div class="p-2 rounded text-xs font-medium" id="sampleCardTxt">Sample Card Box with Button <span class="px-2 py-1 rounded font-bold ml-2" id="sampleBtnTxt">Button</span></div>
+            </div>
           </div>
         </div>
       </div>
@@ -209,7 +229,7 @@
       <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
         <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
           <h2 class="font-bold text-sm text-stone-100 flex items-center">
-            <i class="fa-solid fa-utensils text-amber-400 mr-2"></i> Menu Items & Availability
+            <i class="fa-solid fa-utensils text-amber-400 mr-2"></i> Menu Catalogue & Item Management
           </h2>
           <button onclick="openAddMenuModal()" class="bg-zinc-800 hover:bg-zinc-700 text-amber-400 font-semibold px-3 py-1.5 rounded-lg text-xs border border-zinc-700 transition">
             <i class="fa-solid fa-plus mr-1"></i> Add New Menu Item
@@ -220,10 +240,12 @@
           <table class="w-full text-left text-xs text-stone-300">
             <thead class="bg-zinc-950 text-stone-400 border-b border-zinc-800 uppercase font-semibold">
               <tr>
+                <th class="py-3 px-2 text-center">Hero</th>
+                <th class="py-3 px-2 text-center">Fav</th>
                 <th class="py-3 px-3">ID / Name</th>
                 <th class="py-3 px-3">Category</th>
-                <th class="py-3 px-3">Price</th>
-                <th class="py-3 px-3">Promo Price</th>
+                <th class="py-3 px-3">Price / Promo</th>
+                <th class="py-3 px-3 text-center">Spice</th>
                 <th class="py-3 px-3 text-center">Action</th>
               </tr>
             </thead>
@@ -233,25 +255,34 @@
       </div>
     </div>
 
-    <!-- TAB CONTENT 4: MASTER SYSTEM CONSOLE (OWNER EXCLUSIVE) -->
+    <!-- TAB CONTENT 4: MASTER SYSTEM CONSOLE (SYSTEM ADMIN / OWNER) -->
     <div id="tabContent-console" class="tab-panel hidden space-y-6">
       <div class="bg-zinc-900 border border-amber-500/30 rounded-2xl p-5 shadow-lg space-y-4">
         <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
           <h2 class="font-bold text-sm text-amber-400 flex items-center">
-            <i class="fa-solid fa-terminal mr-2"></i> Master System Console (Owner & Super Admin)
+            <i class="fa-solid fa-terminal mr-2"></i> Master System Console (System Admin / Owner)
           </h2>
-          <span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded">SECURE ISOLATED</span>
-        </div>
-        <p class="text-xs text-stone-400">Monitor cross-tenant Firestore synchronization, inspect live backend JSON states, and audit license metrics.</p>
-        
-        <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 font-mono text-xs text-emerald-400 h-64 overflow-y-auto" id="systemConsoleLog">
-          [System] Initializing RestoSync SaaS Owner Terminal...<br>
+          <span id="tenantLockStatusBadge" class="text-[10px] font-extrabold px-2.5 py-1 rounded uppercase tracking-wider">STATUS: ACTIVE</span>
         </div>
 
-        <div class="flex justify-end space-x-3 pt-2">
-          <button onclick="navigator.clipboard.writeText(JSON.stringify(activeConfig, null, 2)); alert('Config copied to clipboard!');" class="bg-zinc-800 hover:bg-zinc-700 text-stone-200 text-xs font-bold px-4 py-2 rounded-lg border border-zinc-700 transition">
-            <i class="fa-solid fa-copy mr-1.5"></i> Copy Raw JSON State
-          </button>
+        <!-- Tenant Contract & License Details -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs bg-zinc-950 p-4 rounded-xl border border-zinc-800">
+          <div class="space-y-2">
+            <div><label class="block text-stone-400 text-[10px]">Tenant Name</label><input type="text" id="sysTenantName" class="w-full bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-stone-100 font-semibold"></div>
+            <div><label class="block text-stone-400 text-[10px]">Email Contact</label><input type="email" id="sysEmail" class="w-full bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-stone-100"></div>
+            <div><label class="block text-stone-400 text-[10px]">Phone Number</label><input type="text" id="sysPhone" class="w-full bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-stone-100"></div>
+          </div>
+          <div class="space-y-2">
+            <div><label class="block text-stone-400 text-[10px]">Contract Number</label><input type="text" id="sysContractNo" class="w-full bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-stone-100 font-mono"></div>
+            <div><label class="block text-stone-400 text-[10px]">Contract Expiry Date</label><input type="date" id="sysExpiryDate" class="w-full bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-amber-400 font-bold"></div>
+            <div class="pt-2 flex items-center space-x-2">
+              <button onclick="toggleTenantLock()" id="lockUnlockBtn" class="px-4 py-1.5 rounded text-xs font-bold transition"></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 font-mono text-xs text-emerald-400 h-40 overflow-y-auto" id="systemConsoleLog">
+          [System Console] Initializing secure multi-tenant monitor...<br>
         </div>
       </div>
     </div>
@@ -273,11 +304,29 @@
         </div>
         <div><label class="block text-stone-400 mb-1">Menu Name</label><input type="text" id="mName" required class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100"></div>
         <div><label class="block text-stone-400 mb-1">Description</label><textarea id="mDescription" rows="2" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100"></textarea></div>
-        <div class="grid grid-cols-2 gap-3">
+        
+        <div class="grid grid-cols-2 gap-3 bg-zinc-950 p-3 rounded-xl border border-zinc-800">
           <div><label class="block text-stone-300 mb-1">Normal Price ($)</label><input type="number" step="0.01" id="mPrice" required class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-amber-400 font-bold"></div>
           <div><label class="block text-amber-400 mb-1">Promo Price ($)</label><input type="number" step="0.01" id="mPromoPrice" class="w-full bg-zinc-800 border border-amber-500/50 rounded-lg px-3 py-2 text-amber-300 font-bold"></div>
         </div>
-        <div><label class="block text-stone-400 mb-1">Image URL</label><input type="text" id="mImage" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100 font-mono"></div>
+
+        <div class="grid grid-cols-3 gap-3">
+          <div class="bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-xl flex items-center justify-between">
+            <span class="font-bold text-amber-300">Hero Banner</span>
+            <input type="checkbox" id="mIsHero" class="w-4 h-4 accent-amber-500 rounded">
+          </div>
+          <div class="bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-xl flex items-center justify-between">
+            <span class="font-bold text-amber-300">Favorite</span>
+            <input type="checkbox" id="mIsFavorite" class="w-4 h-4 accent-amber-500 rounded">
+          </div>
+          <div>
+            <label class="block text-stone-400 mb-1">Spice Level (0-3)</label>
+            <input type="number" min="0" max="3" id="mSpice" value="0" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100">
+          </div>
+        </div>
+
+        <div><label class="block text-stone-400 mb-1">Image URL / Path</label><input type="text" id="mImage" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100 font-mono"></div>
+        
         <div class="pt-3 flex justify-end space-x-2">
           <button type="button" onclick="closeMenuModal()" class="px-4 py-2 rounded-lg bg-zinc-800 text-stone-300">Cancel</button>
           <button type="submit" class="px-5 py-2 rounded-lg bg-amber-500 text-zinc-950 font-bold">Save Item</button>
@@ -309,23 +358,25 @@
     const TENANT_ID = urlParams.get('tenant') || 'bangkokthaipalmy';
 
     let activeConfig = {};
+    let currentLogoHeight = 48;
 
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('activeTenantBadge').innerText = `Tenant: ${TENANT_ID}`;
       document.getElementById('liveStoreLink').href = `index.html?tenant=${TENANT_ID}`;
-      logConsole(`Connecting to Firestore for tenant ID: ${TENANT_ID}...`);
+      logConsole(`Connecting to Firestore for tenant: ${TENANT_ID}`);
 
       db.collection("tenants").doc(TENANT_ID).onSnapshot((doc) => {
         if (doc.exists && doc.data().config) {
           activeConfig = doc.data().config;
-          logConsole(`Success: Tenant data loaded from Firestore.`);
+          logConsole(`Tenant data synchronized successfully.`);
           populateAdminForm();
           renderAdminMenuTable();
+          updateColorPreview();
         } else {
-          logConsole(`Error: Tenant document '${TENANT_ID}' not found in Firestore.`);
+          logConsole(`Tenant '${TENANT_ID}' not found in Firestore.`);
         }
       }, (error) => {
-        logConsole(`Firebase sync error: ${error.message}`);
+        logConsole(`Sync error: ${error.message}`);
       });
     });
 
@@ -357,13 +408,13 @@
         desc.innerText = "Configure restaurant profile, flexible daily opening hours, holiday surcharges, and total closures.";
       } else if (tabId === 'theme') {
         title.innerText = "Store Setup & Theme Customization";
-        desc.innerText = "Configure logo paths and theme colors.";
+        desc.innerText = "Manage logo uploads, resize controls, and comprehensive theme colors with live output preview.";
       } else if (tabId === 'menu') {
         title.innerText = "Menu Catalogue & Item Management";
-        desc.innerText = "Manage food categories, pricing, stock levels, and promo prices.";
+        desc.innerText = "Manage categories, prices, promo prices, hero banner triggers, favorites, and spice levels.";
       } else if (tabId === 'console') {
-        title.innerText = "Master System Console";
-        desc.innerText = "Monitor real-time system connections, logs, and backend JSON states.";
+        title.innerText = "Master System Console (System Admin)";
+        desc.innerText = "Monitor contract expiry dates, email notifications, and Lock/Unlock status.";
       }
     }
 
@@ -388,34 +439,125 @@
       document.getElementById('cfgSurchargePercent').value = op.surchargePercent || 15;
       document.getElementById('cfgIsTotallyClosed').checked = op.isTotallyClosed === true;
       document.getElementById('cfgClosureTitle').value = op.closureTitle || 'Store Closed for Holidays';
-      document.getElementById('cfgClosureMessage').value = op.closureMessage || 'We are currently away on holidays.';
+      document.getElementById('cfgClosureMessage').value = op.closureMessage || 'We are currently away.';
       document.getElementById('cfgReopenDate').value = op.reopenDate || '';
 
-      const logoUrl = activeConfig.branding?.logo || '';
-      document.getElementById('cfgLogoUrl').value = logoUrl;
-      document.getElementById('logoPreview').src = logoUrl;
+      const branding = activeConfig.branding || {};
+      currentLogoHeight = branding.logoHeight || 48;
+      document.getElementById('logoPreview').src = branding.logo || '';
+      document.getElementById('logoSizeDisplay').innerText = `${currentLogoHeight}px`;
+      document.getElementById('logoPreview').style.height = `${currentLogoHeight}px`;
 
       const theme = activeConfig.theme || {};
       document.getElementById('themeHeaderBg').value = theme.headerBg || '#000000';
+      document.getElementById('themeBodyBg').value = theme.bodyBg || '#18181b';
+      document.getElementById('themeCardBg').value = theme.cardBg || '#27272a';
       document.getElementById('themeBtnBg').value = theme.btnBg || '#f59e0b';
+      document.getElementById('themeFooterBg').value = theme.footerBg || '#000000';
+
+      const contract = activeConfig.contract || {};
+      document.getElementById('sysTenantName').value = activeConfig.store.name || '';
+      document.getElementById('sysEmail').value = contract.email || 'manager@restaurant.co.nz';
+      document.getElementById('sysPhone').value = activeConfig.store.phone || '';
+      document.getElementById('sysContractNo').value = contract.contractNo || 'RS-2026-001';
+      document.getElementById('sysExpiryDate').value = contract.expiryDate || '2026-12-31';
+
+      const isLocked = contract.isLocked === true;
+      const badge = document.getElementById('tenantLockStatusBadge');
+      const btn = document.getElementById('lockUnlockBtn');
+      if (isLocked) {
+        badge.innerText = "STATUS: LOCKED / DISABLED";
+        badge.className = "text-[10px] font-extrabold px-2.5 py-1 rounded uppercase tracking-wider bg-red-950 text-red-400 border border-red-800";
+        btn.innerText = "Unlock Tenant Access";
+        btn.className = "bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-1.5 rounded text-xs transition";
+      } else {
+        badge.innerText = "STATUS: ACTIVE";
+        badge.className = "text-[10px] font-extrabold px-2.5 py-1 rounded uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-800";
+        btn.innerText = "Lock / Disable Tenant";
+        btn.className = "bg-red-700 hover:bg-red-600 text-white font-bold px-4 py-1.5 rounded text-xs transition";
+      }
+    }
+
+    function updateColorPreview() {
+      const hBg = document.getElementById('themeHeaderBg').value;
+      const bBg = document.getElementById('themeBodyBg').value;
+      const cBg = document.getElementById('themeCardBg').value;
+      const btnBg = document.getElementById('themeBtnBg').value;
+      const fBg = document.getElementById('themeFooterBg').value;
+
+      const sampleBox = document.getElementById('themeSampleBox');
+      const sampleH = document.getElementById('sampleHeaderTxt');
+      const sampleC = document.getElementById('sampleCardTxt');
+      const sampleBtn = document.getElementById('sampleBtnTxt');
+
+      if (sampleBox) sampleBox.style.backgroundColor = bBg;
+      if (sampleH) sampleH.style.backgroundColor = hBg;
+      if (sampleC) sampleC.style.backgroundColor = cBg;
+      if (sampleBtn) sampleBtn.style.backgroundColor = btnBg;
+    }
+
+    function handleLogoUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 250;
+          let w = img.width, h = img.height;
+          if (w > h && w > maxDim) { h *= maxDim / w; w = maxDim; }
+          else if (h > maxDim) { w *= maxDim / h; h = maxDim; }
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressedDataUrl = canvas.toDataURL('image/png', 0.85);
+          document.getElementById('logoPreview').src = compressedDataUrl;
+          if (!activeConfig.branding) activeConfig.branding = {};
+          activeConfig.branding.logo = compressedDataUrl;
+          logConsole("Logo compressed and updated locally.");
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function adjustLogoSize(delta) {
+      currentLogoHeight = Math.max(24, Math.min(100, currentLogoHeight + delta));
+      document.getElementById('logoPreview').style.height = `${currentLogoHeight}px`;
+      document.getElementById('logoSizeDisplay').innerText = `${currentLogoHeight}px`;
+      if (!activeConfig.branding) activeConfig.branding = {};
+      activeConfig.branding.logoHeight = currentLogoHeight;
     }
 
     function renderAdminMenuTable() {
       const tbody = document.getElementById('adminMenuTableBody');
       const items = activeConfig.menuItems || [];
       if (items.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-stone-500">No menu items found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-6 text-stone-500">No menu items found.</td></tr>`;
         return;
       }
 
       tbody.innerHTML = items.map((item, idx) => {
         const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
+        const isHero = item.isHero === true;
+        const isFav = item.isFavorite === true;
+
         return `
           <tr class="hover:bg-zinc-800/40 transition">
+            <td class="py-3 px-2 text-center">
+              <span class="${isHero ? 'text-amber-400 font-bold' : 'text-stone-600'}"><i class="fa-solid fa-star"></i></span>
+            </td>
+            <td class="py-3 px-2 text-center">
+              <span class="${isFav ? 'text-amber-400 font-bold' : 'text-stone-600'}"><i class="fa-solid fa-heart"></i></span>
+            </td>
             <td class="py-3 px-3 font-bold text-stone-100">${item.id}: ${item.name}</td>
             <td class="py-3 px-3 text-stone-400">${item.category}</td>
-            <td class="py-3 px-3 font-semibold ${hasPromo ? 'line-through text-stone-500' : 'text-stone-200'}">$${Number(item.price).toFixed(2)}</td>
-            <td class="py-3 px-3">${hasPromo ? `<span class="font-bold text-amber-400">$${Number(item.promoPrice).toFixed(2)}</span>` : '<span class="text-stone-500">-</span>'}</td>
+            <td class="py-3 px-3">
+              <span class="${hasPromo ? 'line-through text-stone-500 mr-2' : 'text-stone-200'}">$${Number(item.price).toFixed(2)}</span>
+              ${hasPromo ? `<span class="font-bold text-amber-400">$${Number(item.promoPrice).toFixed(2)}</span>` : ''}
+            </td>
+            <td class="py-3 px-3 text-center text-amber-300 font-mono">${item.spiceLevel || 0}</td>
             <td class="py-3 px-3 text-center space-x-2">
               <button onclick="openEditMenuModal(${idx})" class="text-amber-400 hover:text-amber-300 text-xs"><i class="fa-solid fa-pen-to-square"></i></button>
               <button onclick="deleteMenuItem(${idx})" class="text-red-400 hover:text-red-300 text-xs"><i class="fa-solid fa-trash"></i></button>
@@ -423,6 +565,13 @@
           </tr>
         `;
       }).join('');
+    }
+
+    function toggleTenantLock() {
+      if (!activeConfig.contract) activeConfig.contract = {};
+      activeConfig.contract.isLocked = !activeConfig.contract.isLocked;
+      populateAdminForm();
+      logConsole(`Tenant lock status toggled. Click 'Save All Changes' to apply.`);
     }
 
     async function saveAllChanges() {
@@ -449,19 +598,27 @@
       };
 
       if (!activeConfig.branding) activeConfig.branding = {};
-      activeConfig.branding.logo = document.getElementById('cfgLogoUrl').value;
+      activeConfig.branding.logoHeight = currentLogoHeight;
 
       activeConfig.theme = {
         headerBg: document.getElementById('themeHeaderBg').value,
-        btnBg: document.getElementById('themeBtnBg').value
+        bodyBg: document.getElementById('themeBodyBg').value,
+        cardBg: document.getElementById('themeCardBg').value,
+        btnBg: document.getElementById('themeBtnBg').value,
+        footerBg: document.getElementById('themeFooterBg').value
       };
+
+      if (!activeConfig.contract) activeConfig.contract = {};
+      activeConfig.contract.email = document.getElementById('sysEmail').value;
+      activeConfig.contract.contractNo = document.getElementById('sysContractNo').value;
+      activeConfig.contract.expiryDate = document.getElementById('sysExpiryDate').value;
 
       try {
         await db.collection("tenants").doc(TENANT_ID).set({
           config: activeConfig,
           lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
         }, { merge: true });
-        logConsole(`Successfully saved changes to Firestore for tenant: ${TENANT_ID}`);
+        logConsole(`Successfully saved changes to Firestore.`);
         alert('Perubahan berhasil disimpan ke Cloud Firebase!');
       } catch (error) {
         logConsole(`Error saving to Firestore: ${error.message}`);
@@ -487,6 +644,9 @@
       document.getElementById('mDescription').value = item.description || '';
       document.getElementById('mPrice').value = item.price;
       document.getElementById('mPromoPrice').value = item.promoPrice || '';
+      document.getElementById('mIsHero').checked = item.isHero === true;
+      document.getElementById('mIsFavorite').checked = item.isFavorite === true;
+      document.getElementById('mSpice').value = item.spiceLevel || 0;
       document.getElementById('mImage').value = item.image || '';
       document.getElementById('menuModal').classList.remove('hidden');
     }
@@ -507,28 +667,28 @@
         description: document.getElementById('mDescription').value,
         price: parseFloat(document.getElementById('mPrice').value) || 0,
         promoPrice: !isNaN(promoVal) && promoVal > 0 ? promoVal : null,
+        isHero: document.getElementById('mIsHero').checked,
+        isFavorite: document.getElementById('mIsFavorite').checked,
+        spiceLevel: parseInt(document.getElementById('mSpice').value) || 0,
         image: document.getElementById('mImage').value,
         stock: 50,
         isAvailable: true
       };
 
       if (!activeConfig.menuItems) activeConfig.menuItems = [];
-      if (idx === -1) {
-        activeConfig.menuItems.push(newItem);
-      } else {
-        activeConfig.menuItems[idx] = newItem;
-      }
+      if (idx === -1) { activeConfig.menuItems.push(newItem); } 
+      else { activeConfig.menuItems[idx] = newItem; }
 
       closeMenuModal();
       renderAdminMenuTable();
-      logConsole(`Menu item updated locally. Click 'Save All Changes' to sync with Firebase.`);
+      logConsole(`Menu item saved locally. Click 'Save All Changes' to sync.`);
     }
 
     function deleteMenuItem(idx) {
-      if (confirm(`Delete item "${activeConfig.menuItems[idx].name}"?`)) {
+      if (confirm(`Delete "${activeConfig.menuItems[idx].name}"?`)) {
         activeConfig.menuItems.splice(idx, 1);
         renderAdminMenuTable();
-        logConsole(`Menu item deleted locally. Click 'Save All Changes' to sync.`);
+        logConsole(`Menu item deleted locally.`);
       }
     }
 
