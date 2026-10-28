@@ -38,8 +38,8 @@
 <body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen selection:bg-amber-500 selection:text-zinc-950">
 
   <!-- HEADER FULL-WIDTH -->
-  <header id="mainHeader" class="bg-red-800 text-white shadow-xl sticky top-0 z-50 border-b border-red-900/40 w-full">
-    <div class="w-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-4">
+  <header id="mainHeader" class="text-white shadow-xl sticky top-0 z-50 border-b border-zinc-800/60 w-full"> 
+       <div class="w-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-4">
       
       <!-- LOGO AREA -->
       <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
@@ -242,59 +242,61 @@
 
     /* MENERAPKAN WARNA DINAMIS SECARA FLEKSIBEL 100% */
     function applyCustomTheme() {
-      const theme = activeConfig.theme || {};
-      const branding = activeConfig.branding || {};
+    const theme = activeConfig.theme || {};
+    const branding = activeConfig.branding || {};
 
-      const logoImg = document.getElementById('storeLogo');
-      if (logoImg && branding.logoHeight) {
+    // Logo Height
+    const logoImg = document.getElementById('storeLogo');
+    if (logoImg && branding.logoHeight) {
         logoImg.style.height = `${branding.logoHeight}px`;
-      }
-
-      const header = document.getElementById('mainHeader');
-      if (header && theme.headerBg) header.style.backgroundColor = theme.headerBg;
-      
-      const logoText = document.getElementById('headerLogoText');
-      if (logoText && theme.headerText) logoText.style.color = theme.headerText;
-
-      const body = document.getElementById('mainBody');
-      if (body && theme.bodyBg) body.style.backgroundColor = theme.bodyBg;
-
-      const title1 = document.getElementById('menuMainTitle');
-      const heroTagTitle = document.getElementById('heroTaglineTitle');
-      if (theme.title1) {
-        if (title1) title1.style.color = theme.title1;
-        if (heroTagTitle) heroTagTitle.style.color = theme.title1;
-      }
-
-      const title2 = document.getElementById('menuSubTitle');
-      if (title2 && theme.title2) title2.style.color = theme.title2;
-
-      // Primary Button Styles (Cart & Explore)
-      const cartBtn = document.getElementById('cartBtn');
-      if (cartBtn && theme.btnBg) {
-        cartBtn.style.backgroundColor = theme.btnBg;
-        cartBtn.style.color = theme.btnText || '#000000';
-      }
-
-      const exploreBtn = document.getElementById('exploreBtn');
-      if (exploreBtn && theme.btnBg) {
-        exploreBtn.style.backgroundColor = theme.btnBg;
-        exploreBtn.style.color = theme.btnText || '#000000';
-      }
-
-      const checkoutBtn = document.getElementById('checkoutBtn');
-      if (checkoutBtn && theme.btnBg) {
-        checkoutBtn.style.backgroundColor = theme.btnBg;
-        checkoutBtn.style.color = theme.btnText || '#000000';
-      }
-
-      const footer = document.getElementById('footerSection');
-      if (footer && theme.footerBg) {
-        footer.style.backgroundColor = theme.footerBg;
-        if (theme.footerText) footer.style.color = theme.footerText;
-      }
     }
 
+  // Header Background & Text
+  const header = document.getElementById('mainHeader');
+  if (header) {
+    if (theme.headerBg) {
+      header.style.backgroundColor = theme.headerBg;
+      // Garis border bawah header menyesuaikan ke Hitam/Gelap atau transparan
+      header.style.borderColor = theme.headerBg === '#000000' || theme.headerBg === '#18181b' 
+        ? '#27272a' 
+        : 'rgba(255, 255, 255, 0.1)';
+    }
+  }
+  
+  const logoText = document.getElementById('headerLogoText');
+  if (logoText && theme.headerText) logoText.style.color = theme.headerText;
+
+  // Body Background
+  const body = document.getElementById('mainBody');
+  if (body && theme.bodyBg) body.style.backgroundColor = theme.bodyBg;
+
+  // Title Colors
+  const title1 = document.getElementById('menuMainTitle');
+  const heroTagTitle = document.getElementById('heroTaglineTitle');
+  if (theme.title1) {
+    if (title1) title1.style.color = theme.title1;
+    if (heroTagTitle) heroTagTitle.style.color = theme.title1;
+  }
+
+  const title2 = document.getElementById('menuSubTitle');
+  if (title2 && theme.title2) title2.style.color = theme.title2;
+
+  // Primary Buttons (Cart, Explore, Checkout)
+  ['cartBtn', 'exploreBtn', 'checkoutBtn'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn && theme.btnBg) {
+      btn.style.backgroundColor = theme.btnBg;
+      btn.style.color = theme.btnText || '#000000';
+    }
+  });
+
+  // Footer Background & Text
+  const footer = document.getElementById('footerSection');
+  if (footer && theme.footerBg) {
+    footer.style.backgroundColor = theme.footerBg;
+    if (theme.footerText) footer.style.color = theme.footerText;
+  }
+}
     function initStoreBranding() {
       if (!activeConfig.store) return;
       document.getElementById('bannerTagline').innerText = activeConfig.store.tagline || '';
