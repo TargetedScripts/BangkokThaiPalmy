@@ -583,7 +583,7 @@
     function handleCheckoutAction() { alert('Order submitted!'); }
   </script>
 
-  <!-- FIREBASE REAL-TIME SYNC (OTOMATIS UPDATE DI HP PEMBELI) -->
+  <!-- FIREBASE REAL-TIME SYNC (TANPA KEDIP-KEDIP) -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -603,8 +603,13 @@
 
     db.collection("tenants").doc(TENANT_ID).onSnapshot((doc) => {
       if (doc.exists && doc.data().config) {
-        console.log("Update diterima dari Cloud! Menyegarkan halaman otomatis...");
-        location.reload();
+        const liveConfig = doc.data().config;
+        console.log("Data real-time diterima dari Cloud Firebase!");
+        
+        activeConfig = liveConfig;
+        if (typeof initStoreBranding === 'function') initStoreBranding();
+        if (typeof renderMenuContentBox === 'function') renderMenuContentBox();
+        if (typeof checkStoreStatusAndNotice === 'function') checkStoreStatusAndNotice();
       }
     }, (error) => {
       console.error("Gagal mendengarkan update Firebase:", error);
