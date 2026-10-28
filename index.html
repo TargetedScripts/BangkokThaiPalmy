@@ -11,23 +11,10 @@
     .hero-slide { transition: opacity 1s ease-in-out; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .strike-red-diagonal { position: relative; display: inline-block; color: #a1a1aa; font-weight: 700; }
-    .strike-red-diagonal::after { content: ""; position: absolute; left: -3px; right: -3px; top: 50%; height: 3px; background: #ef4444; transform: translateY(-50%) rotate(-12deg); pointer-events: none; }
-    
-    /* Otomatis Invert Logo di Hero Banner Menjadi Putih Bersih */
     .hero-logo-invert { filter: brightness(0) invert(1); }
   </style>
 </head>
 <body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen pb-16">
-
-  <!-- LICENSE SUSPENDED MODAL (Bypassed for testing) -->
-  <div id="licenseSuspendedScreen" class="fixed inset-0 bg-zinc-950 z-[100] hidden flex items-center justify-center p-6 text-center">
-    <div class="bg-zinc-900 border border-red-900/50 p-8 rounded-3xl max-w-md shadow-2xl space-y-4">
-      <div class="w-16 h-16 bg-red-950 text-red-500 rounded-full flex items-center justify-center mx-auto text-2xl"><i class="fa-solid fa-lock"></i></div>
-      <h2 class="text-2xl font-black text-white">Store Access Suspended</h2>
-      <p class="text-xs text-stone-400 leading-relaxed" id="suspendReason">Lisensi langganan kedaluwarsa.</p>
-    </div>
-  </div>
 
   <!-- HEADER -->
   <header id="mainHeader" class="sticky top-0 z-50 border-b border-zinc-800/60 w-full bg-black"> 
@@ -51,11 +38,10 @@
     </div>
   </div>
 
-  <!-- HERO BANNER (DENGAN LOGO INVERT PUTIH) -->
+  <!-- HERO BANNER & IMAGE SLIDER -->
   <section class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden">
-    <div id="heroSlidesContainer" class="relative w-full h-full"></div>
-    <div id="heroOverlayDiv" class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/50 to-black/70 flex flex-col justify-center items-center text-center p-6 text-white">
-      <!-- Logo otomatis invert menjadi putih di banner -->
+    <div id="heroSlidesContainer" class="absolute inset-0 w-full h-full"></div>
+    <div id="heroOverlayDiv" class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/50 to-black/70 flex flex-col justify-center items-center text-center p-6 text-white z-10">
       <img id="heroLogoInvert" src="" alt="Logo" class="w-auto object-contain mb-3 hero-logo-invert" style="height: 72px;">
       <h2 id="heroTaglineTitle" class="text-2xl md:text-3xl font-extrabold tracking-widest uppercase mb-2">Store Name</h2>
       <p id="bannerTagline" class="text-sm text-stone-300 mb-6">Authentic flavours cooked fresh.</p>
@@ -86,13 +72,26 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer id="mainFooter" class="text-xs py-10 border-t border-zinc-800 mt-12 bg-black">
+  <!-- FOOTER (DENGAN OPERATING HOURS & TESTING LINKS) -->
+  <footer id="mainFooter" class="text-xs py-10 border-t border-zinc-800 mt-12 bg-black text-stone-400">
     <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
       <div>
-        <h4 id="footerStoreName" class="font-bold text-sm mb-2">Store Name</h4>
+        <h4 id="footerStoreName" class="font-bold text-sm mb-2 text-stone-200">Store Name</h4>
         <p id="footerAddress" class="mb-1">Address...</p>
-        <p>Phone: <a id="footerPhone" href="#" class="underline">Phone...</a></p>
+        <p class="mb-1">Phone: <a id="footerPhone" href="#" class="underline">Phone...</a></p>
+      </div>
+      <div>
+        <h4 class="font-bold text-sm mb-2 text-stone-200"><i class="fa-solid fa-clock mr-1.5 text-amber-400"></i> Operating Hours</h4>
+        <div id="footerOperatingHours" class="space-y-1 text-[11px]">
+          <p>Loading hours...</p>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-bold text-sm mb-2 text-stone-200"><i class="fa-solid fa-toolbox mr-1.5 text-amber-400"></i> Quick Links (Testing Mode)</h4>
+        <div class="flex flex-col space-y-1.5 text-[11px]">
+          <a href="admin.html" class="text-amber-400 hover:underline"><i class="fa-solid fa-user-gear mr-1"></i> Open Manager Portal (Admin)</a>
+          <a href="system-console.html" class="text-amber-400 hover:underline"><i class="fa-solid fa-terminal mr-1"></i> Open System Operator Console</a>
+        </div>
       </div>
     </div>
   </footer>
@@ -114,18 +113,17 @@
 
     const urlParams = new URLSearchParams(window.location.search);
     const TENANT_ID = urlParams.get('tenant') || 'bangkokthaipalmy';
-    let activeConfig = {}, currentFilter = 'ALL', cart = [];
+    let activeConfig = {}, currentFilter = 'ALL', cart = [], currentSlide = 0, slideInterval;
 
     document.addEventListener('DOMContentLoaded', () => {
       db.collection("tenants").doc(TENANT_ID).onSnapshot((doc) => {
         if (doc.exists && doc.data().config) {
           activeConfig = doc.data().config;
-          
-          // Bypass sementara untuk testing di HP
           if (!validateAESLicense(activeConfig.licenseToken)) return;
 
           applyThemeEngine();
           initStoreBranding();
+          initHeroSlider();
           renderHighlightsBar();
           renderCategoryPills();
           renderMenuContentBox();
@@ -133,17 +131,8 @@
       });
     });
 
-    function validateAESLicense(token) {
-      // Bypass aktif agar langsung bisa dibuka di HP tanpa kendala status suspended
-      return true; 
-    }
+    function validateAESLicense(token) { return true; } // Bypass untuk testing di HP
 
-    function triggerSuspension(msg) {
-      document.getElementById('suspendReason').innerText = msg;
-      document.getElementById('licenseSuspendedScreen').classList.remove('hidden');
-    }
-
-    // Terapkan Tema Warna Menyeluruh ke Semua Elemen Website
     function applyThemeEngine() {
       const th = activeConfig.theme || {};
       document.getElementById('mainHeader').style.backgroundColor = th.headerBg || '#000000';
@@ -166,10 +155,46 @@
       document.getElementById('footerStoreName').innerText = store.name || 'Store Name';
       document.getElementById('footerAddress').innerText = store.address || '';
       document.getElementById('footerPhone').innerText = store.phone || '';
+      document.getElementById('footerPhone').href = `tel:${store.phone || ''}`;
+
+      // Render Operating Hours di Footer
+      const op = activeConfig.operatingHours || {};
+      const hoursHtml = Object.keys(op).map(day => `<div class="flex justify-between capitalize"><span>${day}:</span><span class="text-stone-200">${op[day]}</span></div>`).join('');
+      document.getElementById('footerOperatingHours').innerHTML = hoursHtml || '<p>Hours not set</p>';
 
       if (branding.logo) {
         document.getElementById('storeLogo').src = branding.logo;
-        document.getElementById('heroLogoInvert').src = branding.logo; // Otomatis putih di banner
+        document.getElementById('heroLogoInvert').src = branding.logo;
+      }
+    }
+
+    function initHeroSlider() {
+      const container = document.getElementById('heroSlidesContainer');
+      const items = (activeConfig.menuItems || []).filter(i => i.isHero && i.image);
+      
+      // Fallback gambar default jika belum ada menu hero ber-gambar
+      const slides = items.length > 0 ? items.map(i => i.image) : [
+        'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=1200&q=80'
+      ];
+
+      container.innerHTML = slides.map((img, idx) => `
+        <div class="hero-slide absolute inset-0 w-full h-full ${idx === 0 ? 'opacity-100' : 'opacity-0'}">
+          <img src="${img}" class="w-full h-full object-cover">
+        </div>
+      `).join('');
+
+      if (slides.length > 1) {
+        if (slideInterval) clearInterval(slideInterval);
+        slideInterval = setInterval(() => {
+          const slideElements = container.querySelectorAll('.hero-slide');
+          if (slideElements.length === 0) return;
+          slideElements[currentSlide].classList.remove('opacity-100');
+          slideElements[currentSlide].classList.add('opacity-0');
+          currentSlide = (currentSlide + 1) % slideElements.length;
+          slideElements[currentSlide].classList.remove('opacity-0');
+          slideElements[currentSlide].classList.add('opacity-100');
+        }, 4000);
       }
     }
 
