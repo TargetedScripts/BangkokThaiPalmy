@@ -26,7 +26,6 @@
         <span id="headerTitle" class="font-bold text-lg uppercase tracking-wider text-amber-300">TAKEAWAY</span>
       </div>
       <div class="flex items-center space-x-2">
-        <!-- View Mode Switcher (Grid vs Classic) -->
         <button onclick="toggleViewMode()" id="viewModeBtn" class="bg-zinc-800 text-stone-300 px-3 py-2 rounded-lg text-xs font-semibold border border-zinc-700">
           <i class="fa-solid fa-list mr-1"></i> <span id="viewModeText">Classic View</span>
         </button>
@@ -46,7 +45,7 @@
     </div>
   </div>
 
-  <!-- HERO BANNER & IMAGE SLIDER -->
+  <!-- HERO BANNER & DYNAMIC IMAGE SLIDER -->
   <section class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden">
     <div id="heroSlidesContainer" class="absolute inset-0 w-full h-full"></div>
     <div id="heroOverlayDiv" class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/50 to-black/70 flex flex-col justify-center items-center text-center p-6 text-white z-10">
@@ -168,7 +167,7 @@
       }
     }
 
-    // Slider Menggabungkan 3 Default + Menu Hero/Promo Ber-gambar
+    // Inisialisasi Slider Hero Mengambil Gambar Menu yang ditag isHero atau isPromo + Fallback
     function initHeroSlider() {
       const container = document.getElementById('heroSlidesContainer');
       const items = (activeConfig.menuItems || []).filter(i => (i.isHero || i.isPromo) && i.image);
@@ -179,7 +178,9 @@
         'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=1200&q=80',
         'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1200&q=80'
       ];
-      slides = [...slides, ...defaultImages].slice(0, 5); // Ambil hingga 5 gambar slider
+      
+      // Jika menu yang ditag hero/promo tidak ada gambarnya, gunakan default
+      if (slides.length === 0) slides = defaultImages;
 
       container.innerHTML = slides.map((img, idx) => `
         <div class="hero-slide absolute inset-0 w-full h-full ${idx === 0 ? 'opacity-100' : 'opacity-0'}">
@@ -272,10 +273,13 @@
               const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
               return `
                 <div class="py-3 flex justify-between items-center text-xs">
-                  <div>
-                    <span class="font-bold text-stone-100">${item.id}: ${item.name}</span>
-                    ${item.isFavorite ? '<i class="fa-solid fa-heart text-red-500 ml-1.5"></i>' : ''}
-                    <p class="text-stone-400 text-[11px]">${item.description || ''}</p>
+                  <div class="flex items-center space-x-3">
+                    ${item.image ? `<img src="${item.image}" class="w-12 h-12 rounded-lg object-cover">` : ''}
+                    <div>
+                      <span class="font-bold text-stone-100">${item.id}: ${item.name}</span>
+                      ${item.isFavorite ? '<i class="fa-solid fa-heart text-red-500 ml-1.5"></i>' : ''}
+                      <p class="text-stone-400 text-[11px]">${item.description || ''}</p>
+                    </div>
                   </div>
                   <div class="text-right flex items-center space-x-3">
                     <div>
@@ -292,7 +296,7 @@
         return;
       }
 
-      // Standard Grid View Mode
+      // Standard Grid View Mode (Dengan Foto Makanan di Kartu)
       document.getElementById('menuContentBox').innerHTML = `
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           ${items.map(item => {
@@ -301,23 +305,32 @@
             const spiceIcons = spiceLevel > 0 ? '<span class="text-red-500 ml-1">' + '<i class="fa-solid fa-pepper-hot"></i>'.repeat(spiceLevel) + '</span>' : '';
 
             return `
-              <div class="rounded-2xl p-4 border flex flex-col justify-between shadow-lg relative" style="background-color: ${cardBg}; border-color: ${cardBorder};">
-                <!-- Badges Favorite & Promo di sudut kartu -->
-                <div class="absolute top-3 right-3 flex space-x-1.5">
-                  ${item.isFavorite ? '<span class="bg-red-950/80 text-red-400 border border-red-900 px-2 py-0.5 rounded-full text-[10px] font-bold"><i class="fa-solid fa-heart mr-1"></i>Fav</span>' : ''}
-                  ${hasPromo ? '<span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full text-[10px] font-bold"><i class="fa-solid fa-tag mr-1"></i>Promo</span>' : ''}
-                </div>
-
-                <div>
-                  <h3 class="font-bold text-base pr-12">${item.id}: ${item.name} ${spiceIcons}</h3>
-                  <p class="text-xs text-stone-400 mt-1">${item.description || ''}</p>
-                  
-                  <div class="mt-3 flex items-baseline space-x-2">
-                    <span class="${hasPromo ? 'strike-red-diagonal text-sm' : 'font-black text-amber-400 text-lg'}">$${Number(item.price).toFixed(2)}</span>
-                    ${hasPromo ? `<span class="font-black text-amber-400 text-lg">$${Number(item.promoPrice).toFixed(2)}</span>` : ''}
+              <div class="rounded-2xl border flex flex-col justify-between shadow-lg relative overflow-hidden" style="background-color: ${cardBg}; border-color: ${cardBorder};">
+                <!-- Foto Makanan di Grid Card -->
+                ${item.image ? `
+                  <div class="w-full h-40 bg-zinc-950 overflow-hidden relative">
+                    <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
                   </div>
+                ` : ''}
+
+                <div class="p-4 flex flex-col justify-between flex-grow">
+                  <!-- Badges Favorite & Promo -->
+                  <div class="absolute top-3 right-3 flex space-x-1.5 z-10">
+                    ${item.isFavorite ? '<span class="bg-red-950/90 text-red-400 border border-red-900 px-2 py-0.5 rounded-full text-[10px] font-bold shadow"><i class="fa-solid fa-heart mr-1"></i>Fav</span>' : ''}
+                    ${hasPromo ? '<span class="bg-amber-500/90 text-zinc-950 border border-amber-400 px-2 py-0.5 rounded-full text-[10px] font-bold shadow"><i class="fa-solid fa-tag mr-1"></i>Promo</span>' : ''}
+                  </div>
+
+                  <div>
+                    <h3 class="font-bold text-base pr-12">${item.id}: ${item.name} ${spiceIcons}</h3>
+                    <p class="text-xs text-stone-400 mt-1">${item.description || ''}</p>
+                    
+                    <div class="mt-3 flex items-baseline space-x-2">
+                      <span class="${hasPromo ? 'strike-red-diagonal text-sm' : 'font-black text-amber-400 text-lg'}">$${Number(item.price).toFixed(2)}</span>
+                      ${hasPromo ? `<span class="font-black text-amber-400 text-lg">$${Number(item.promoPrice).toFixed(2)}</span>` : ''}
+                    </div>
+                  </div>
+                  <button onclick="addToCart('${item.id}')" class="mt-4 text-zinc-950 font-bold py-2.5 rounded-xl text-xs transition shadow" style="background-color: ${btnBg};">Add to Order</button>
                 </div>
-                <button onclick="addToCart('${item.id}')" class="mt-4 text-zinc-950 font-bold py-2.5 rounded-xl text-xs transition shadow" style="background-color: ${btnBg};">Add to Order</button>
               </div>
             `;
           }).join('')}
