@@ -131,18 +131,18 @@
     </div>
   </div>
 
-  <!-- POPUP ANNOUNCEMENT / VACATION MODAL -->
+  <!-- POPUP ANNOUNCEMENT / VACATION / CLOSED MODAL -->
   <div id="storeNoticeModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="bg-zinc-900 border border-zinc-700 w-full max-w-md rounded-2xl shadow-2xl p-6 text-center space-y-4 relative">
       <button onclick="closeStoreNoticeModal()" class="absolute top-4 right-4 text-stone-400 hover:text-white text-xl font-bold">&times;</button>
       <div class="w-14 h-14 bg-amber-500/10 text-amber-400 rounded-2xl flex items-center justify-center mx-auto text-2xl border border-amber-500/30 shadow-inner">
-        <i class="fa-solid fa-umbrella-beach"></i>
+        <i class="fa-solid fa-clock"></i>
       </div>
-      <h3 id="noticeTitle" class="text-xl font-extrabold text-stone-100">Store Temporarily Closed</h3>
-      <p id="noticeMessage" class="text-xs text-stone-300 leading-relaxed max-w-xs mx-auto">We are currently closed for holidays. Please check back later!</p>
+      <h3 id="noticeTitle" class="text-xl font-extrabold text-stone-100">Store Currently Closed</h3>
+      <p id="noticeMessage" class="text-xs text-stone-300 leading-relaxed max-w-xs mx-auto">We are currently closed. Please check our opening hours below!</p>
       
       <div id="reopenDateBox" class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 text-xs text-amber-400 font-bold hidden">
-        <i class="fa-regular fa-calendar-check mr-1.5"></i> <span id="reopenDateText">Re-opening on Monday, 15 Nov</span>
+        <i class="fa-regular fa-clock mr-1.5"></i> <span id="reopenDateText">Today's Hours: 6:00 PM - 9:00 PM</span>
       </div>
 
       <button onclick="closeStoreNoticeModal()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-stone-200 font-bold py-2.5 rounded-xl text-xs transition border border-zinc-700">
@@ -203,6 +203,7 @@
     let activeConfig = {};
     let slidesDataGlobal = [];
     let activeLayoutMode = 'grid';
+    let isStoreOpenRightNow = true;
 
     document.addEventListener('DOMContentLoaded', () => {
       const saved = localStorage.getItem('RESTOSYNC_WORKING_CONFIG');
@@ -340,7 +341,6 @@
       renderOperatingHoursFooter();
     }
 
-    /* RENDER DAILY OPERATING HOURS (MON - SUN) IN FOOTER */
     function renderOperatingHoursFooter() {
       const op = activeConfig.operatingHours || {};
       const list = document.getElementById('operatingHoursList');
@@ -349,12 +349,12 @@
       if (!list) return;
 
       const days = [
-        { label: "Monday", val: op.mon || op.weekdayHours || "4:30 PM - 9:00 PM" },
-        { label: "Tuesday", val: op.tue || op.weekdayHours || "4:30 PM - 9:00 PM" },
-        { label: "Wednesday", val: op.wed || op.weekdayHours || "4:30 PM - 9:00 PM" },
-        { label: "Thursday", val: op.thu || op.weekdayHours || "4:30 PM - 9:00 PM" },
-        { label: "Friday", val: op.fri || op.weekdayHours || "4:30 PM - 9:30 PM" },
-        { label: "Saturday", val: op.sat || op.weekdayHours || "4:30 PM - 9:30 PM" },
+        { label: "Monday", val: op.mon || "4:30 PM - 9:00 PM" },
+        { label: "Tuesday", val: op.tue || "4:30 PM - 9:00 PM" },
+        { label: "Wednesday", val: op.wed || "4:30 PM - 9:00 PM" },
+        { label: "Thursday", val: op.thu || "4:30 PM - 9:00 PM" },
+        { label: "Friday", val: op.fri || "4:30 PM - 9:30 PM" },
+        { label: "Saturday", val: op.sat || "4:30 PM - 9:30 PM" },
         { label: "Sunday", val: op.sun || "Closed" }
       ];
 
@@ -373,12 +373,64 @@
       }
     }
 
+    // UTILITY: CONVERT TIME STRING (e.g. "6:00 PM") TO MINUTES FROM MIDNIGHT
+    function parseTimeStringToMinutes(timeStr) {
+      if (!timeStr) return null;
+      const clean = timeStr.trim().toUpperCase();
+      const match = clean.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/);
+      if (!match) return null;
+
+      let hours = parseInt(match[1]);
+      const minutes = parseInt(match[2]);
+      const ampm = match[3];
+
+      if (ampm === 'PM' && hours < 12) hours += 12;
+      if (ampm === 'AM' && hours === 12) hours = 0;
+
+      return (hours * 60) + minutes;
+    }
+
+    // CHECK IF STORE IS OPEN REAL-TIME RIGHT NOW
+    function checkRealTimeOperatingHours() {
+      const op = activeConfig.operatingHours || {};
+      const now = new Date();
+      const dayIndex = now.getDay(); // 0 = Sun, 1 = Mon, ..., 3 = Wed, 6 = Sat
+      
+      const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+      const currentDayKey = dayKeys[dayIndex];
+      const todayHoursStr = op[currentDayKey] || "Closed";
+
+      if (!todayHoursStr || todayHoursStr.toLowerCase() === 'closed') {
+        return { isOpen: false, todayHoursStr: "Closed Today" };
+      }
+
+      // EXPECT FORMAT: "6:00 PM - 9:00 PM"
+      const parts = todayHoursStr.split('-');
+      if (parts.length !== 2) {
+        return { isOpen: true, todayHoursStr }; // Fallback jika format teks bebas
+      }
+
+      const openMin = parseTimeStringToMinutes(parts[0]);
+      const closeMin = parseTimeStringToMinutes(parts[1]);
+
+      if (openMin === null || closeMin === null) {
+        return { isOpen: true, todayHoursStr };
+      }
+
+      const currentMin = (now.getHours() * 60) + now.getMinutes();
+      const isOpen = (currentMin >= openMin && currentMin < closeMin);
+
+      return { isOpen, todayHoursStr };
+    }
+
     function checkStoreStatusAndNotice() {
       const op = activeConfig.operatingHours || {};
       const badge = document.getElementById('headerStatusBadge');
       const noticeModal = document.getElementById('storeNoticeModal');
 
+      // 1. CEK CLOSURE MANUAL (VACATION / LIBUR)
       if (op.isTotallyClosed === true) {
+        isStoreOpenRightNow = false;
         if (badge) {
           badge.innerText = "TEMPORARILY CLOSED";
           badge.className = "text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider bg-red-950 text-red-400 border border-red-800";
@@ -398,9 +450,28 @@
         return;
       }
 
-      if (badge) {
-        badge.innerText = "OPEN NOW";
-        badge.className = "text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-800";
+      // 2. CEK REAL-TIME JAM OPERASIONAL HARI INI
+      const timeCheck = checkRealTimeOperatingHours();
+      isStoreOpenRightNow = timeCheck.isOpen;
+
+      if (!isStoreOpenRightNow) {
+        if (badge) {
+          badge.innerText = "CLOSED NOW";
+          badge.className = "text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider bg-red-950 text-red-400 border border-red-800";
+        }
+
+        document.getElementById('noticeTitle').innerText = "Store Currently Closed";
+        document.getElementById('noticeMessage').innerText = `We are currently closed. Our operating hours for today are ${timeCheck.todayHoursStr}.`;
+        
+        document.getElementById('reopenDateText').innerText = `Today's Hours: ${timeCheck.todayHoursStr}`;
+        document.getElementById('reopenDateBox').classList.remove('hidden');
+
+        noticeModal.classList.remove('hidden');
+      } else {
+        if (badge) {
+          badge.innerText = "OPEN NOW";
+          badge.className = "text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-800";
+        }
       }
     }
 
@@ -412,6 +483,10 @@
       const op = activeConfig.operatingHours || {};
       if (op.isTotallyClosed) {
         alert(`Sorry, order cannot be processed. ${op.closureTitle || 'Store is temporarily closed'}. Re-opening: ${op.reopenDate || 'Soon'}`);
+        return;
+      }
+      if (!isStoreOpenRightNow) {
+        alert("Sorry, store is currently closed. Orders can only be placed during operating hours!");
         return;
       }
       alert('Order submitted successfully to Bangkok Thai Takeaway!');
