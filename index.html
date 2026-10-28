@@ -49,7 +49,7 @@
       
       <!-- CART BUTTON -->
       <div class="flex items-center shrink-0">
-        <button onclick="toggleCartModal()" id="cartBtn" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 sm:space-x-2 transition shadow-lg shrink-0">
+        <button onclick="toggleCartModal()" id="cartBtn" class="font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 sm:space-x-2 transition shadow-lg shrink-0">
           <i class="fa-solid fa-basket-shopping"></i>
           <span>Cart</span>
           <span id="cartCount" class="bg-zinc-950 text-amber-400 font-bold text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full">0</span>
@@ -68,7 +68,7 @@
       <h2 id="heroTaglineTitle" class="text-2xl md:text-3xl font-extrabold tracking-widest uppercase mb-2">Takeaway</h2>
       <p id="bannerTagline" class="text-sm md:text-lg text-stone-300 max-w-xl mb-6 font-light">Authentic Thai flavours cooked fresh to order in Palmerston North.</p>
       
-      <a href="#online-menu" id="exploreBtn" class="bg-red-700 hover:bg-red-800 text-white font-bold px-8 py-3.5 rounded-xl shadow-2xl transition flex items-center space-x-2 text-base border border-red-500/30 hover:scale-105 transform">
+      <a href="#online-menu" id="exploreBtn" class="font-bold px-8 py-3.5 rounded-xl shadow-2xl transition flex items-center space-x-2 text-base border border-white/20 hover:scale-105 transform">
         <i class="fa-solid fa-utensils"></i>
         <span>Explore Menu & Order</span>
       </a>
@@ -97,7 +97,7 @@
       </div>
     </div>
 
-    <!-- CATEGORY PILLS + SPECIAL FILTERS (PROMO & FAVORITES) -->
+    <!-- CATEGORY PILLS + SPECIAL FILTERS -->
     <div class="sticky top-[61px] z-30 bg-zinc-900/95 backdrop-blur-md py-3 -mx-4 px-4 shadow-lg mb-6 border-b border-zinc-800">
       <div id="categoryPills" class="flex space-x-2 overflow-x-auto no-scrollbar py-1"></div>
     </div>
@@ -119,7 +119,7 @@
         <div class="flex justify-between text-sm text-stone-400"><span>Subtotal</span><span id="cartSubtotal" class="text-stone-200">$0.00</span></div>
         <div class="flex justify-between text-sm text-stone-400"><span>GST (15% Included)</span><span id="cartGST" class="text-stone-200">$0.00</span></div>
         <div class="flex justify-between text-lg font-bold text-stone-100 pt-2 border-t border-zinc-800"><span>Total (NZD)</span><span id="cartTotal" class="text-amber-400">$0.00</span></div>
-        <button onclick="alert('Order submitted to Bangkok Thai Takeaway!')" class="w-full bg-red-700 hover:bg-red-800 text-white py-3.5 rounded-xl font-bold text-center transition shadow-xl border border-red-500/30">
+        <button id="checkoutBtn" onclick="alert('Order submitted to Bangkok Thai Takeaway!')" class="w-full py-3.5 rounded-xl font-bold text-center transition shadow-xl border border-white/20">
           Proceed to Checkout
         </button>
       </div>
@@ -240,6 +240,7 @@
       `;
     }
 
+    /* MENERAPKAN WARNA DINAMIS SECARA FLEKSIBEL 100% */
     function applyCustomTheme() {
       const theme = activeConfig.theme || {};
       const branding = activeConfig.branding || {};
@@ -250,18 +251,13 @@
       }
 
       const header = document.getElementById('mainHeader');
-      if (header && theme.headerBg) {
-        header.style.backgroundColor = theme.headerBg;
-      }
+      if (header && theme.headerBg) header.style.backgroundColor = theme.headerBg;
+      
       const logoText = document.getElementById('headerLogoText');
-      if (logoText && theme.headerText) {
-        logoText.style.color = theme.headerText;
-      }
+      if (logoText && theme.headerText) logoText.style.color = theme.headerText;
 
       const body = document.getElementById('mainBody');
-      if (body && theme.bodyBg) {
-        body.style.backgroundColor = theme.bodyBg;
-      }
+      if (body && theme.bodyBg) body.style.backgroundColor = theme.bodyBg;
 
       const title1 = document.getElementById('menuMainTitle');
       const heroTagTitle = document.getElementById('heroTaglineTitle');
@@ -271,14 +267,25 @@
       }
 
       const title2 = document.getElementById('menuSubTitle');
-      if (title2 && theme.title2) {
-        title2.style.color = theme.title2;
+      if (title2 && theme.title2) title2.style.color = theme.title2;
+
+      // Primary Button Styles (Cart & Explore)
+      const cartBtn = document.getElementById('cartBtn');
+      if (cartBtn && theme.btnBg) {
+        cartBtn.style.backgroundColor = theme.btnBg;
+        cartBtn.style.color = theme.btnText || '#000000';
       }
 
       const exploreBtn = document.getElementById('exploreBtn');
       if (exploreBtn && theme.btnBg) {
         exploreBtn.style.backgroundColor = theme.btnBg;
-        if (theme.btnText) exploreBtn.style.color = theme.btnText;
+        exploreBtn.style.color = theme.btnText || '#000000';
+      }
+
+      const checkoutBtn = document.getElementById('checkoutBtn');
+      if (checkoutBtn && theme.btnBg) {
+        checkoutBtn.style.backgroundColor = theme.btnBg;
+        checkoutBtn.style.color = theme.btnText || '#000000';
       }
 
       const footer = document.getElementById('footerSection');
@@ -302,11 +309,11 @@
       }
     }
 
-    /* HERO CAROUSEL: Mengambil item yang di-toggle 'isHero' (atau fallback ke 'isFeatured') */
     function initHeroCarousel() {
       const container = document.getElementById('heroSlidesContainer');
       const baseImages = activeConfig.branding?.heroImages || [];
       const heroItems = activeConfig.menuItems?.filter(i => (i.isHero || (i.isHero === undefined && i.isFeatured)) && i.image && i.isAvailable !== false) || [];
+      const theme = activeConfig.theme || {};
 
       slidesDataGlobal = baseImages.map(img => ({ type: 'brand', src: img }));
       
@@ -325,6 +332,9 @@
 
       if (slidesDataGlobal.length === 0) return;
 
+      const primaryBtnStyle = `background-color: ${theme.btnBg || '#f59e0b'}; color: ${theme.btnText || '#09090b'};`;
+      const accentTagStyle = `background-color: ${theme.accentBg || '#991b1b'}; color: ${theme.accentText || '#fef3c7'};`;
+
       container.innerHTML = slidesDataGlobal.map((s, idx) => {
         const hasPromo = s.promoPrice && s.promoPrice < s.price;
         return `
@@ -333,7 +343,7 @@
             ${s.type === 'food' ? `
               <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/60 flex flex-col justify-end p-6 md:p-10 text-left">
                 <div class="max-w-xl space-y-2">
-                  <span class="bg-red-700 text-amber-300 text-[10px] md:text-xs font-black px-3 py-1 rounded-md uppercase tracking-wider inline-block shadow-md">${s.promoTag}</span>
+                  <span style="${accentTagStyle}" class="text-[10px] md:text-xs font-black px-3 py-1 rounded-md uppercase tracking-wider inline-block shadow-md">${s.promoTag}</span>
                   <h3 class="font-extrabold text-stone-100 text-xl md:text-3xl leading-tight">${s.id}: ${s.title}</h3>
                   <p class="text-xs md:text-sm text-stone-300 line-clamp-2">${s.description}</p>
                   
@@ -344,7 +354,7 @@
                     ` : `
                       <span class="font-black text-amber-400 text-2xl md:text-3xl">$${s.price.toFixed(2)}</span>
                     `}
-                    <button onclick="addToCart('${s.id}')" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-5 py-2.5 rounded-xl text-xs md:text-sm shadow-xl transition flex items-center space-x-2">
+                    <button onclick="addToCart('${s.id}')" style="${primaryBtnStyle}" class="font-bold px-5 py-2.5 rounded-xl text-xs md:text-sm shadow-xl transition flex items-center space-x-2">
                       <i class="fa-solid fa-plus"></i>
                       <span>Add to Order</span>
                     </button>
@@ -411,7 +421,7 @@
 
       grid.innerHTML = activeItems.map(i => `
         <div class="bg-zinc-800/80 px-3.5 py-2.5 rounded-xl border border-zinc-700/60 flex items-center space-x-3 shadow-md">
-          <div class="w-8 h-8 bg-red-950/80 text-amber-400 rounded-lg flex items-center justify-center flex-shrink-0 text-sm border border-red-800/60">
+          <div class="w-8 h-8 bg-zinc-950 text-amber-400 rounded-lg flex items-center justify-center flex-shrink-0 text-sm border border-zinc-700">
             <i class="fa-solid fa-star"></i>
           </div>
           <div class="text-left">
@@ -422,23 +432,27 @@
       `).join('');
     }
 
-    /* RENDERING CATEGORY PILLS */
+    /* CATEGORY PILLS DENGAN WARNA ACCENT DAN PRIMARY DINAMIS */
     function renderCategoryPills() {
       if (!activeConfig.menuItems) return;
       const visibleItems = activeConfig.menuItems.filter(i => i.isAvailable !== false);
       const rawCategories = [...new Set(visibleItems.map(item => item.category))];
+      const theme = activeConfig.theme || {};
+
+      const primaryBtnStyle = `background-color: ${theme.btnBg || '#f59e0b'}; color: ${theme.btnText || '#09090b'}; border-color: ${theme.btnBg || '#f59e0b'};`;
+      const accentBtnStyle = `background-color: ${theme.accentBg || '#991b1b'}; color: ${theme.accentText || '#fef3c7'}; border-color: ${theme.accentBg || '#991b1b'};`;
 
       let pillsHTML = `
-        <button onclick="filterCategory('ALL')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${currentCategory === 'ALL' ? 'bg-amber-500 text-zinc-950 border-amber-500 shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">
+        <button onclick="filterCategory('ALL')" style="${currentCategory === 'ALL' ? primaryBtnStyle : ''}" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${currentCategory === 'ALL' ? 'shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">
           ALL
         </button>
 
-        <button onclick="filterCategory('FILTER_PROMO')" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition border flex items-center space-x-1.5 ${currentCategory === 'FILTER_PROMO' ? 'bg-red-700 text-white border-red-500 shadow-md' : 'bg-red-950/80 text-amber-300 border-red-800/80 hover:bg-red-900'}">
-          <i class="fa-solid fa-fire text-amber-400"></i>
+        <button onclick="filterCategory('FILTER_PROMO')" style="${currentCategory === 'FILTER_PROMO' ? primaryBtnStyle : accentBtnStyle}" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition border flex items-center space-x-1.5 shadow-md">
+          <i class="fa-solid fa-fire"></i>
           <span>PROMO & OFFERS</span>
         </button>
 
-        <button onclick="filterCategory('FILTER_FAVORITES')" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition border flex items-center space-x-1.5 ${currentCategory === 'FILTER_FAVORITES' ? 'bg-amber-500 text-zinc-950 border-amber-500 shadow-md' : 'bg-zinc-800 text-amber-400 border-zinc-700 hover:bg-zinc-700'}">
+        <button onclick="filterCategory('FILTER_FAVORITES')" style="${currentCategory === 'FILTER_FAVORITES' ? primaryBtnStyle : ''}" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition border flex items-center space-x-1.5 ${currentCategory === 'FILTER_FAVORITES' ? 'shadow-md' : 'bg-zinc-800 text-amber-400 border-zinc-700 hover:bg-zinc-700'}">
           <i class="fa-solid fa-star"></i>
           <span>FAVORITES</span>
         </button>
@@ -446,7 +460,7 @@
 
       rawCategories.forEach(cat => {
         pillsHTML += `
-          <button onclick="filterCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${cat === currentCategory ? 'bg-amber-500 text-zinc-950 border-amber-500 shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">
+          <button onclick="filterCategory('${cat}')" style="${cat === currentCategory ? primaryBtnStyle : ''}" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${cat === currentCategory ? 'shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">
             ${cat}
           </button>
         `;
@@ -466,7 +480,7 @@
       renderMenuContentBox();
     }
 
-    /* LOGIK FILTERING MENU CONTENT BOX (FIXED FAVORITE) */
+    /* RENDER MENU CARDS DENGAN TOMBOL ADD TO ORDER BERWARNA ACCENT DINAMIS */
     function renderMenuContentBox() {
       if (!activeConfig.menuItems) return;
 
@@ -475,15 +489,12 @@
         btnText.innerText = activeLayoutMode === 'grid' ? 'Switch to Classic List' : 'Switch to Modern Grid';
       }
 
-      // Saring item berdasarkan Kategori atau Special Filter
       const visibleItems = activeConfig.menuItems.filter(i => {
         const isEnabled = i.isAvailable !== false;
         if (!isEnabled) return false;
 
         if (currentCategory === 'ALL') return true;
         if (currentCategory === 'FILTER_PROMO') return (i.promoPrice && i.promoPrice < i.price);
-        
-        // MEMERIKSA ATRIBUT isFavorite SECARA PRESISI
         if (currentCategory === 'FILTER_FAVORITES') return (i.isFavorite === true);
 
         return i.category === currentCategory;
@@ -491,6 +502,8 @@
 
       const contentBox = document.getElementById('menuContentBox');
       const theme = activeConfig.theme || {};
+
+      const accentBtnStyle = `background-color: ${theme.accentBg || '#991b1b'}; color: ${theme.accentText || '#fef3c7'};`;
 
       if (visibleItems.length === 0) {
         contentBox.innerHTML = `
@@ -519,7 +532,7 @@
                         <h3 class="font-bold text-stone-100 text-base">${item.id}: ${item.name}</h3>
                         ${item.isFavorite ? `<i class="fa-solid fa-star text-amber-400 text-xs" title="Favorite Dish"></i>` : ''}
                         ${isSoldOut ? `<span class="bg-red-800 text-white font-extrabold text-[9px] px-2 py-0.5 rounded shadow tracking-wider uppercase">SOLD OUT</span>` : ''}
-                        ${promoTag && !isSoldOut ? `<span class="bg-red-700 text-amber-300 font-bold text-[9px] px-2 py-0.5 rounded uppercase">${promoTag}</span>` : ''}
+                        ${promoTag && !isSoldOut ? `<span style="${accentBtnStyle}" class="font-bold text-[9px] px-2 py-0.5 rounded uppercase">${promoTag}</span>` : ''}
                       </div>
                       <p class="text-xs text-stone-400 leading-relaxed">${item.description}</p>
                       ${getSpiceBadge(item.spiceLevel)}
@@ -537,7 +550,7 @@
 
                   <div class="pt-1 flex justify-end">
                     ${!isSoldOut 
-                      ? `<button onclick="addToCart('${item.id}')" class="bg-red-950/80 hover:bg-red-800 text-amber-300 hover:text-white font-semibold px-4 py-1.5 rounded-lg text-xs transition border border-red-700/50">
+                      ? `<button onclick="addToCart('${item.id}')" style="${accentBtnStyle}" class="font-semibold px-4 py-1.5 rounded-lg text-xs transition border border-white/10 shadow-md hover:opacity-90">
                            + Add to Order
                          </button>`
                       : `<button disabled class="bg-zinc-950 text-stone-600 font-bold px-4 py-1.5 rounded-lg text-xs border border-zinc-800 cursor-not-allowed">
@@ -567,7 +580,7 @@
                       
                       ${isSoldOut ? `<div class="absolute inset-0 bg-black/60 flex items-center justify-center"><span class="bg-red-800 text-white font-extrabold text-sm px-4 py-1.5 rounded-lg shadow-xl border border-red-500 tracking-wider uppercase">SOLD OUT</span></div>` : ''}
                       
-                      ${promoTag && !isSoldOut ? `<div class="absolute top-3 left-3 bg-red-700 text-amber-300 font-black text-[10px] px-2.5 py-1 rounded-md uppercase tracking-wider">${promoTag}</div>` : ''}
+                      ${promoTag && !isSoldOut ? `<div style="${accentBtnStyle}" class="absolute top-3 left-3 font-black text-[10px] px-2.5 py-1 rounded-md uppercase tracking-wider shadow-md">${promoTag}</div>` : ''}
 
                       ${item.isFavorite ? `<div class="absolute top-3 right-3 bg-zinc-950/80 text-amber-400 p-1.5 rounded-full border border-amber-500/40 shadow-md" title="Favorite Dish"><i class="fa-solid fa-star text-xs"></i></div>` : ''}
                     </div>
@@ -593,7 +606,7 @@
 
                   <div class="p-4 pt-0">
                     ${!isSoldOut 
-                      ? `<button onclick="addToCart('${item.id}')" class="w-full bg-red-950/60 hover:bg-red-800 text-amber-300 hover:text-white font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 border border-red-700/50 shadow-sm">
+                      ? `<button onclick="addToCart('${item.id}')" style="${accentBtnStyle}" class="w-full font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 border border-white/10 shadow-md hover:opacity-90">
                            <i class="fa-solid fa-plus"></i> <span>Add to Order</span>
                          </button>`
                       : `<button disabled class="w-full bg-zinc-900 text-stone-600 font-bold py-2.5 rounded-xl text-xs text-center border border-zinc-800 cursor-not-allowed">
