@@ -45,7 +45,7 @@
       <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
         <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain drop-shadow max-h-8 sm:max-h-10">
         <span id="headerLogoText" class="hidden sm:inline-block font-bold text-lg sm:text-xl tracking-wider uppercase text-amber-300 whitespace-nowrap">Takeaway</span>
-        <span id="headerStatusBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider"></span>
+        <span id="headerStatusBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider transition-all"></span>
       </div>
       
       <!-- CART BUTTON -->
@@ -434,14 +434,19 @@
 
     function checkStoreStatusAndNotice() {
       const op = activeConfig.operatingHours || {};
+      const theme = activeConfig.theme || {};
       const badge = document.getElementById('headerStatusBadge');
       const noticeModal = document.getElementById('storeNoticeModal');
+
+      // Menggunakan variabel tema dari Admin untuk badge status
+      const openBadgeStyle = `background-color: ${theme.btnBg || '#f59e0b'}; color: ${theme.btnText || '#09090b'}; border: 1px solid ${theme.btnBg || '#f59e0b'};`;
+      const closedBadgeStyle = `background-color: ${theme.accentBg || '#991b1b'}; color: ${theme.accentText || '#fef3c7'}; border: 1px solid ${theme.accentBg || '#991b1b'};`;
 
       if (op.isTotallyClosed === true) {
         isStoreOpenRightNow = false;
         if (badge) {
           badge.innerText = "TEMPORARILY CLOSED";
-          badge.className = "text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider bg-red-950 text-red-400 border border-red-800";
+          badge.style.cssText = closedBadgeStyle;
         }
 
         document.getElementById('noticeTitle').innerText = op.closureTitle || "Store Temporarily Closed";
@@ -464,7 +469,7 @@
       if (!isStoreOpenRightNow) {
         if (badge) {
           badge.innerText = "CLOSED NOW";
-          badge.className = "text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider bg-red-950 text-red-400 border border-red-800";
+          badge.style.cssText = closedBadgeStyle;
         }
 
         document.getElementById('noticeTitle').innerText = "Store Currently Closed";
@@ -477,7 +482,7 @@
       } else {
         if (badge) {
           badge.innerText = "OPEN NOW";
-          badge.className = "text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-800";
+          badge.style.cssText = openBadgeStyle;
         }
       }
     }
