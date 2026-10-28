@@ -31,10 +31,10 @@
       </div>
     </div>
 
-    <!-- TAB NAVIGATION BAR -->
+    <!-- TAB NAVIGATION -->
     <div class="bg-zinc-950 border-t border-zinc-800 px-4 sm:px-6 flex space-x-2 overflow-x-auto no-scrollbar text-xs font-semibold">
-      <button id="tabBtn-profile" onclick="switchAdminTab('profile')" class="py-3 px-4 text-amber-400 border-b-2 border-amber-400 flex items-center space-x-2 transition font-bold whitespace-nowrap"><i class="fa-solid fa-store"></i><span>Store Info & Hours</span></button>
-      <button id="tabBtn-theme" onclick="switchAdminTab('theme')" class="py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition whitespace-nowrap"><i class="fa-solid fa-palette"></i><span>Theme & Highlights</span></button>
+      <button id="tabBtn-profile" onclick="switchAdminTab('profile')" class="py-3 px-4 text-amber-400 border-b-2 border-amber-400 flex items-center space-x-2 transition whitespace-nowrap"><i class="fa-solid fa-store"></i><span>Store Info & Hours</span></button>
+      <button id="tabBtn-theme" onclick="switchAdminTab('theme')" class="py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition whitespace-nowrap"><i class="fa-solid fa-palette"></i><span>Theme, Logo & Colors</span></button>
       <button id="tabBtn-menu" onclick="switchAdminTab('menu')" class="py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition whitespace-nowrap"><i class="fa-solid fa-utensils"></i><span>Menu Catalogue</span></button>
       <button id="tabBtn-console" onclick="switchAdminTab('console')" class="py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition whitespace-nowrap"><i class="fa-solid fa-shield text-amber-400"></i><span class="text-amber-400">AES-256 License</span></button>
     </div>
@@ -57,8 +57,8 @@
         </div>
 
         <div class="lg:col-span-2 bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
-          <h2 class="font-bold text-sm text-stone-100 border-b border-zinc-800 pb-3 flex items-center justify-between">
-            <span class="flex items-center"><i class="fa-solid fa-clock text-amber-400 mr-2"></i> Flexible Daily Operating Hours</span>
+          <h2 class="font-bold text-sm text-stone-100 border-b border-zinc-800 pb-3 flex items-center">
+            <i class="fa-solid fa-clock text-amber-400 mr-2"></i> Operating Hours
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
             <div><label class="block text-stone-400 mb-1 font-semibold">Monday</label><input type="text" id="hoursMon" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100"></div>
@@ -73,47 +73,61 @@
       </div>
     </div>
 
-    <!-- TAB 2: THEME & FEATURE HIGHLIGHTS BAR -->
+    <!-- TAB 2: THEME, LOGO & COMPREHENSIVE COLORS -->
     <div id="tabContent-theme" class="tab-panel hidden space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Logo Uploader -->
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
-          <h2 class="font-bold text-sm text-stone-100 border-b border-zinc-800 pb-3 flex items-center"><i class="fa-solid fa-image text-amber-400 mr-2"></i> Logo Branding</h2>
+          <h2 class="font-bold text-sm text-stone-100 border-b border-zinc-800 pb-3 flex items-center"><i class="fa-solid fa-image text-amber-400 mr-2"></i> Client Logo Management</h2>
           <div class="space-y-3 text-xs">
-            <div><label class="block text-stone-400 mb-1">Upload New Logo</label><input type="file" id="logoFileInput" accept="image/*" onchange="handleLogoUpload(event)" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-2 py-1.5 text-stone-300"></div>
+            <div><label class="block text-stone-400 mb-1">Upload Logo (Auto-Inverted to White in Hero Banner)</label><input type="file" id="logoFileInput" accept="image/*" onchange="handleLogoUpload(event)" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-2 py-1.5 text-stone-300"></div>
             <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 flex flex-col items-center justify-center space-y-2">
+              <span class="text-[10px] text-stone-500">PREVIEW</span>
               <img id="logoPreview" src="" alt="Logo" class="object-contain" style="height: 48px;">
             </div>
           </div>
         </div>
 
-        <!-- Feature Highlights Bar Control (3 Lencana Keunggulan) -->
+        <!-- Feature Highlights Bar Control -->
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
-          <h2 class="font-bold text-sm text-amber-400 border-b border-zinc-800 pb-3 flex items-center"><i class="fa-solid fa-award mr-2"></i> Feature Highlights Bar Control (3 Lencana)</h2>
+          <h2 class="font-bold text-sm text-amber-400 border-b border-zinc-800 pb-3 flex items-center"><i class="fa-solid fa-award mr-2"></i> Feature Highlights Bar (3 Badges)</h2>
           <div class="space-y-3 text-xs">
             <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 space-y-2">
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-stone-200">Highlight 1</span>
-                <input type="checkbox" id="hl1Active" class="w-4 h-4 accent-amber-500 rounded">
-              </div>
+              <div class="flex items-center justify-between"><span class="font-bold text-stone-200">Highlight 1</span><input type="checkbox" id="hl1Active" class="w-4 h-4 accent-amber-500 rounded"></div>
               <input type="text" id="hl1Text" placeholder="e.g., Liquor Licensed" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-stone-100">
             </div>
-
             <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 space-y-2">
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-stone-200">Highlight 2</span>
-                <input type="checkbox" id="hl2Active" class="w-4 h-4 accent-amber-500 rounded">
-              </div>
+              <div class="flex items-center justify-between"><span class="font-bold text-stone-200">Highlight 2</span><input type="checkbox" id="hl2Active" class="w-4 h-4 accent-amber-500 rounded"></div>
               <input type="text" id="hl2Text" placeholder="e.g., BYO Wine Welcome" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-stone-100">
             </div>
-
             <div class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 space-y-2">
-              <div class="flex items-center justify-between">
-                <span class="font-bold text-stone-200">Highlight 3</span>
-                <input type="checkbox" id="hl3Active" class="w-4 h-4 accent-amber-500 rounded">
-              </div>
+              <div class="flex items-center justify-between"><span class="font-bold text-stone-200">Highlight 3</span><input type="checkbox" id="hl3Active" class="w-4 h-4 accent-amber-500 rounded"></div>
               <input type="text" id="hl3Text" placeholder="e.g., Halal Certified" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1 text-stone-100">
             </div>
           </div>
+        </div>
+
+      </div>
+
+      <!-- Comprehensive Color Customizer (Semua Elemen Website) -->
+      <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
+        <h2 class="font-bold text-sm text-stone-100 border-b border-zinc-800 pb-3 flex items-center"><i class="fa-solid fa-swatchbook text-amber-400 mr-2"></i> Comprehensive Website Color Customizer</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+          <div><label class="block text-stone-400 mb-1">Header Background</label><input type="color" id="themeHeaderBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+          <div><label class="block text-stone-400 mb-1">Header Text / Buttons</label><input type="color" id="themeHeaderText" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+          <div><label class="block text-stone-400 mb-1">Main Body Background</label><input type="color" id="themeBodyBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+          <div><label class="block text-stone-400 mb-1">Main Text Color</label><input type="color" id="themeMainText" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+          <div><label class="block text-stone-400 mb-1">Hero Banner Overlay</label><input type="color" id="themeHeroOverlay" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+          <div><label class="block text-stone-400 mb-1">Category Bar Background</label><input type="color" id="themeCatBarBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+          <div><label class="block text-stone-400 mb-1">Category Active Button</label><input type="color" id="themeCatActive" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+          <div><label class="block text-stone-400 mb-1">Category Normal Button</label><input type="color" id="themeCatNormal" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+          <div><label class="block text-stone-400 mb-1">Menu Card Background</label><input type="color" id="themeCardBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+          <div><label class="block text-stone-400 mb-1">Menu Card Border</label><input type="color" id="themeCardBorder" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+          <div><label class="block text-stone-400 mb-1">Primary Action Button</label><input type="color" id="themeBtnBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+          <div><label class="block text-stone-400 mb-1">Cart Header Background</label><input type="color" id="themeCartHeader" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+          <div><label class="block text-stone-400 mb-1">Footer Background</label><input type="color" id="themeFooterBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+          <div><label class="block text-stone-400 mb-1">Footer Text Color</label><input type="color" id="themeFooterText" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
         </div>
       </div>
     </div>
@@ -122,8 +136,8 @@
     <div id="tabContent-menu" class="tab-panel hidden space-y-6">
       <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
         <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
-          <h2 class="font-bold text-sm text-stone-100 flex items-center"><i class="fa-solid fa-utensils text-amber-400 mr-2"></i> Menu Catalogue</h2>
-          <button onclick="openAddMenuModal()" class="bg-zinc-800 hover:bg-zinc-700 text-amber-400 font-semibold px-3 py-1.5 rounded-lg text-xs border border-zinc-700"><i class="fa-solid fa-plus mr-1"></i> Add Menu Item</button>
+          <h2 class="font-bold text-sm text-stone-100 flex items-center"><i class="fa-solid fa-utensils text-amber-400 mr-2"></i> Menu Management</h2>
+          <button onclick="openAddMenuModal()" class="bg-zinc-800 text-amber-400 font-semibold px-3 py-1.5 rounded-lg text-xs border border-zinc-700"><i class="fa-solid fa-plus mr-1"></i> Add Item</button>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs text-stone-300">
@@ -145,13 +159,12 @@
       </div>
     </div>
 
-    <!-- TAB 4: AES-256 LICENSE TOKEN -->
+    <!-- TAB 4: AES-256 LICENSE -->
     <div id="tabContent-console" class="tab-panel hidden space-y-6">
       <div class="bg-zinc-900 border border-amber-500/30 rounded-2xl p-5 shadow-lg space-y-4">
-        <h2 class="font-bold text-sm text-amber-400 flex items-center"><i class="fa-solid fa-shield-halved mr-2"></i> AES-256 Secure License Configuration</h2>
-        <p class="text-xs text-stone-400">Masukkan Token Lisensi terenkripsi dari System Console untuk mengamankan operasional tenant.</p>
+        <h2 class="font-bold text-sm text-amber-400 flex items-center"><i class="fa-solid fa-shield-halved mr-2"></i> AES-256 License Token</h2>
         <div>
-          <label class="block text-stone-400 text-xs mb-1">Encrypted License Token (CryptoJS AES-256)</label>
+          <label class="block text-stone-400 text-xs mb-1">Encrypted License Token</label>
           <textarea id="cfgLicenseToken" rows="4" class="w-full bg-zinc-950 border border-zinc-800 rounded-lg p-3 text-amber-400 font-mono text-xs"></textarea>
         </div>
       </div>
@@ -160,7 +173,6 @@
 
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyCMd3tOM2g8FNL96UIlGRE9cbq3UUvssrQ",
@@ -170,20 +182,15 @@
       messagingSenderId: "780544019719",
       appId: "1:780544019719:web:e5fccb00a4981f2579c9a2"
     };
-
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     const urlParams = new URLSearchParams(window.location.search);
     const TENANT_ID = urlParams.get('tenant') || 'bangkokthaipalmy';
-
     let activeConfig = {};
-    let currentLogoHeight = 48;
 
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('activeTenantBadge').innerText = `Tenant: ${TENANT_ID}`;
-      document.getElementById('liveStoreLink').href = `index.html?tenant=${TENANT_ID}`;
-
       db.collection("tenants").doc(TENANT_ID).onSnapshot((doc) => {
         if (doc.exists && doc.data().config) {
           activeConfig = doc.data().config;
@@ -209,56 +216,63 @@
       document.getElementById('cfgPhone').value = activeConfig.store.phone || '';
       document.getElementById('cfgAddress').value = activeConfig.store.address || '';
 
-      const op = activeConfig.operatingHours || {};
-      ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].forEach(d => {
-        document.getElementById(`hours${d}`).value = op[d.toLowerCase()] || '';
+      const hl = activeConfig.highlights || {};
+      ['1','2','3'].forEach(i => {
+        document.getElementById(`hl${i}Active`).checked = hl[`hl${i}`]?.active === true;
+        document.getElementById(`hl${i}Text`).value = hl[`hl${i}`]?.text || '';
       });
 
-      const highlights = activeConfig.highlights || {};
-      document.getElementById('hl1Active').checked = highlights.hl1?.active === true;
-      document.getElementById('hl1Text').value = highlights.hl1?.text || '';
-      document.getElementById('hl2Active').checked = highlights.hl2?.active === true;
-      document.getElementById('hl2Text').value = highlights.hl2?.text || '';
-      document.getElementById('hl3Active').checked = highlights.hl3?.active === true;
-      document.getElementById('hl3Text').value = highlights.hl3?.text || '';
+      const th = activeConfig.theme || {};
+      document.getElementById('themeHeaderBg').value = th.headerBg || '#000000';
+      document.getElementById('themeHeaderText').value = th.headerText || '#fde047';
+      document.getElementById('themeBodyBg').value = th.bodyBg || '#18181b';
+      document.getElementById('themeMainText').value = th.mainText || '#e7e5e4';
+      document.getElementById('themeHeroOverlay').value = th.heroOverlay || '#000000';
+      document.getElementById('themeCatBarBg').value = th.catBarBg || '#18181b';
+      document.getElementById('themeCatActive').value = th.catActive || '#f59e0b';
+      document.getElementById('themeCatNormal').value = th.catNormal || '#27272a';
+      document.getElementById('themeCardBg').value = th.cardBg || '#27272a';
+      document.getElementById('themeCardBorder').value = th.cardBorder || '#3f3f46';
+      document.getElementById('themeBtnBg').value = th.btnBg || '#f59e0b';
+      document.getElementById('themeCartHeader').value = th.cartHeader || '#991b1b';
+      document.getElementById('themeFooterBg').value = th.footerBg || '#000000';
+      document.getElementById('themeFooterText').value = th.footerText || '#a8a29e';
 
-      const branding = activeConfig.branding || {};
-      currentLogoHeight = branding.logoHeight || 48;
-      document.getElementById('logoPreview').src = branding.logo || '';
+      document.getElementById('logoPreview').src = activeConfig.branding?.logo || '';
       document.getElementById('cfgLicenseToken').value = activeConfig.licenseToken || '';
+    }
+
+    function handleLogoUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        document.getElementById('logoPreview').src = e.target.result;
+        if (!activeConfig.branding) activeConfig.branding = {};
+        activeConfig.branding.logo = e.target.result;
+      };
+      reader.readAsDataURL(file);
     }
 
     function renderAdminMenuTable() {
       const tbody = document.getElementById('adminMenuTableBody');
       const items = activeConfig.menuItems || [];
-      if (items.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-stone-500">No menu items found.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = items.map((item, idx) => {
-        const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
-        return `
-          <tr class="hover:bg-zinc-800/40 transition ${item.isHidden ? 'opacity-40 bg-red-950/10' : ''}">
-            <td class="py-3 px-2 text-center"><button onclick="toggleQuickFlag(${idx}, 'isHero')"><i class="fa-solid fa-star text-base ${item.isHero ? 'text-amber-400' : 'text-stone-700'}"></i></button></td>
-            <td class="py-3 px-2 text-center"><button onclick="toggleQuickFlag(${idx}, 'isFavorite')"><i class="fa-solid fa-heart text-base ${item.isFavorite ? 'text-amber-400' : 'text-stone-700'}"></i></button></td>
-            <td class="py-3 px-2 text-center"><button onclick="toggleQuickFlag(${idx}, 'isHidden')"><i class="fa-solid ${item.isHidden ? 'fa-eye-slash text-red-500' : 'fa-eye text-stone-500'} text-base"></i></button></td>
-            <td class="py-3 px-3 font-bold text-stone-100">${item.id}: ${item.name}</td>
-            <td class="py-3 px-3 text-stone-400">${item.category}</td>
-            <td class="py-3 px-3"><span class="${hasPromo ? 'line-through text-stone-500 mr-2' : ''}">$${Number(item.price).toFixed(2)}</span>${hasPromo ? `<span class="font-bold text-amber-400">$${Number(item.promoPrice).toFixed(2)}</span>` : ''}</td>
-            <td class="py-3 px-3 text-center font-mono ${item.stock === 0 ? 'text-red-400 font-bold' : ''}">${item.stock ?? 50}</td>
-            <td class="py-3 px-3 text-center space-x-2">
-              <button onclick="openEditMenuModal(${idx})" class="text-amber-400 text-xs px-2 py-1 bg-zinc-800 rounded border border-zinc-700">Edit</button>
-              <button onclick="deleteMenuItem(${idx})" class="text-red-400 text-xs px-2 py-1 bg-zinc-800 rounded border border-zinc-700"><i class="fa-solid fa-trash"></i></button>
-            </td>
-          </tr>
-        `;
-      }).join('');
+      tbody.innerHTML = items.map((item, idx) => `
+        <tr class="hover:bg-zinc-800/40 transition">
+          <td class="py-3 px-2 text-center"><button onclick="toggleFlag(${idx}, 'isHero')"><i class="fa-solid fa-star text-base ${item.isHero ? 'text-amber-400' : 'text-stone-700'}"></i></button></td>
+          <td class="py-3 px-2 text-center"><button onclick="toggleFlag(${idx}, 'isFavorite')"><i class="fa-solid fa-heart text-base ${item.isFavorite ? 'text-amber-400' : 'text-stone-700'}"></i></button></td>
+          <td class="py-3 px-2 text-center"><button onclick="toggleFlag(${idx}, 'isHidden')"><i class="fa-solid ${item.isHidden ? 'fa-eye-slash text-red-500' : 'fa-eye text-stone-500'} text-base"></i></button></td>
+          <td class="py-3 px-3 font-bold text-stone-100">${item.id}: ${item.name}</td>
+          <td class="py-3 px-3 text-stone-400">${item.category}</td>
+          <td class="py-3 px-3">$${Number(item.price).toFixed(2)}</td>
+          <td class="py-3 px-3 text-center">${item.stock ?? 50}</td>
+          <td class="py-3 px-3 text-center"><button onclick="deleteMenu(${idx})" class="text-red-400 text-xs"><i class="fa-solid fa-trash"></i></button></td>
+        </tr>
+      `).join('');
     }
 
-    function toggleQuickFlag(idx, flagKey) {
-      if (!activeConfig.menuItems[idx]) return;
-      activeConfig.menuItems[idx][flagKey] = !activeConfig.menuItems[idx][flagKey];
+    function toggleFlag(idx, key) {
+      activeConfig.menuItems[idx][key] = !activeConfig.menuItems[idx][key];
       renderAdminMenuTable();
     }
 
@@ -274,14 +288,29 @@
         hl3: { active: document.getElementById('hl3Active').checked, text: document.getElementById('hl3Text').value }
       };
 
+      activeConfig.theme = {
+        headerBg: document.getElementById('themeHeaderBg').value,
+        headerText: document.getElementById('themeHeaderText').value,
+        bodyBg: document.getElementById('themeBodyBg').value,
+        mainText: document.getElementById('themeMainText').value,
+        heroOverlay: document.getElementById('themeHeroOverlay').value,
+        catBarBg: document.getElementById('themeCatBarBg').value,
+        catActive: document.getElementById('themeCatActive').value,
+        catNormal: document.getElementById('themeCatNormal').value,
+        cardBg: document.getElementById('themeCardBg').value,
+        cardBorder: document.getElementById('themeCardBorder').value,
+        btnBg: document.getElementById('themeBtnBg').value,
+        cartHeader: document.getElementById('themeCartHeader').value,
+        footerBg: document.getElementById('themeFooterBg').value,
+        footerText: document.getElementById('themeFooterText').value
+      };
+
       activeConfig.licenseToken = document.getElementById('cfgLicenseToken').value.trim();
 
       try {
         await db.collection("tenants").doc(TENANT_ID).set({ config: activeConfig, lastUpdated: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true });
-        alert('Perubahan berhasil disimpan ke Cloud Firebase!');
-      } catch (error) {
-        alert('Gagal menyimpan.');
-      }
+        alert('Semua perubahan berhasil disimpan!');
+      } catch (e) { alert('Gagal menyimpan.'); }
     }
   </script>
 </body>
