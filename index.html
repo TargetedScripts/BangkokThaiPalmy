@@ -36,19 +36,19 @@
 <body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen selection:bg-amber-500 selection:text-zinc-950 pb-16">
 
   <!-- HEADER FULL-WIDTH -->
-  <header id="mainHeader" class="text-white shadow-xl sticky top-0 z-50 border-b border-zinc-800/60 w-full"> 
+  <header id="mainHeader" class="text-white shadow-xl sticky top-0 z-50 border-b border-zinc-800/60 w-full bg-black"> 
     <div class="w-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-4">
       
       <!-- LOGO AREA -->
       <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
         <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain drop-shadow max-h-8 sm:max-h-10">
         <span id="headerLogoText" class="hidden sm:inline-block font-bold text-lg sm:text-xl tracking-wider uppercase text-amber-300 whitespace-nowrap">Takeaway</span>
-        <span id="headerStatusBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider transition-all"></span>
+        <span id="headerStatusBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider transition-all bg-emerald-950 text-emerald-400 border border-emerald-800">OPEN NOW</span>
       </div>
       
       <!-- CART BUTTON -->
       <div class="flex items-center space-x-2 shrink-0">
-        <button onclick="toggleCartModal()" id="cartBtn" class="font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 sm:space-x-2 transition shadow-lg shrink-0">
+        <button onclick="toggleCartModal()" id="cartBtn" class="font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 sm:space-x-2 transition shadow-lg shrink-0 bg-amber-500 text-zinc-950">
           <i class="fa-solid fa-basket-shopping"></i>
           <span>Cart</span>
           <span id="cartCount" class="bg-zinc-950 text-amber-400 font-bold text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full">0</span>
@@ -58,33 +58,28 @@
     </div>
   </header>
 
-  <!-- HERO BANNER CAROUSEL -->
+  <!-- HERO BANNER CAROUSEL / OVERLAY -->
   <section id="heroSection" class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden shadow-2xl">
     <div id="heroSlidesContainer" class="relative w-full h-full"></div>
 
     <div id="defaultHeroOverlay" class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/50 to-black/70 flex flex-col justify-center items-center text-center p-6 text-white transition-opacity duration-700 opacity-100 pointer-events-auto">
       <img id="heroLogo" src="" alt="Store Logo" class="w-auto object-contain mb-3 filter drop-shadow-lg" style="height: 80px;">
-      <h2 id="heroTaglineTitle" class="text-2xl md:text-3xl font-extrabold tracking-widest uppercase mb-2">Takeaway</h2>
-      <p id="bannerTagline" class="text-sm md:text-lg text-stone-300 max-w-xl mb-6 font-light">Authentic flavours cooked fresh to order.</p>
+      <h2 id="heroTaglineTitle" class="text-2xl md:text-3xl font-extrabold tracking-widest uppercase mb-2">Bangkok Thai Takeaway</h2>
+      <p id="bannerTagline" class="text-sm md:text-lg text-stone-300 max-w-xl mb-6 font-light">Authentic Thai flavours cooked fresh to order.</p>
       
-      <a href="#online-menu" id="exploreBtn" class="font-bold px-8 py-3.5 rounded-xl shadow-2xl transition flex items-center space-x-2 text-base border border-white/20 hover:scale-105 transform">
+      <a href="#online-menu" id="exploreBtn" class="bg-amber-500 text-zinc-950 font-bold px-8 py-3.5 rounded-xl shadow-2xl transition flex items-center space-x-2 text-base border border-white/20 hover:scale-105 transform">
         <i class="fa-solid fa-utensils"></i>
         <span>Explore Menu & Order</span>
       </a>
     </div>
   </section>
 
-  <!-- FEATURE HIGHLIGHTS BAR -->
-  <section id="highlightsSection" class="max-w-7xl mx-auto px-4 py-4 w-full">
-    <div id="highlightsGrid"></div>
-  </section>
-
   <!-- MAIN MENU SECTION -->
-  <section id="online-menu" class="max-w-7xl mx-auto px-4 py-4 w-full flex-grow">
+  <section id="online-menu" class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2 border-b border-zinc-800 pb-4">
       <div>
-        <h2 id="menuMainTitle" class="text-2xl font-bold tracking-wide">Our Takeaway Menu</h2>
-        <p id="menuSubTitle" class="text-xs text-stone-400">Select a category or filter below to browse items</p>
+        <h2 class="text-2xl font-bold tracking-wide">Our Takeaway Menu</h2>
+        <p class="text-xs text-stone-400">Select a category below to browse items</p>
       </div>
       
       <div class="flex items-center space-x-2">
@@ -101,6 +96,7 @@
       <div id="categoryPills" class="flex space-x-2 overflow-x-auto no-scrollbar py-1"></div>
     </div>
 
+    <!-- MENU CONTENT CONTAINER -->
     <div id="menuContentBox" class="w-full"></div>
   </section>
 
@@ -116,76 +112,22 @@
       </div>
       <div class="p-4 border-t border-zinc-800 bg-zinc-950 space-y-2.5">
         <div class="flex justify-between text-xs text-stone-400"><span>Subtotal</span><span id="cartSubtotal" class="text-stone-200">$0.00</span></div>
-        <div class="flex justify-between text-xs text-stone-400"><span>GST (15% Included)</span><span id="cartGST" class="text-stone-200">$0.00</span></div>
         <div class="flex justify-between text-base font-bold text-stone-100 pt-2 border-t border-zinc-800"><span>Total (NZD)</span><span id="cartTotal" class="text-amber-400">$0.00</span></div>
-        <button id="checkoutBtn" onclick="handleCheckoutAction()" class="w-full py-3.5 rounded-xl font-bold text-center transition shadow-xl border border-white/20">
+        <button onclick="handleCheckoutAction()" class="w-full bg-amber-500 text-zinc-950 py-3.5 rounded-xl font-bold text-center transition shadow-xl">
           Proceed to Checkout
         </button>
       </div>
     </div>
   </div>
 
-  <!-- POPUP ANNOUNCEMENT / CLOSED MODAL -->
-  <div id="storeNoticeModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-zinc-900 border border-zinc-700 w-full max-w-md rounded-2xl shadow-2xl p-6 text-center space-y-4 relative">
-      <button onclick="closeStoreNoticeModal()" class="absolute top-4 right-4 text-stone-400 hover:text-white text-xl font-bold">&times;</button>
-      
-      <div class="flex justify-center mx-auto mb-2">
-        <img id="noticeLogo" src="" alt="Store Logo" class="w-auto h-20 max-w-[240px] object-contain filter drop-shadow-lg">
-      </div>
-
-      <h3 id="noticeTitle" class="text-xl font-extrabold text-stone-100">Store Currently Closed</h3>
-      <p id="noticeMessage" class="text-xs text-stone-300 leading-relaxed max-w-xs mx-auto">We are currently closed. Please check our operating hours below!</p>
-      
-      <div id="reopenDateBox" class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 text-xs text-amber-400 font-bold hidden">
-        <i class="fa-regular fa-clock mr-1.5"></i> <span id="reopenDateText">Today's Hours: Closed Today</span>
-      </div>
-
-      <button onclick="closeStoreNoticeModal()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-stone-200 font-bold py-2.5 rounded-xl text-xs transition border border-zinc-700">
-        Browse Menu Anyway
-      </button>
-    </div>
-  </div>
-
-  <!-- LOCATION & MAPS SECTION -->
-  <section id="locationSection" class="bg-zinc-950 py-12 border-t border-zinc-800 mt-12">
-    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-      <div class="space-y-4">
-        <h3 id="storeTitleBottom" class="text-2xl font-bold text-stone-100">Store Name</h3>
-        
-        <p class="text-stone-300 flex items-center">
-          <i class="fa-solid fa-location-dot text-amber-400 mr-3 text-lg"></i>
-          <a id="storeAddressLink" href="#" target="_blank" class="hover:text-amber-400 transition underline decoration-zinc-700 underline-offset-4">Loading address...</a>
-        </p>
-
-        <p class="text-stone-300 flex items-center">
-          <i class="fa-solid fa-phone text-amber-400 mr-3 text-lg"></i>
-          <a id="storePhoneLink" href="#" class="hover:text-amber-400 font-semibold transition underline decoration-zinc-700 underline-offset-4">Loading phone...</a>
-        </p>
-
-        <div class="pt-2">
-          <h4 class="font-semibold text-stone-200 mb-2 flex items-center">
-            <i class="fa-regular fa-clock text-amber-400 mr-2"></i> Opening Hours:
-          </h4>
-          <ul id="operatingHoursList" class="text-xs text-stone-400 space-y-1.5 max-w-xs divide-y divide-zinc-800/60"></ul>
-        </div>
-      </div>
-
-      <div class="bg-zinc-900 border border-zinc-800/80 rounded-2xl h-72 flex items-center justify-center text-stone-400 font-medium shadow-inner overflow-hidden">
-        <iframe id="googleMapsIframe" class="w-full h-full border-0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2975.234567890123!2d175.609!3d-40.355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d4043f29a0a0000%3A0x0!2s287%20Main%20St%2C%20Palmerston%20North%20Central%2C%20Palmerston%20North%204410!5e0!3m2!1sen!2snz!4v1700000000000!5m2!1sen!2snz"></iframe>
-      </div>
-    </div>
-  </section>
-
   <!-- FOOTER -->
-  <footer id="footerSection" class="bg-black text-stone-500 text-xs py-8 border-t border-zinc-900">
+  <footer class="bg-black text-stone-500 text-xs py-8 border-t border-zinc-900 mt-12">
     <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
-      <p id="footerStoreInfo">
-        <span id="footerStoreName">Store Name</span> | 
-        <a id="footerAddressLink" href="#" target="_blank" class="hover:text-stone-300 underline">Loading address...</a> | 
-        Phone: <a id="footerPhoneLink" href="#" class="hover:text-amber-400 text-stone-300 font-semibold underline">Loading phone...</a>
+      <p>
+        <span id="footerStoreName">Bangkok Thai Takeaway</span> | 
+        <a id="storeAddressLink" href="#" target="_blank" class="hover:text-stone-300 underline">Loading address...</a> | 
+        Phone: <a id="storePhoneLink" href="#" class="hover:text-amber-400 text-stone-300 font-semibold underline">Loading phone...</a>
       </p>
-      
       <div class="flex justify-center space-x-4 pt-1">
         <a id="adminPortalLink" href="admin.html" class="text-amber-400/80 hover:text-amber-300 underline"><i class="fa-solid fa-user-gear mr-1"></i> Manager Portal (Admin)</a>
       </div>
@@ -193,7 +135,7 @@
     </div>
   </footer>
 
-  <!-- FIREBASE SDKs & JAVASCRIPT LOGIC -->
+  <!-- FIREBASE SDKs & CLIENT SCRIPT -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -221,192 +163,69 @@
     let activeLayoutMode = 'grid';
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Hubungkan link admin dengan tenant parameter yang aktif
       const adminLink = document.getElementById('adminPortalLink');
-      if (adminLink) {
-        adminLink.href = `admin.html?tenant=${TENANT_ID}`;
-      }
+      if (adminLink) adminLink.href = `admin.html?tenant=${TENANT_ID}`;
 
-      // Real-time listener Firestore
       db.collection("tenants").doc(TENANT_ID).onSnapshot((doc) => {
         if (doc.exists && doc.data().config) {
           activeConfig = doc.data().config;
-          activeLayoutMode = activeConfig.store?.defaultLayout || 'grid';
-
           initStoreBranding();
-          applyCustomTheme();
           initHeroCarousel();
-          renderHighlightsBar();
           renderCategoryPills();
           renderMenuContentBox();
-          checkStoreStatusAndNotice();
         }
       }, (error) => {
-        console.error("Firebase sync error:", error);
+        console.error("Firebase error:", error);
       });
     });
 
-    function applyCustomTheme() {
-      const theme = activeConfig.theme || {};
-      const branding = activeConfig.branding || {};
-
-      const logoImg = document.getElementById('storeLogo');
-      if (logoImg && branding.logoHeight) logoImg.style.height = `${branding.logoHeight}px`;
-
-      const header = document.getElementById('mainHeader');
-      if (header && theme.headerBg) header.style.backgroundColor = theme.headerBg;
-      
-      const body = document.getElementById('mainBody');
-      if (body && theme.bodyBg) body.style.backgroundColor = theme.bodyBg;
-
-      const primaryBtnStyle = `background-color: ${theme.btnBg || '#f59e0b'}; color: ${theme.btnText || '#09090b'};`;
-      
-      const cartBtn = document.getElementById('cartBtn');
-      if (cartBtn) cartBtn.style.cssText += primaryBtnStyle;
-
-      const exploreBtn = document.getElementById('exploreBtn');
-      if (exploreBtn) exploreBtn.style.cssText += primaryBtnStyle;
-
-      const checkoutBtn = document.getElementById('checkoutBtn');
-      if (checkoutBtn) checkoutBtn.style.cssText += primaryBtnStyle;
-    }
-
     function initStoreBranding() {
-      if (!activeConfig.store) return;
-      const logoUrl = activeConfig.branding?.logo || '';
-      const storeName = activeConfig.store.name || 'Store Name';
-      const phoneNum = activeConfig.store.phone || '';
-      const addressText = activeConfig.store.address || '';
-      const mapsUrl = activeConfig.store.googleMapsEmbedUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressText)}`;
-      const cleanPhone = phoneNum.replace(/[^0-9+]/g, '');
-
-      document.getElementById('bannerTagline').innerText = activeConfig.store.tagline || '';
-      document.getElementById('storeTitleBottom').innerText = storeName;
+      const store = activeConfig.store || {};
+      const branding = activeConfig.branding || {};
+      const storeName = store.name || 'Store Name';
+      
+      document.getElementById('headerLogoText').innerText = storeName;
+      document.getElementById('heroTaglineTitle').innerText = storeName;
+      document.getElementById('bannerTagline').innerText = store.tagline || '';
       document.getElementById('footerStoreName').innerText = storeName;
+      document.getElementById('storeAddressLink').innerText = store.address || '';
+      document.getElementById('storePhoneLink').innerText = store.phone || '';
 
-      const addrLink = document.getElementById('storeAddressLink');
-      if (addrLink) { addrLink.innerText = addressText; addrLink.href = mapsUrl; }
-      
-      const footerAddr = document.getElementById('footerAddressLink');
-      if (footerAddr) { footerAddr.innerText = addressText; footerAddr.href = mapsUrl; }
-
-      const phoneLink = document.getElementById('storePhoneLink');
-      if (phoneLink) { phoneLink.innerText = phoneNum; phoneLink.href = `tel:${cleanPhone}`; }
-      
-      const footerPhone = document.getElementById('footerPhoneLink');
-      if (footerPhone) { footerPhone.innerText = phoneNum; footerPhone.href = `tel:${cleanPhone}`; }
-      
-      document.getElementById('storeLogo').src = logoUrl;
-      document.getElementById('heroLogo').src = logoUrl;
-      document.getElementById('noticeLogo').src = logoUrl;
-
-      renderOperatingHoursFooter();
-    }
-
-    function renderOperatingHoursFooter() {
-      const op = activeConfig.operatingHours || {};
-      const list = document.getElementById('operatingHoursList');
-      if (!list) return;
-
-      const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-      const dayIndices = [1, 2, 3, 4, 5, 6, 0];
-
-      list.innerHTML = dayIndices.map((idx, i) => {
-        const shortKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-        const val = op[shortKeys[idx]] || "Closed";
-        const isClosed = String(val).toLowerCase().includes('closed');
-        return `
-          <li class="flex justify-between pt-1">
-            <span>${dayNames[i]}:</span> 
-            <span class="font-medium ${isClosed ? 'text-red-400' : 'text-stone-200'}">${val}</span>
-          </li>
-        `;
-      }).join('');
-    }
-
-    function checkStoreStatusAndNotice() {
-      const op = activeConfig.operatingHours || {};
-      const theme = activeConfig.theme || {};
-      const badge = document.getElementById('headerStatusBadge');
-      const noticeModal = document.getElementById('storeNoticeModal');
-
-      const openBadgeStyle = `background-color: ${theme.btnBg || '#f59e0b'}; color: ${theme.btnText || '#09090b'}; border: 1px solid ${theme.btnBg || '#f59e0b'};`;
-      const closedBadgeStyle = `background-color: ${theme.accentBg || '#991b1b'}; color: ${theme.accentText || '#fef3c7'}; border: 1px solid ${theme.accentBg || '#991b1b'};`;
-
-      if (op.isTotallyClosed === true || op.isTotallyClosed === 'true') {
-        if (badge) { badge.innerText = "TEMPORARILY CLOSED"; badge.style.cssText = closedBadgeStyle; }
-        document.getElementById('noticeTitle').innerText = op.closureTitle || "Store Temporarily Closed";
-        document.getElementById('noticeMessage').innerText = op.closureMessage || "We are currently away on holidays.";
-        if(noticeModal) noticeModal.classList.remove('hidden');
-        return;
+      const logoUrl = branding.logo || '';
+      if (logoUrl) {
+        document.getElementById('storeLogo').src = logoUrl;
+        document.getElementById('heroLogo').src = logoUrl;
       }
-
-      if (badge) { badge.innerText = "OPEN NOW"; badge.style.cssText = openBadgeStyle; }
-    }
-
-    function closeStoreNoticeModal() { 
-      document.getElementById('storeNoticeModal').classList.add('hidden'); 
     }
 
     function initHeroCarousel() {
       const container = document.getElementById('heroSlidesContainer');
-      if (!container) return;
-      const baseImages = activeConfig.branding?.heroImages || [];
-      if (baseImages.length === 0) return;
+      const heroImages = activeConfig.branding?.heroImages || [];
+      if (heroImages.length === 0) return;
 
-      container.innerHTML = baseImages.map((src, idx) => `
+      container.innerHTML = heroImages.map((src, idx) => `
         <div class="hero-slide absolute inset-0 w-full h-full ${idx === 0 ? 'opacity-100' : 'opacity-0'}">
           <img src="${src}" class="w-full h-full object-cover">
         </div>
       `).join('');
     }
 
-    function renderHighlightsBar() {
-      const section = document.getElementById('highlightsSection');
-      const grid = document.getElementById('highlightsGrid');
-      const hl = activeConfig.highlights || {};
-
-      if (!hl || hl.enabled === false) {
-        if(section) section.classList.add('hidden');
-        return;
-      }
-
-      const activeItems = [hl.item1, hl.item2, hl.item3].filter(i => i && i.enabled !== false);
-      if (activeItems.length === 0) { if(section) section.classList.add('hidden'); return; }
-
-      if(section) section.classList.remove('hidden');
-      if(grid) {
-        grid.className = `grid grid-cols-1 md:grid-cols-3 gap-3 text-center`;
-        grid.innerHTML = activeItems.map(i => `
-          <div class="bg-zinc-800/80 px-3.5 py-2.5 rounded-xl border border-zinc-700/60 flex items-center space-x-3 shadow-md">
-            <div class="w-8 h-8 bg-zinc-950 text-amber-400 rounded-lg flex items-center justify-center flex-shrink-0 text-sm border border-zinc-700">
-              <i class="fa-solid fa-star"></i>
-            </div>
-            <div class="text-left">
-              <h4 class="font-bold text-xs text-stone-100 leading-tight">${i.title}</h4>
-              <p class="text-[10px] text-stone-400 leading-tight">${i.sub}</p>
-            </div>
-          </div>
-        `).join('');
-      }
-    }
-
     function renderCategoryPills() {
       const items = activeConfig.menuItems || [];
-      const rawCategories = [...new Set(items.map(i => i.category))];
-      const theme = activeConfig.theme || {};
-      const primaryBtnStyle = `background-color: ${theme.btnBg || '#f59e0b'}; color: ${theme.btnText || '#09090b'};`;
+      const categories = [...new Set(items.map(i => i.category))];
+      const pillsContainer = document.getElementById('categoryPills');
 
       let html = `
-        <button onclick="filterCategory('ALL')" style="${currentCategory === 'ALL' ? primaryBtnStyle : ''}" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${currentCategory === 'ALL' ? 'shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">ALL</button>
+        <button onclick="filterCategory('ALL')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${currentCategory === 'ALL' ? 'bg-amber-500 text-zinc-950 font-bold shadow-md' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">ALL</button>
       `;
 
-      rawCategories.forEach(cat => {
-        html += `<button onclick="filterCategory('${cat}')" style="${cat === currentCategory ? primaryBtnStyle : ''}" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${cat === currentCategory ? 'shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">${cat}</button>`;
+      categories.forEach(cat => {
+        const isActive = cat === currentCategory;
+        html += `
+          <button onclick="filterCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${isActive ? 'bg-amber-500 text-zinc-950 font-bold shadow-md' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">${cat}</button>
+        `;
       });
-
-      const pillsContainer = document.getElementById('categoryPills');
-      if (pillsContainer) pillsContainer.innerHTML = html;
+      pillsContainer.innerHTML = html;
     }
 
     function filterCategory(cat) {
@@ -417,6 +236,7 @@
 
     function toggleUserLayout() {
       activeLayoutMode = activeLayoutMode === 'grid' ? 'classic' : 'grid';
+      document.getElementById('layoutSwitchText').innerText = activeLayoutMode === 'grid' ? 'Switch to Classic List' : 'Switch to Modern Grid';
       renderMenuContentBox();
     }
 
@@ -429,10 +249,8 @@
       });
 
       const contentBox = document.getElementById('menuContentBox');
-      if (!contentBox) return;
-
       if (visibleItems.length === 0) {
-        contentBox.innerHTML = `<div class="text-center py-12 text-stone-500 col-span-full">No menu items found.</div>`;
+        contentBox.innerHTML = `<div class="text-center py-12 text-stone-500">No menu items found.</div>`;
         return;
       }
 
@@ -443,10 +261,10 @@
             const finalPrice = hasPromo ? Number(item.promoPrice) : Number(item.price);
 
             return `
-              <div class="rounded-2xl shadow-lg overflow-hidden border border-zinc-700/60 flex flex-col justify-between bg-zinc-800">
+              <div class="rounded-2xl shadow-lg overflow-hidden border border-zinc-700/60 flex flex-col justify-between bg-zinc-800 group">
                 <div>
                   <div class="relative overflow-hidden h-48 bg-zinc-900">
-                    <img src="${item.image || ''}" alt="${item.name}" class="w-full h-full object-cover">
+                    <img src="${item.image || ''}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                   </div>
                   <div class="p-4">
                     <div class="flex justify-between items-start gap-2">
@@ -459,8 +277,8 @@
                   </div>
                 </div>
                 <div class="p-4 pt-0">
-                  <button onclick="addToCart('${item.id}')" class="w-full bg-amber-500 text-zinc-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md hover:bg-amber-400">
-                    <i class="fa-solid fa-plus mr-1"></i> Add to Order
+                  <button onclick="addToCart('${item.id}')" class="w-full bg-amber-500 text-zinc-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md hover:bg-amber-400 flex items-center justify-center space-x-1">
+                    <i class="fa-solid fa-plus"></i><span>Add to Order</span>
                   </button>
                 </div>
               </div>
