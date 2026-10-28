@@ -1,232 +1,567 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RestoSync SaaS - Live Store Enterprise</title>
-  <!-- Tailwind CSS CDN -->
+  <title>RestoSync SaaS - Live Store</title>
+  <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
+  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-zinc-950 text-stone-100 font-sans antialiased min-h-screen flex flex-col">
+  <style>
+    .hero-slide { transition: opacity 1s ease-in-out; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-  <!-- Sticky Header -->
-  <header class="sticky top-0 z-40 bg-zinc-950/90 backdrop-blur border-b border-zinc-800 px-4 py-3 flex items-center justify-between shadow-md">
-    <div class="flex items-center space-x-3">
-      <span class="text-amber-500 text-xl"><i class="fa-solid fa-store"></i></span>
-      <h1 id="store-name" class="font-bold text-lg tracking-wide text-amber-400">Memuat Toko...</h1>
-    </div>
-    <div class="flex items-center space-x-4">
-      <span id="store-status-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-zinc-800 text-stone-300 border border-zinc-700">Mengecek...</span>
-      <button onclick="window.toggleCartModal()" class="relative bg-amber-500 text-zinc-950 px-3 py-1.5 rounded-lg font-bold text-sm flex items-center space-x-1.5 shadow hover:bg-amber-400 transition">
-        <i class="fa-solid fa-cart-shopping"></i>
-        <span id="cart-counter">0</span>
-      </button>
+    /* Efek Coretan Miring Merah Tebal untuk Harga Promo */
+    .strike-red-diagonal {
+      position: relative;
+      display: inline-block;
+      color: #a1a1aa;
+      font-weight: 700;
+    }
+    .strike-red-diagonal::after {
+      content: "";
+      position: absolute;
+      left: -3px;
+      right: -3px;
+      top: 50%;
+      height: 3px;
+      background: #ef4444;
+      transform: translateY(-50%) rotate(-12deg);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen selection:bg-amber-500 selection:text-zinc-950 pb-16">
+
+  <!-- HEADER FULL-WIDTH -->
+  <header id="mainHeader" class="text-white shadow-xl sticky top-0 z-50 border-b border-zinc-800/60 w-full"> 
+    <div class="w-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-4">
+      
+      <!-- LOGO AREA -->
+      <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
+        <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain drop-shadow max-h-8 sm:max-h-10">
+        <span id="headerLogoText" class="hidden sm:inline-block font-bold text-lg sm:text-xl tracking-wider uppercase text-amber-300 whitespace-nowrap">Takeaway</span>
+        <span id="headerStatusBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider transition-all"></span>
+      </div>
+      
+      <!-- CART BUTTON -->
+      <div class="flex items-center space-x-2 shrink-0">
+        <button onclick="window.toggleCartModal()" id="cartBtn" class="font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 sm:space-x-2 transition shadow-lg shrink-0">
+          <i class="fa-solid fa-basket-shopping"></i>
+          <span>Cart</span>
+          <span id="cartCount" class="bg-zinc-950 text-amber-400 font-bold text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full">0</span>
+        </button>
+      </div>
+
     </div>
   </header>
 
-  <!-- Hero Banner Visual Section -->
-  <section id="hero-banner" class="relative bg-zinc-900 border-b border-zinc-800 py-16 px-4 text-center bg-cover bg-center overflow-hidden" style="background-image: linear-gradient(to bottom, rgba(9, 9, 11, 0.85), rgba(9, 9, 11, 0.95)), url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5');">
-    <div class="max-w-3xl mx-auto space-y-3 relative z-10">
-      <span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Authentic Multi-Vertical Dining</span>
-      <h2 id="store-tagline" class="text-2xl md:text-4xl font-extrabold text-stone-100 tracking-tight">Memuat Slogan...</h2>
-      <p id="store-address" class="text-xs md:text-sm text-stone-300 flex items-center justify-center space-x-2 pt-1">
-        <i class="fa-solid fa-location-dot text-amber-400 mr-1"></i> <span id="address-text">Memuat alamat...</span>
-      </p>
+  <!-- HERO BANNER CAROUSEL -->
+  <section id="heroSection" class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden shadow-2xl">
+    <div id="heroSlidesContainer" class="relative w-full h-full"></div>
+
+    <div id="defaultHeroOverlay" class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/50 to-black/70 flex flex-col justify-center items-center text-center p-6 text-white transition-opacity duration-700 opacity-100 pointer-events-auto">
+      <img id="heroLogo" src="" alt="Store Logo" class="w-auto object-contain mb-3 filter drop-shadow-lg" style="height: 80px;">
+      <h2 id="heroTaglineTitle" class="text-2xl md:text-3xl font-extrabold tracking-widest uppercase mb-2">Takeaway</h2>
+      <p id="bannerTagline" class="text-sm md:text-lg text-stone-300 max-w-xl mb-6 font-light">Authentic Thai flavours cooked fresh to order.</p>
+      
+      <a href="#online-menu" id="exploreBtn" class="font-bold px-8 py-3.5 rounded-xl shadow-2xl transition flex items-center space-x-2 text-base border border-white/20 hover:scale-105 transform">
+        <i class="fa-solid fa-utensils"></i>
+        <span>Explore Menu & Order</span>
+      </a>
     </div>
   </section>
 
-  <!-- Category Pills Bar -->
-  <nav class="sticky top-[57px] z-30 bg-zinc-950/95 border-b border-zinc-800 px-4 py-3 overflow-x-auto whitespace-nowrap scrollbar-none shadow-sm">
-    <div id="category-container" class="inline-flex space-x-2">
-      <!-- Tombol Kategori dirender dinamis -->
-    </div>
-  </nav>
+  <!-- FEATURE HIGHLIGHTS BAR -->
+  <section id="highlightsSection" class="max-w-7xl mx-auto px-4 py-4 w-full">
+    <div id="highlightsGrid"></div>
+  </section>
 
-  <!-- Main Catalog Grid Container -->
-  <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6">
-    <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Dynamic Item Cards -->
+  <!-- MAIN MENU SECTION -->
+  <section id="online-menu" class="max-w-7xl mx-auto px-4 py-4 w-full flex-grow">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2 border-b border-zinc-800 pb-4">
+      <div>
+        <h2 id="menuMainTitle" class="text-2xl font-bold tracking-wide">Our Takeaway Menu</h2>
+        <p id="menuSubTitle" class="text-xs text-stone-400">Select a category or filter below to browse items</p>
+      </div>
+      
+      <div class="flex items-center space-x-2">
+        <span class="text-xs text-stone-400">Layout Mode:</span>
+        <button onclick="window.toggleUserLayout()" id="layoutSwitchBtn" class="text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-amber-400 border border-zinc-700 px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition shadow-sm">
+          <i class="fa-solid fa-arrows-rotate"></i>
+          <span id="layoutSwitchText">Switch View</span>
+        </button>
+      </div>
     </div>
-  </main>
 
-  <!-- Footer -->
-  <footer class="bg-zinc-900 border-t border-zinc-800 text-center py-6 text-xs text-stone-500 space-y-1">
-    <p>&copy; 2026 RestoSync SaaS Enterprise Ecosystem. Powered by Firebase Firestore.</p>
-    <p class="text-[10px] text-stone-600">Zero-Flicker Real-Time Multi-Tenant Engine</p>
+    <!-- CATEGORY PILLS + SPECIAL FILTERS -->
+    <div class="sticky top-[61px] z-30 bg-zinc-900/95 backdrop-blur-md py-3 -mx-4 px-4 shadow-lg mb-6 border-b border-zinc-800">
+      <div id="categoryPills" class="flex space-x-2 overflow-x-auto no-scrollbar py-1"></div>
+    </div>
+
+    <div id="menuContentBox" class="w-full"></div>
+  </section>
+
+  <!-- CART ESTIMATOR MODAL -->
+  <div id="cartModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex justify-end">
+    <div class="bg-zinc-900 w-full max-w-md h-full flex flex-col shadow-2xl border-l border-zinc-800">
+      <div class="p-4 bg-red-800 text-white flex justify-between items-center shadow-md">
+        <h3 class="font-bold text-lg flex items-center"><i class="fa-solid fa-cart-shopping mr-2 text-amber-400"></i> Your Order</h3>
+        <button onclick="window.toggleCartModal()" class="text-stone-300 hover:text-white text-2xl font-bold transition">&times;</button>
+      </div>
+      <div id="cartItemsList" class="flex-grow p-4 overflow-y-auto space-y-4 divide-y divide-zinc-800">
+        <p class="text-center text-stone-500 py-8">Your cart is empty.</p>
+      </div>
+      <div class="p-4 border-t border-zinc-800 bg-zinc-950 space-y-2.5">
+        <div class="flex justify-between text-xs text-stone-400"><span>Subtotal</span><span id="cartSubtotal" class="text-stone-200">$0.00</span></div>
+        <div id="holidaySurchargeRow" class="hidden flex justify-between text-xs text-amber-400 font-semibold">
+          <span id="surchargeLabel">Public Holiday Surcharge</span>
+          <span id="cartSurcharge">$0.00</span>
+        </div>
+        <div class="flex justify-between text-xs text-stone-400"><span>GST (15% Included)</span><span id="cartGST" class="text-stone-200">$0.00</span></div>
+        <div class="flex justify-between text-base font-bold text-stone-100 pt-2 border-t border-zinc-800"><span>Total (NZD)</span><span id="cartTotal" class="text-amber-400">$0.00</span></div>
+        <button id="checkoutBtn" onclick="window.handleCheckoutAction()" class="w-full py-3.5 rounded-xl font-bold text-center transition shadow-xl border border-white/20">
+          Proceed to Checkout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP ANNOUNCEMENT / CLOSED MODAL -->
+  <div id="storeNoticeModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-700 w-full max-w-md rounded-2xl shadow-2xl p-6 text-center space-y-4 relative">
+      <button onclick="window.closeStoreNoticeModal()" class="absolute top-4 right-4 text-stone-400 hover:text-white text-xl font-bold">&times;</button>
+      
+      <div class="flex justify-center mx-auto mb-2">
+        <img id="noticeLogo" src="" alt="Store Logo" class="w-auto h-20 max-w-[240px] object-contain filter drop-shadow-lg">
+      </div>
+
+      <h3 id="noticeTitle" class="text-xl font-extrabold text-stone-100">Store Currently Closed</h3>
+      <p id="noticeMessage" class="text-xs text-stone-300 leading-relaxed max-w-xs mx-auto">We are currently closed. Please check our operating hours below!</p>
+      
+      <div id="reopenDateBox" class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 text-xs text-amber-400 font-bold hidden">
+        <i class="fa-regular fa-clock mr-1.5"></i> <span id="reopenDateText">Today's Hours: Closed Today</span>
+      </div>
+
+      <button onclick="window.closeStoreNoticeModal()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-stone-200 font-bold py-2.5 rounded-xl text-xs transition border border-zinc-700">
+        Browse Menu Anyway
+      </button>
+    </div>
+  </div>
+
+  <!-- LOCATION & MAPS SECTION -->
+  <section id="locationSection" class="bg-zinc-950 py-12 border-t border-zinc-800 mt-12">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      <div class="space-y-4">
+        <h3 id="storeTitleBottom" class="text-2xl font-bold text-stone-100">Store Title</h3>
+        
+        <p class="text-stone-300 flex items-center">
+          <i class="fa-solid fa-location-dot text-amber-400 mr-3 text-lg"></i>
+          <a id="storeAddressLink" href="#" target="_blank" class="hover:text-amber-400 transition underline decoration-zinc-700 underline-offset-4">Loading address...</a>
+        </p>
+
+        <p class="text-stone-300 flex items-center">
+          <i class="fa-solid fa-phone text-amber-400 mr-3 text-lg"></i>
+          <a id="storePhoneLink" href="#" class="hover:text-amber-400 font-semibold transition underline decoration-zinc-700 underline-offset-4">Loading phone...</a>
+        </p>
+
+        <div class="pt-2">
+          <h4 class="font-semibold text-stone-200 mb-2 flex items-center">
+            <i class="fa-regular fa-clock text-amber-400 mr-2"></i> Opening Hours:
+          </h4>
+          <ul id="operatingHoursList" class="text-xs text-stone-400 space-y-1.5 max-w-xs divide-y divide-zinc-800/60"></ul>
+        </div>
+      </div>
+
+      <div class="bg-zinc-900 border border-zinc-800/80 rounded-2xl h-72 flex items-center justify-center text-stone-400 font-medium shadow-inner overflow-hidden">
+        <iframe id="googleMapsIframe" class="w-full h-full border-0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2975.234567890123!2d175.609!3d-40.355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d4043f29a0a0000%3A0x0!2s287%20Main%20St%2C%20Palmerston%20North%20Central%2C%20Palmerston%20North%204410!5e0!3m2!1sen!2snz!4v1700000000000!5m2!1sen!2snz"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="footerSection" class="bg-black text-stone-500 text-xs py-8 border-t border-zinc-900">
+    <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
+      <p id="footerStoreInfo">
+        <span id="footerStoreName">Store Name</span> | 
+        <a id="footerAddressLink" href="#" target="_blank" class="hover:text-stone-300 underline">Loading address...</a> | 
+        Phone: <a id="footerPhoneLink" href="#" class="hover:text-amber-400 text-stone-300 font-semibold underline">Loading phone...</a>
+      </p>
+      
+      <div class="flex justify-center space-x-4 pt-1">
+        <a id="adminPortalLink" href="admin.html?tenant=bangkokthaipalmy" class="text-amber-400/80 hover:text-amber-300 underline"><i class="fa-solid fa-user-gear mr-1"></i> Manager Portal (Admin)</a>
+      </div>
+      <p>Powered by <strong class="text-stone-300 font-bold">RestoSync SaaS</strong> &copy; 2026 TargetedScripts.com</p>
+    </div>
   </footer>
 
-  <!-- Firebase SDKs (Compat v9) -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <!-- MODULAR JAVASCRIPT INITIALIZATION -->
+  <script type="module">
+    import { AppState } from './assets/js/core/state.js';
+    import { TenantLoader } from './assets/js/core/tenant-loader.js';
+    import { StoreStatusEngine } from './assets/js/modules/store-status.js';
+    import { CatalogEngine } from './assets/js/modules/catalog-engine.js';
 
-  <script>
-    // State Aplikasi Global Sederhana
-    const AppState = {
-      tenantId: "bangkokthaipalmy",
-      config: {},
-      cart: [],
-      currentCategory: "ALL",
-      
-      addToCart(item, effectivePrice) {
-        const existing = this.cart.find(c => c.id === item.id);
-        if (existing) {
-          existing.qty++;
-        } else {
-          this.cart.push({ ...item, price: effectivePrice, qty: 1 });
-        }
-        document.getElementById('cart-counter').innerText = this.getCartItemCount();
-      },
+    let currentCategory = 'ALL';
+    let cart = [];
+    let activeLayoutMode = 'grid';
 
-      getCartItemCount() {
-        return this.cart.reduce((sum, item) => sum + item.qty, 0);
-      },
-
-      getCartSubtotal() {
-        return this.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-      }
-    };
-
-    window.filterCat = function(category) {
-      AppState.currentCategory = category;
-      renderCatalogGrid();
-      renderCategories();
-    };
-
-    window.addToOrder = function(itemId) {
-      const menuItems = AppState.config.menuItems || [];
-      const item = menuItems.find(i => i.id === itemId);
-      if (item) {
-        const effectivePrice = (item.promoPrice && Number(item.promoPrice) < Number(item.price)) 
-          ? Number(item.promoPrice) 
-          : Number(item.price);
-        AppState.addToCart(item, effectivePrice);
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Inisialisasi real-time tenant listener dari Firestore
+      await TenantLoader.initTenantListener((configData) => {
+        AppState.config = configData;
+        activeLayoutMode = AppState.config.store?.defaultLayout || 'grid';
         
-        // Feedback visual tombol
-        const btn = document.getElementById(`btn-${itemId}`);
-        if(btn) {
-          const originalText = btn.innerHTML;
-          btn.innerHTML = `<i class="fa-solid fa-check mr-1"></i> Ditambahkan!`;
-          btn.className = "w-full bg-emerald-600 text-white text-xs font-bold py-2.5 rounded-lg transition flex items-center justify-center space-x-1.5 shadow";
-          setTimeout(() => {
-            btn.innerHTML = originalText;
-            btn.className = "w-full bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 text-stone-200 text-xs font-bold py-2.5 rounded-lg transition border border-zinc-700 flex items-center justify-center space-x-1.5";
-          }, 1000);
-        }
-      }
-    };
-
-    window.toggleCartModal = function() {
-      const count = AppState.getCartItemCount();
-      const subtotal = AppState.getCartSubtotal();
-      alert(`🛒 Keranjang Belanja:\nTotal Item: ${count}\nSubtotal: $${subtotal.toFixed(2)}`);
-    };
-
-    function renderCategories() {
-      const items = AppState.config.menuItems || [];
-      const categories = [...new Set(items.map(i => i.category || 'General'))];
-      const container = document.getElementById('category-container');
-      
-      let html = `
-        <button onclick="window.filterCat('ALL')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${AppState.currentCategory === 'ALL' ? 'bg-amber-500 text-zinc-950 font-bold shadow-md' : 'bg-zinc-900 text-stone-300 border-zinc-800 hover:bg-zinc-800'}">ALL</button>
-      `;
-
-      categories.forEach(cat => {
-        const isActive = cat === AppState.currentCategory;
-        html += `
-          <button onclick="window.filterCat('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${isActive ? 'bg-amber-500 text-zinc-950 font-bold shadow-md' : 'bg-zinc-900 text-stone-300 border-zinc-800 hover:bg-zinc-800'}">${cat}</button>
-        `;
+        initStoreBranding();
+        applyCustomTheme();
+        initHeroCarousel();
+        renderHighlightsBar();
+        renderCategoryPills();
+        renderMenuContentBox();
+        checkStoreStatusAndNotice();
       });
-      container.innerHTML = html;
+
+      // Update link admin portal sesuai tenant aktif
+      const adminLink = document.getElementById('adminPortalLink');
+      if (adminLink) {
+        adminLink.href = `admin.html?tenant=${TenantLoader.getTenantId()}`;
+      }
+    });
+
+    function applyCustomTheme() {
+      const config = AppState.config || {};
+      const theme = config.theme || {};
+      const branding = config.branding || {};
+
+      const logoImg = document.getElementById('storeLogo');
+      if (logoImg && branding.logoHeight) logoImg.style.height = `${branding.logoHeight}px`;
+
+      const header = document.getElementById('mainHeader');
+      if (header && theme.headerBg) header.style.backgroundColor = theme.headerBg;
+      
+      const logoText = document.getElementById('headerLogoText');
+      if (logoText && theme.headerText) logoText.style.color = theme.headerText;
+
+      const body = document.getElementById('mainBody');
+      if (body && theme.bodyBg) body.style.backgroundColor = theme.bodyBg;
+
+      const primaryBtnStyle = `background-color: ${theme.btnBg || '#f59e0b'}; color: ${theme.btnText || '#09090b'};`;
+      
+      const cartBtn = document.getElementById('cartBtn');
+      if (cartBtn) cartBtn.style.cssText += primaryBtnStyle;
+
+      const exploreBtn = document.getElementById('exploreBtn');
+      if (exploreBtn) exploreBtn.style.cssText += primaryBtnStyle;
+
+      const checkoutBtn = document.getElementById('checkoutBtn');
+      if (checkoutBtn) checkoutBtn.style.cssText += primaryBtnStyle;
     }
 
-    function renderCatalogGrid() {
-      const items = AppState.config.menuItems || [];
-      const filtered = items.filter(item => {
-        if (AppState.currentCategory === 'ALL') return true;
-        return item.category === AppState.currentCategory;
-      });
+    function initStoreBranding() {
+      const config = AppState.config || {};
+      if (!config.store) return;
+      const logoUrl = config.branding?.logo || '';
+      const storeName = config.store.name || 'Store Name';
+      const phoneNum = config.store.phone || '';
+      const addressText = config.store.address || '';
+      const mapsUrl = config.store.googleMapsEmbedUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressText)}`;
+      const cleanPhone = phoneNum.replace(/[^0-9+]/g, '');
 
-      const gridEl = document.getElementById('catalog-grid');
-      if (filtered.length === 0) {
-        gridEl.innerHTML = `<div class="col-span-full text-center py-12 text-stone-500">Tidak ada item ditemukan dalam kategori ini.</div>`;
+      document.getElementById('bannerTagline').innerText = config.store.tagline || '';
+      document.getElementById('storeTitleBottom').innerText = storeName;
+      document.getElementById('footerStoreName').innerText = storeName;
+
+      const addrLink = document.getElementById('storeAddressLink');
+      if (addrLink) { addrLink.innerText = addressText; addrLink.href = mapsUrl; }
+      
+      const footerAddr = document.getElementById('footerAddressLink');
+      if (footerAddr) { footerAddr.innerText = addressText; footerAddr.href = mapsUrl; }
+
+      const phoneLink = document.getElementById('storePhoneLink');
+      if (phoneLink) { phoneLink.innerText = phoneNum; phoneLink.href = `tel:${cleanPhone}`; }
+      
+      const footerPhone = document.getElementById('footerPhoneLink');
+      if (footerPhone) { footerPhone.innerText = phoneNum; footerPhone.href = `tel:${cleanPhone}`; }
+      
+      if (document.getElementById('storeLogo')) document.getElementById('storeLogo').src = logoUrl;
+      if (document.getElementById('heroLogo')) document.getElementById('heroLogo').src = logoUrl;
+      if (document.getElementById('noticeLogo')) document.getElementById('noticeLogo').src = logoUrl;
+
+      renderOperatingHoursFooter();
+    }
+
+    function renderOperatingHoursFooter() {
+      const config = AppState.config || {};
+      const op = config.operatingHours || {};
+      const list = document.getElementById('operatingHoursList');
+      if (!list) return;
+
+      const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+      const dayIndices = [1, 2, 3, 4, 5, 6, 0];
+
+      list.innerHTML = dayIndices.map((idx, i) => {
+        const shortKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+        const longKeys = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        const val = op[shortKeys[idx]] || op[longKeys[idx]] || "Closed";
+        const isClosed = String(val).toLowerCase().includes('closed');
+        return `
+          <li class="flex justify-between pt-1">
+            <span>${dayNames[i]}:</span> 
+            <span class="font-medium ${isClosed ? 'text-red-400' : 'text-stone-200'}">${val}</span>
+          </li>
+        `;
+      }).join('');
+    }
+
+    function checkStoreStatusAndNotice() {
+      const config = AppState.config || {};
+      const op = config.operatingHours || {};
+      const theme = config.theme || {};
+      const badge = document.getElementById('headerStatusBadge');
+      const noticeModal = document.getElementById('storeNoticeModal');
+
+      const openBadgeStyle = `background-color: ${theme.btnBg || '#f59e0b'}; color: ${theme.btnText || '#09090b'}; border: 1px solid ${theme.btnBg || '#f59e0b'};`;
+      const closedBadgeStyle = `background-color: ${theme.accentBg || '#991b1b'}; color: ${theme.accentText || '#fef3c7'}; border: 1px solid ${theme.accentBg || '#991b1b'};`;
+
+      if (op.isTotallyClosed === true || op.isTotallyClosed === 'true') {
+        if (badge) { badge.innerText = "TEMPORARILY CLOSED"; badge.style.cssText = closedBadgeStyle; }
+        document.getElementById('noticeTitle').innerText = op.closureTitle || "Store Temporarily Closed";
+        document.getElementById('noticeMessage').innerText = op.closureMessage || "We are currently away on holidays. Please check back soon!";
+        if(noticeModal) noticeModal.classList.remove('hidden');
         return;
       }
 
-      let gridHtml = '';
-      filtered.forEach(item => {
-        const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
-        gridHtml += `
-          <div class="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden shadow-lg flex flex-col justify-between hover:border-zinc-700 transition">
-            <div>
-              <div class="h-48 bg-zinc-800 relative overflow-hidden">
-                <img src="${item.image || 'https://images.unsplash.com/photo-1541658016709-82535e94bc69'}" alt="${item.name}" class="w-full h-full object-cover hover:scale-105 transition duration-300">
-                ${hasPromo ? '<span class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow">PROMO</span>' : ''}
-              </div>
-              <div class="p-4 space-y-2">
-                <div class="flex justify-between items-start">
-                  <h3 class="font-bold text-stone-100 text-base leading-snug">${item.name}</h3>
-                  <div class="text-right whitespace-nowrap ml-2">
-                    ${hasPromo ? `<span class="text-xs text-stone-500 line-through mr-1.5">$${Number(item.price).toFixed(2)}</span><span class="text-amber-400 font-bold text-base">$${Number(item.promoPrice).toFixed(2)}</span>` : `<span class="text-amber-400 font-bold text-base">$${Number(item.price).toFixed(2)}</span>`}
-                  </div>
-                </div>
-                <p class="text-xs text-stone-400 line-clamp-2">${item.description || ''}</p>
-              </div>
-            </div>
-            <div class="p-4 pt-0">
-              <button id="btn-${item.id}" onclick="window.addToOrder('${item.id}')" class="w-full bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 text-stone-200 text-xs font-bold py-2.5 rounded-lg transition border border-zinc-700 flex items-center justify-center space-x-1.5 shadow">
-                <i class="fa-solid fa-plus"></i>
-                <span>Tambah ke Pesanan</span>
-              </button>
-            </div>
-          </div>
-        `;
-      });
-      gridEl.innerHTML = gridHtml;
+      const timeCheck = StoreStatusEngine.checkStatus(op);
+
+      if (!timeCheck.isOpen) {
+        if (badge) { badge.innerText = "CLOSED NOW"; badge.style.cssText = closedBadgeStyle; }
+        document.getElementById('noticeTitle').innerText = "Store Currently Closed";
+        document.getElementById('noticeMessage').innerText = `We are currently closed. Our operating hours for today are ${timeCheck.todayHoursStr}.`;
+        document.getElementById('reopenDateText').innerText = `Today's Hours: ${timeCheck.todayHoursStr}`;
+        document.getElementById('reopenDateBox').classList.remove('hidden');
+        if(noticeModal) noticeModal.classList.remove('hidden');
+      } else {
+        if (badge) { badge.innerText = "OPEN NOW"; badge.style.cssText = openBadgeStyle; }
+      }
     }
 
-    // Inisialisasi Firebase & Tarik Data Real-time
-    const firebaseConfig = {
-      apiKey: "AIzaSyCMd3tOM2g8FNL96UIlGRE9cbq3UUvssrQ",
-      authDomain: "restosync-saas.firebaseapp.com",
-      projectId: "restosync-saas",
-      storageBucket: "restosync-saas.firebasestorage.app",
-      messagingSenderId: "780544019719",
-      appId: "1:780544019719:web:e5fccb00a4981f2579c9a2"
+    window.closeStoreNoticeModal = function() {
+      const modal = document.getElementById('storeNoticeModal');
+      if (modal) modal.classList.add('hidden');
     };
 
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    const db = firebase.firestore();
+    function renderHighlightsBar() {
+      const config = AppState.config || {};
+      const section = document.getElementById('highlightsSection');
+      const grid = document.getElementById('highlightsGrid');
+      const hl = config.highlights || {};
 
-    const urlParams = new URLSearchParams(window.location.search);
-    AppState.tenantId = urlParams.get('tenant') || 'bangkokthaipalmy';
-
-    db.collection('tenants').doc(AppState.tenantId).onSnapshot((doc) => {
-      if (doc.exists) {
-        const data = doc.data();
-        AppState.config = data.config || {};
-        const store = AppState.config.store || {};
-
-        // Render Header & Hero Banner
-        document.getElementById('store-name').innerText = store.name || 'RestoSync Store';
-        document.getElementById('store-tagline').innerText = store.tagline || 'Selamat Datang di Toko Kami';
-        document.getElementById('address-text').innerText = `${store.address || ''} | Tel: ${store.phone || ''}`;
-
-        // Status Toko Buka
-        const statusBadge = document.getElementById('store-status-badge');
-        statusBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-950 text-emerald-300 border border-emerald-800 flex items-center";
-        statusBadge.innerHTML = `<i class="fa-solid fa-circle text-[6px] mr-1.5 animate-pulse text-emerald-400"></i> BUKA`;
-
-        // Render Kategori & Katalog Menu
-        renderCategories();
-        renderCatalogGrid();
-      } else {
-        document.getElementById('store-name').innerText = "Tenant Tidak Ditemukan";
+      if (!hl || hl.enabled === false || hl.enabled === 'false') {
+        if (section) section.classList.add('hidden');
+        return;
       }
-    });
+
+      const allItems = [
+        hl.item1 || { enabled: true, title: "Authentic Recipes", sub: "Traditional wok stir-fry" },
+        hl.item2 || { enabled: true, title: "Fast Online Pickup", sub: "Order in seconds" },
+        hl.item3 || { enabled: true, title: "Custom Spice & Veggie", sub: "Tailored spice levels" }
+      ];
+
+      const activeItems = allItems.filter(i => i.enabled !== false && i.enabled !== 'false');
+      if (activeItems.length === 0) { if (section) section.classList.add('hidden'); return; }
+
+      if (section) section.classList.remove('hidden');
+      if (grid) {
+        grid.className = `grid grid-cols-1 ${activeItems.length === 2 ? 'md:grid-cols-2' : activeItems.length >= 3 ? 'md:grid-cols-3' : ''} gap-3 text-center`;
+        grid.innerHTML = activeItems.map(i => `
+          <div class="bg-zinc-800/80 px-3.5 py-2.5 rounded-xl border border-zinc-700/60 flex items-center space-x-3 shadow-md">
+            <div class="w-8 h-8 bg-zinc-950 text-amber-400 rounded-lg flex items-center justify-center flex-shrink-0 text-sm border border-zinc-700">
+              <i class="fa-solid fa-star"></i>
+            </div>
+            <div class="text-left">
+              <h4 class="font-bold text-xs text-stone-100 leading-tight">${i.title}</h4>
+              <p class="text-[10px] text-stone-400 leading-tight">${i.sub}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function renderCategoryPills() {
+      const config = AppState.config || {};
+      if (!config.menuItems) return;
+      const visibleItems = config.menuItems.filter(i => i.isAvailable !== false && i.isAvailable !== 'false');
+      const rawCategories = [...new Set(visibleItems.map(item => item.category))];
+      const theme = config.theme || {};
+
+      const primaryBtnStyle = `background-color: ${theme.btnBg || '#f59e0b'}; color: ${theme.btnText || '#09090b'}; border-color: ${theme.btnBg || '#f59e0b'};`;
+      const accentBtnStyle = `background-color: ${theme.accentBg || '#991b1b'}; color: ${theme.accentText || '#fef3c7'}; border-color: ${theme.accentBg || '#991b1b'};`;
+
+      let pillsHTML = `
+        <button onclick="window.filterCategory('ALL')" style="${currentCategory === 'ALL' ? primaryBtnStyle : ''}" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${currentCategory === 'ALL' ? 'shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">ALL</button>
+        <button onclick="window.filterCategory('FILTER_PROMO')" style="${currentCategory === 'FILTER_PROMO' ? primaryBtnStyle : accentBtnStyle}" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition border flex items-center space-x-1.5 shadow-md"><i class="fa-solid fa-fire"></i><span>PROMO & OFFERS</span></button>
+        <button onclick="window.filterCategory('FILTER_FAVORITES')" style="${currentCategory === 'FILTER_FAVORITES' ? primaryBtnStyle : ''}" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition border flex items-center space-x-1.5 ${currentCategory === 'FILTER_FAVORITES' ? 'shadow-md' : 'bg-zinc-800 text-amber-400 border-zinc-700 hover:bg-zinc-700'}"><i class="fa-solid fa-star"></i><span>FAVORITES</span></button>
+      `;
+
+      rawCategories.forEach(cat => {
+        pillsHTML += `<button onclick="window.filterCategory('${cat}')" style="${cat === currentCategory ? primaryBtnStyle : ''}" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${cat === currentCategory ? 'shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">${cat}</button>`;
+      });
+
+      const pillsContainer = document.getElementById('categoryPills');
+      if (pillsContainer) pillsContainer.innerHTML = pillsHTML;
+    }
+
+    window.filterCategory = function(cat) { 
+      currentCategory = cat; 
+      renderCategoryPills(); 
+      renderMenuContentBox(); 
+    };
+
+    window.toggleUserLayout = function() { 
+      activeLayoutMode = activeLayoutMode === 'grid' ? 'classic' : 'grid'; 
+      renderMenuContentBox(); 
+    };
+
+    function renderMenuContentBox() {
+      const config = AppState.config || {};
+      if (!config.menuItems) return;
+      const btnText = document.getElementById('layoutSwitchText');
+      if (btnText) btnText.innerText = activeLayoutMode === 'grid' ? 'Switch to Classic List' : 'Switch to Modern Grid';
+
+      const visibleItems = config.menuItems.filter(i => {
+        if (i.isAvailable === false || i.isAvailable === 'false') return false;
+        const isFav = (i.isFavorite === true || i.isFavorite === 'true' || i.isFav === true || i.isFav === 'true');
+        const hasPromo = (i.promoPrice && Number(i.promoPrice) < Number(i.price));
+
+        if (currentCategory === 'ALL') return true;
+        if (currentCategory === 'FILTER_PROMO') return hasPromo;
+        if (currentCategory === 'FILTER_FAVORITES') return isFav;
+        return i.category === currentCategory;
+      });
+
+      const contentBox = document.getElementById('menuContentBox');
+      if (!contentBox) return;
+      const theme = config.theme || {};
+      const accentBtnStyle = `background-color: ${theme.accentBg || '#991b1b'}; color: ${theme.accentText || '#fef3c7'};`;
+
+      if (visibleItems.length === 0) {
+        contentBox.innerHTML = `<div class="text-center py-12 bg-zinc-900/50 rounded-2xl border border-zinc-800 space-y-2"><i class="fa-solid fa-utensils text-3xl text-stone-600"></i><p class="text-stone-400 text-sm font-semibold">No menu items found in this section.</p></div>`;
+        return;
+      }
+
+      contentBox.innerHTML = `
+        <div class="${activeLayoutMode === 'classic' ? 'space-y-4 max-w-4xl mx-auto' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'}">
+          ${visibleItems.map(item => {
+            const isSoldOut = item.stock <= 0;
+            const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
+            const finalPrice = hasPromo ? Number(item.promoPrice) : Number(item.price);
+            const isFav = (item.isFavorite === true || item.isFavorite === 'true' || item.isFav === true || item.isFav === 'true');
+
+            return `
+              <div class="rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden border border-zinc-700/60 flex flex-col justify-between group relative" style="background-color: ${theme.cardBg || '#27272a'};">
+                <div>
+                  <div class="relative overflow-hidden">
+                    ${item.image ? `<img src="${item.image}" alt="${item.name}" class="w-full h-48 object-cover group-hover:scale-105 transition duration-500 ${isSoldOut ? 'grayscale opacity-50' : ''}">` : `<div class="w-full h-36 bg-zinc-900 flex items-center justify-center text-stone-500 text-xs italic"><i class="fa-solid fa-utensils mr-2"></i> ${config.store.name}</div>`}
+                    ${isSoldOut ? `<div class="absolute inset-0 bg-black/60 flex items-center justify-center"><span class="bg-red-800 text-white font-extrabold text-sm px-4 py-1.5 rounded-lg shadow-xl border border-red-500 tracking-wider uppercase">SOLD OUT</span></div>` : ''}
+                    ${isFav ? `<div class="absolute top-3 right-3 bg-zinc-950/80 text-amber-400 p-1.5 rounded-full border border-amber-500/40 shadow-md" title="Favorite Dish"><i class="fa-solid fa-star text-xs"></i></div>` : ''}
+                  </div>
+                  <div class="p-4">
+                    <div class="flex justify-between items-start gap-2">
+                      <h3 class="font-bold text-stone-100 text-base leading-snug">${item.id}: ${item.name}</h3>
+                      <div class="text-right flex-shrink-0">
+                        ${hasPromo ? `<div><span class="strike-red-diagonal text-sm font-bold">$${Number(item.price).toFixed(2)}</span></div><div class="font-black text-amber-400 text-lg">$${finalPrice.toFixed(2)}</div>` : `<div class="font-black text-amber-400 text-lg">$${Number(item.price).toFixed(2)}</div>`}
+                      </div>
+                    </div>
+                    <p class="text-xs text-stone-400 mt-1.5 line-clamp-2 leading-relaxed">${item.description}</p>
+                  </div>
+                </div>
+                <div class="p-4 pt-0">
+                  ${!isSoldOut ? `<button onclick="window.addToCart('${item.id}')" style="${accentBtnStyle}" class="w-full font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 border border-white/10 shadow-md hover:opacity-90"><i class="fa-solid fa-plus"></i> <span>Add to Order</span></button>` : `<button disabled class="w-full bg-zinc-900 text-stone-600 font-bold py-2.5 rounded-xl text-xs text-center border border-zinc-800 cursor-not-allowed">Out of Stock</button>`}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function initHeroCarousel() {
+      const config = AppState.config || {};
+      const container = document.getElementById('heroSlidesContainer');
+      if (!container) return;
+      const baseImages = config.branding?.heroImages || [];
+      const slidesDataGlobal = baseImages.map(img => ({ type: 'brand', src: img }));
+      if (slidesDataGlobal.length === 0) return;
+
+      container.innerHTML = slidesDataGlobal.map((s, idx) => `
+        <div class="hero-slide absolute inset-0 w-full h-full ${idx === 0 ? 'opacity-100' : 'opacity-0'}">
+          <img src="${s.src}" class="w-full h-full object-cover">
+        </div>
+      `).join('');
+    }
+
+    window.addToCart = function(id) {
+      const config = AppState.config || {};
+      const item = config.menuItems.find(i => i.id === id);
+      if (!item) return;
+      const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
+      const effectivePrice = hasPromo ? Number(item.promoPrice) : Number(item.price);
+      const ex = cart.find(c => c.id === id);
+      if (ex) { ex.qty++; } else { cart.push({ ...item, price: effectivePrice, qty: 1 }); }
+      updateCartUI();
+    };
+
+    window.updateCartQty = function(id, delta) {
+      const idx = cart.findIndex(c => c.id === id);
+      if (idx !== -1) {
+        cart[idx].qty += delta;
+        if (cart[idx].qty <= 0) cart.splice(idx, 1);
+      }
+      updateCartUI();
+    };
+
+    function updateCartUI() {
+      const countEl = document.getElementById('cartCount');
+      if (countEl) countEl.innerText = cart.reduce((s,i)=>s+i.qty,0);
+      const subtotal = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+      const subtotalEl = document.getElementById('cartSubtotal');
+      const totalEl = document.getElementById('cartTotal');
+      if (subtotalEl) subtotalEl.innerText = `$${subtotal.toFixed(2)}`;
+      if (totalEl) totalEl.innerText = `$${subtotal.toFixed(2)}`;
+
+      const itemsList = document.getElementById('cartItemsList');
+      if (!itemsList) return;
+      if (cart.length === 0) {
+        itemsList.innerHTML = `<p class="text-center text-stone-500 py-8">Your cart is empty.</p>`;
+      } else {
+        itemsList.innerHTML = cart.map(i => `
+          <div class="pt-3 flex justify-between items-center text-stone-200">
+            <div>
+              <h4 class="font-semibold text-sm">${i.id}: ${i.name}</h4>
+              <p class="text-xs text-stone-400">$${i.price.toFixed(2)} each</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="window.updateCartQty('${i.id}', -1)" class="w-6 h-6 bg-zinc-800 text-stone-300 rounded flex items-center justify-center font-bold text-xs hover:bg-zinc-700">-</button>
+              <span class="text-xs font-bold px-1">${i.qty}</span>
+              <button onclick="window.updateCartQty('${i.id}', 1)" class="w-6 h-6 bg-zinc-800 text-stone-300 rounded flex items-center justify-center font-bold text-xs hover:bg-zinc-700">+</button>
+              <span class="text-sm font-bold text-amber-400 w-12 text-right">$${(i.price * i.qty).toFixed(2)}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    window.toggleCartModal = function() { 
+      const modal = document.getElementById('cartModal');
+      if (modal) modal.classList.toggle('hidden'); 
+    };
+
+    window.handleCheckoutAction = function() { 
+      alert('Order submitted successfully!'); 
+    };
   </script>
+
 </body>
 </html>
