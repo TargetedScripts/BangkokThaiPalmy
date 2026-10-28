@@ -625,5 +625,44 @@
     function toggleCartModal() { document.getElementById('cartModal').classList.toggle('hidden'); }
     function handleCheckoutAction() { alert('Order submitted!'); }
   </script>
+
+<!-- Firebase SDKs via CDN -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCMd3tOM2g8FNL96UIlGRE9cbq3UUvssrQ",
+    authDomain: "restosync-saas.firebaseapp.com",
+    projectId: "restosync-saas",
+    storageBucket: "restosync-saas.firebasestorage.app",
+    messagingSenderId: "780544019719",
+    appId: "1:780544019719:web:e5fccb00a4981f2579c9a2"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const TENANT_ID = "bangkokthaipalmy";
+
+  // Real-time Listener
+  db.collection("tenants").doc(TENANT_ID)
+    .onSnapshot((doc) => {
+      if (doc.exists && doc.data().config) {
+        const liveConfig = doc.data().config;
+        console.log("Data real-time diterima dari Firebase:", liveConfig);
+        
+        // Perbarui tampilan jam buka & menu di HP pembeli
+        if (typeof renderStoreHours === 'function') {
+          renderStoreHours(liveConfig.operatingHours);
+        }
+        if (typeof renderMenuCatalogue === 'function') {
+          renderMenuCatalogue(liveConfig.menuItems);
+        }
+      }
+    }, (error) => {
+      console.error("Gagal mendengarkan update Firebase:", error);
+    });
+</script>
+
 </body>
 </html>
