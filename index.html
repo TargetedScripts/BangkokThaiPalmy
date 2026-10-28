@@ -35,16 +35,17 @@
     }
   </style>
 </head>
-<body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen selection:bg-amber-500 selection:text-zinc-950">
+<body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen selection:bg-amber-500 selection:text-zinc-950 pb-16">
 
   <!-- HEADER FULL-WIDTH -->
   <header id="mainHeader" class="text-white shadow-xl sticky top-0 z-50 border-b border-zinc-800/60 w-full"> 
-       <div class="w-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-4">
+    <div class="w-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-4">
       
       <!-- LOGO AREA -->
       <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
         <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain drop-shadow max-h-8 sm:max-h-10">
         <span id="headerLogoText" class="hidden sm:inline-block font-bold text-lg sm:text-xl tracking-wider uppercase text-amber-300 whitespace-nowrap">Takeaway</span>
+        <span id="headerStatusBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider"></span>
       </div>
       
       <!-- CART BUTTON -->
@@ -115,18 +116,51 @@
       <div id="cartItemsList" class="flex-grow p-4 overflow-y-auto space-y-4 divide-y divide-zinc-800">
         <p class="text-center text-stone-500 py-8">Your cart is empty.</p>
       </div>
-      <div class="p-4 border-t border-zinc-800 bg-zinc-950 space-y-3">
-        <div class="flex justify-between text-sm text-stone-400"><span>Subtotal</span><span id="cartSubtotal" class="text-stone-200">$0.00</span></div>
-        <div class="flex justify-between text-sm text-stone-400"><span>GST (15% Included)</span><span id="cartGST" class="text-stone-200">$0.00</span></div>
-        <div class="flex justify-between text-lg font-bold text-stone-100 pt-2 border-t border-zinc-800"><span>Total (NZD)</span><span id="cartTotal" class="text-amber-400">$0.00</span></div>
-        <button id="checkoutBtn" onclick="alert('Order submitted to Bangkok Thai Takeaway!')" class="w-full py-3.5 rounded-xl font-bold text-center transition shadow-xl border border-white/20">
+      <div class="p-4 border-t border-zinc-800 bg-zinc-950 space-y-2.5">
+        <div class="flex justify-between text-xs text-stone-400"><span>Subtotal</span><span id="cartSubtotal" class="text-stone-200">$0.00</span></div>
+        <div id="holidaySurchargeRow" class="hidden flex justify-between text-xs text-amber-400 font-semibold">
+          <span id="surchargeLabel">Public Holiday Surcharge</span>
+          <span id="cartSurcharge">$0.00</span>
+        </div>
+        <div class="flex justify-between text-xs text-stone-400"><span>GST (15% Included)</span><span id="cartGST" class="text-stone-200">$0.00</span></div>
+        <div class="flex justify-between text-base font-bold text-stone-100 pt-2 border-t border-zinc-800"><span>Total (NZD)</span><span id="cartTotal" class="text-amber-400">$0.00</span></div>
+        <button id="checkoutBtn" onclick="handleCheckoutAction()" class="w-full py-3.5 rounded-xl font-bold text-center transition shadow-xl border border-white/20">
           Proceed to Checkout
         </button>
       </div>
     </div>
   </div>
 
-  <!-- LOCATION & MAPS -->
+  <!-- POPUP ANNOUNCEMENT / VACATION MODAL (POPUP WINDOW) -->
+  <div id="storeNoticeModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-700 w-full max-w-md rounded-2xl shadow-2xl p-6 text-center space-y-4 relative">
+      <button onclick="closeStoreNoticeModal()" class="absolute top-4 right-4 text-stone-400 hover:text-white text-xl font-bold">&times;</button>
+      <div class="w-14 h-14 bg-amber-500/10 text-amber-400 rounded-2xl flex items-center justify-center mx-auto text-2xl border border-amber-500/30 shadow-inner">
+        <i id="noticeIcon" class="fa-solid fa-umbrella-beach"></i>
+      </div>
+      <h3 id="noticeTitle" class="text-xl font-extrabold text-stone-100">Store Temporarily Closed</h3>
+      <p id="noticeMessage" class="text-xs text-stone-300 leading-relaxed max-w-xs mx-auto">We are currently closed for holidays. Please check back later!</p>
+      
+      <div id="reopenDateBox" class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 text-xs text-amber-400 font-bold hidden">
+        <i class="fa-regular fa-calendar-check mr-1.5"></i> <span id="reopenDateText">Re-opening on Monday, 15 Nov</span>
+      </div>
+
+      <button onclick="closeStoreNoticeModal()" class="w-full bg-zinc-800 hover:bg-zinc-700 text-stone-200 font-bold py-2.5 rounded-xl text-xs transition border border-zinc-700">
+        Browse Menu Anyway
+      </button>
+    </div>
+  </div>
+
+  <!-- FLYING WINDOW / BOTTOM BANNER NOTIFICATION -->
+  <div id="flyingStatusBanner" class="fixed bottom-0 inset-x-0 bg-amber-500 text-zinc-950 font-bold px-4 py-2.5 z-40 shadow-2xl hidden flex items-center justify-between text-xs border-t border-amber-400">
+    <div class="flex items-center space-x-2">
+      <i class="fa-solid fa-clock text-sm"></i>
+      <span id="flyingBannerText">Store is currently outside normal operating hours.</span>
+    </div>
+    <button onclick="document.getElementById('flyingStatusBanner').classList.add('hidden')" class="text-zinc-950 font-extrabold text-base leading-none">&times;</button>
+  </div>
+
+  <!-- LOCATION & MAPS SECTION -->
   <section id="locationSection" class="bg-zinc-950 py-12 border-t border-zinc-800 mt-12">
     <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
       <div class="space-y-4">
@@ -137,12 +171,19 @@
         <p id="storePhone" class="text-stone-300 flex items-center">
           <i class="fa-solid fa-phone text-amber-400 mr-3 text-lg"></i> Loading phone...
         </p>
+
+        <!-- OPERATING HOURS DISPLAY DARI CONFIG ADMIN -->
         <div class="pt-2">
-          <h4 class="font-semibold text-stone-200 mb-2">Opening Hours:</h4>
-          <ul class="text-sm text-stone-400 space-y-1">
-            <li class="flex justify-between max-w-xs"><span>Monday - Saturday:</span> <span class="font-medium text-stone-200">4:30 PM - 9:00 PM</span></li>
-            <li class="flex justify-between max-w-xs"><span>Sunday:</span> <span class="font-medium text-stone-200">Closed</span></li>
+          <h4 class="font-semibold text-stone-200 mb-2 flex items-center">
+            <i class="fa-regular fa-clock text-amber-400 mr-2"></i> Opening Hours:
+          </h4>
+          <ul id="operatingHoursList" class="text-sm text-stone-400 space-y-1 max-w-xs">
+            <li class="flex justify-between"><span>Monday - Saturday:</span> <span class="font-medium text-stone-200">4:30 PM - 9:00 PM</span></li>
+            <li class="flex justify-between"><span>Sunday:</span> <span class="font-medium text-stone-200">Closed</span></li>
           </ul>
+          <p id="surchargeNoticeFooter" class="text-[11px] text-amber-400/90 mt-2 italic hidden">
+            <i class="fa-solid fa-circle-info mr-1"></i> A public holiday surcharge applies on selected open holidays.
+          </p>
         </div>
       </div>
       <div class="bg-zinc-900 border border-zinc-800/80 rounded-2xl h-64 flex items-center justify-center text-stone-400 font-medium shadow-inner overflow-hidden">
@@ -192,6 +233,9 @@
       renderHighlightsBar();
       renderCategoryPills();
       renderMenuContentBox();
+
+      // CEK STATUS TOTAL CLOSURE & OPERATING HOURS
+      checkStoreStatusAndNotice();
     });
 
     function verifyLicenseToken() {
@@ -241,65 +285,59 @@
     }
 
     /* MENERAPKAN WARNA DINAMIS SECARA FLEKSIBEL 100% */
-function applyCustomTheme() {
-  const theme = activeConfig.theme || {};
-  const branding = activeConfig.branding || {};
+    function applyCustomTheme() {
+      const theme = activeConfig.theme || {};
+      const branding = activeConfig.branding || {};
 
-  // Logo Height
-  const logoImg = document.getElementById('storeLogo');
-  if (logoImg && branding.logoHeight) {
-    logoImg.style.height = `${branding.logoHeight}px`;
-  }
+      const logoImg = document.getElementById('storeLogo');
+      if (logoImg && branding.logoHeight) {
+        logoImg.style.height = `${branding.logoHeight}px`;
+      }
 
-  // Header Background, Text & Dynamic Border Line Fix
-  const header = document.getElementById('mainHeader');
-  if (header) {
-    if (theme.headerBg) {
-      header.style.backgroundColor = theme.headerBg;
-      // Menghilangkan/menyesuaikan border merah tua dengan warna header dinamis
-      header.style.borderColor = (theme.headerBg === '#000000' || theme.headerBg === '#18181b') 
-        ? '#27272a' 
-        : 'rgba(255, 255, 255, 0.1)';
+      const header = document.getElementById('mainHeader');
+      if (header) {
+        if (theme.headerBg) {
+          header.style.backgroundColor = theme.headerBg;
+          header.style.borderColor = (theme.headerBg === '#000000' || theme.headerBg === '#18181b') 
+            ? '#27272a' 
+            : 'rgba(255, 255, 255, 0.1)';
+        }
+      }
+      
+      const logoText = document.getElementById('headerLogoText');
+      if (logoText && theme.headerText) logoText.style.color = theme.headerText;
+
+      const body = document.getElementById('mainBody');
+      if (body && theme.bodyBg) body.style.backgroundColor = theme.bodyBg;
+
+      const title1 = document.getElementById('menuMainTitle');
+      const heroTagTitle = document.getElementById('heroTaglineTitle');
+      if (theme.title1) {
+        if (title1) title1.style.color = theme.title1;
+        if (heroTagTitle) heroTagTitle.style.color = theme.title1;
+      }
+
+      const title2 = document.getElementById('menuSubTitle');
+      if (title2 && theme.title2) title2.style.color = theme.title2;
+
+      const primaryBtnStyle = `background-color: ${theme.btnBg || '#f59e0b'}; color: ${theme.btnText || '#09090b'};`;
+      
+      const cartBtn = document.getElementById('cartBtn');
+      if (cartBtn) cartBtn.style.cssText += primaryBtnStyle;
+
+      const exploreBtn = document.getElementById('exploreBtn');
+      if (exploreBtn) exploreBtn.style.cssText += primaryBtnStyle;
+
+      const checkoutBtn = document.getElementById('checkoutBtn');
+      if (checkoutBtn) checkoutBtn.style.cssText += primaryBtnStyle;
+
+      const footer = document.getElementById('footerSection');
+      if (footer && theme.footerBg) {
+        footer.style.backgroundColor = theme.footerBg;
+        if (theme.footerText) footer.style.color = theme.footerText;
+      }
     }
-  }
-  
-  const logoText = document.getElementById('headerLogoText');
-  if (logoText && theme.headerText) logoText.style.color = theme.headerText;
 
-  // Body Background
-  const body = document.getElementById('mainBody');
-  if (body && theme.bodyBg) body.style.backgroundColor = theme.bodyBg;
-
-  // Title Colors
-  const title1 = document.getElementById('menuMainTitle');
-  const heroTagTitle = document.getElementById('heroTaglineTitle');
-  if (theme.title1) {
-    if (title1) title1.style.color = theme.title1;
-    if (heroTagTitle) heroTagTitle.style.color = theme.title1;
-  }
-
-  const title2 = document.getElementById('menuSubTitle');
-  if (title2 && theme.title2) title2.style.color = theme.title2;
-
-  // Primary Buttons (Cart, Explore & Checkout)
-  const primaryBtnStyle = `background-color: ${theme.btnBg || '#f59e0b'}; color: ${theme.btnText || '#09090b'};`;
-  
-  const cartBtn = document.getElementById('cartBtn');
-  if (cartBtn) cartBtn.style.cssText += primaryBtnStyle;
-
-  const exploreBtn = document.getElementById('exploreBtn');
-  if (exploreBtn) exploreBtn.style.cssText += primaryBtnStyle;
-
-  const checkoutBtn = document.getElementById('checkoutBtn');
-  if (checkoutBtn) checkoutBtn.style.cssText += primaryBtnStyle;
-
-  // Footer Background & Text
-  const footer = document.getElementById('footerSection');
-  if (footer && theme.footerBg) {
-    footer.style.backgroundColor = theme.footerBg;
-    if (theme.footerText) footer.style.color = theme.footerText;
-  }
-}
     function initStoreBranding() {
       if (!activeConfig.store) return;
       document.getElementById('bannerTagline').innerText = activeConfig.store.tagline || '';
@@ -312,6 +350,87 @@ function applyCustomTheme() {
       if (activeConfig.store.googleMapsEmbedUrl) {
         document.getElementById('googleMapsIframe').src = activeConfig.store.googleMapsEmbedUrl;
       }
+
+      // Render Display Jam Operasional di Footer Bottom
+      renderOperatingHoursFooter();
+    }
+
+    /* RENDER OPERATING HOURS & SURCHARGE DI BOTTOM HOMEPAGE */
+    function renderOperatingHoursFooter() {
+      const op = activeConfig.operatingHours || {};
+      const list = document.getElementById('operatingHoursList');
+      const surchargeNotice = document.getElementById('surchargeNoticeFooter');
+
+      if (!list) return;
+
+      const weekText = op.weekdayHours || "Mon - Sat: 4:30 PM - 9:00 PM";
+      const sunText = op.sundayHours || "Sun: Closed";
+
+      list.innerHTML = `
+        <li class="flex justify-between"><span>Mon - Sat:</span> <span class="font-medium text-stone-200">${weekText}</span></li>
+        <li class="flex justify-between"><span>Sunday:</span> <span class="font-medium text-stone-200">${sunText}</span></li>
+      `;
+
+      if (op.hasHolidaySurcharge && op.surchargePercent > 0) {
+        surchargeNotice.innerText = `* ${op.surchargeName || 'Public Holiday Surcharge'} (${op.surchargePercent}%) applies today.`;
+        surchargeNotice.classList.remove('hidden');
+      } else {
+        surchargeNotice.classList.add('hidden');
+      }
+    }
+
+    /* CHECK TOTAL CLOSURE & OPERATING HOURS STATUS */
+    function checkStoreStatusAndNotice() {
+      const op = activeConfig.operatingHours || {};
+      const badge = document.getElementById('headerStatusBadge');
+      const noticeModal = document.getElementById('storeNoticeModal');
+      const flyingBanner = document.getElementById('flyingStatusBanner');
+
+      // 1. KONDISI TUTUP TOTAL (OWNER VACATION / EMERGENCY)
+      if (op.isTotallyClosed === true) {
+        if (badge) {
+          badge.innerText = "TEMPORARILY CLOSED";
+          badge.className = "text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider bg-red-950 text-red-400 border border-red-800";
+        }
+
+        document.getElementById('noticeTitle').innerText = op.closureTitle || "Store Temporarily Closed";
+        document.getElementById('noticeMessage').innerText = op.closureMessage || "We are currently away for annual holidays and will return soon!";
+        
+        if (op.reopenDate) {
+          document.getElementById('reopenDateText').innerText = `Re-opening on ${op.reopenDate}`;
+          document.getElementById('reopenDateBox').classList.remove('hidden');
+        } else {
+          document.getElementById('reopenDateBox').classList.add('hidden');
+        }
+
+        noticeModal.classList.remove('hidden');
+        return;
+      }
+
+      // 2. CEK STATUS OPERASIONAL NORMAL
+      if (badge) {
+        badge.innerText = "OPEN NOW";
+        badge.className = "text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-800";
+      }
+
+      // 3. JIKA OUTSIDE HOURS (TUKAR DENGAN FLYING BANNER MELAYANG)
+      if (op.isOutsideHours === true) {
+        document.getElementById('flyingBannerText').innerText = op.outsideHoursMessage || "We are currently closed for online orders. Our opening hours are 4:30 PM - 9:00 PM.";
+        flyingBanner.classList.remove('hidden');
+      }
+    }
+
+    function closeStoreNoticeModal() {
+      document.getElementById('storeNoticeModal').classList.add('hidden');
+    }
+
+    function handleCheckoutAction() {
+      const op = activeConfig.operatingHours || {};
+      if (op.isTotallyClosed) {
+        alert(`Sorry, order cannot be processed. ${op.closureTitle || 'Store is temporarily closed'}. Re-opening: ${op.reopenDate || 'Soon'}`);
+        return;
+      }
+      alert('Order submitted successfully to Bangkok Thai Takeaway!');
     }
 
     function initHeroCarousel() {
@@ -437,7 +556,6 @@ function applyCustomTheme() {
       `).join('');
     }
 
-    /* CATEGORY PILLS DENGAN WARNA ACCENT DAN PRIMARY DINAMIS */
     function renderCategoryPills() {
       if (!activeConfig.menuItems) return;
       const visibleItems = activeConfig.menuItems.filter(i => i.isAvailable !== false);
@@ -485,7 +603,6 @@ function applyCustomTheme() {
       renderMenuContentBox();
     }
 
-    /* RENDER MENU CARDS DENGAN TOMBOL ADD TO ORDER BERWARNA ACCENT DINAMIS */
     function renderMenuContentBox() {
       if (!activeConfig.menuItems) return;
 
@@ -614,7 +731,7 @@ function applyCustomTheme() {
                       ? `<button onclick="addToCart('${item.id}')" style="${accentBtnStyle}" class="w-full font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 border border-white/10 shadow-md hover:opacity-90">
                            <i class="fa-solid fa-plus"></i> <span>Add to Order</span>
                          </button>`
-                      : `<button disabled class="w-full bg-zinc-900 text-stone-600 font-bold py-2.5 rounded-xl text-xs text-center border border-zinc-800 cursor-not-allowed">
+                      : `<button disabled class="bg-zinc-900 text-stone-600 font-bold py-2.5 rounded-xl text-xs text-center border border-zinc-800 cursor-not-allowed">
                            Out of Stock
                          </button>`
                     }
@@ -651,15 +768,30 @@ function applyCustomTheme() {
       updateCartUI();
     }
 
+    /* RENDER CART DENGAN DYNAMIC PUBLIC HOLIDAY SURCHARGE */
     function updateCartUI() {
       document.getElementById('cartCount').innerText = cart.reduce((s,i)=>s+i.qty,0);
       const subtotal = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+      
+      const op = activeConfig.operatingHours || {};
+      let surchargeAmount = 0;
+
+      if (op.hasHolidaySurcharge && op.surchargePercent > 0) {
+        surchargeAmount = subtotal * (op.surchargePercent / 100);
+        document.getElementById('surchargeLabel').innerText = `${op.surchargeName || 'Public Holiday Surcharge'} (${op.surchargePercent}%)`;
+        document.getElementById('cartSurcharge').innerText = `$${surchargeAmount.toFixed(2)}`;
+        document.getElementById('holidaySurchargeRow').classList.remove('hidden');
+      } else {
+        document.getElementById('holidaySurchargeRow').classList.add('hidden');
+      }
+
+      const totalWithSurcharge = subtotal + surchargeAmount;
       const gstRate = activeConfig.store?.gstRate || 0.15;
-      const gst = subtotal * gstRate;
+      const gst = totalWithSurcharge * gstRate;
 
       document.getElementById('cartSubtotal').innerText = `$${subtotal.toFixed(2)}`;
       document.getElementById('cartGST').innerText = `$${gst.toFixed(2)}`;
-      document.getElementById('cartTotal').innerText = `$${subtotal.toFixed(2)}`;
+      document.getElementById('cartTotal').innerText = `$${totalWithSurcharge.toFixed(2)}`;
 
       const itemsList = document.getElementById('cartItemsList');
       if (cart.length === 0) {
