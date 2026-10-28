@@ -48,8 +48,11 @@
         <span id="headerStatusBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider transition-all"></span>
       </div>
       
-      <!-- CART BUTTON -->
-      <div class="flex items-center shrink-0">
+      <!-- CART BUTTON & RESET CACHE -->
+      <div class="flex items-center space-x-2 shrink-0">
+        <button onclick="forceSyncConfig()" title="Refresh Data From Admin" class="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-stone-400 hover:text-white border border-zinc-700 text-xs">
+          <i class="fa-solid fa-rotate"></i>
+        </button>
         <button onclick="toggleCartModal()" id="cartBtn" class="font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 sm:space-x-2 transition shadow-lg shrink-0">
           <i class="fa-solid fa-basket-shopping"></i>
           <span>Cart</span>
@@ -221,14 +224,22 @@
     let activeLayoutMode = 'grid';
     let isStoreOpenRightNow = true;
 
+    function forceSyncConfig() {
+      localStorage.removeItem('RESTOSYNC_WORKING_CONFIG');
+      location.reload();
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
-      // Prioritaskan RESTOSYNC_CONFIG asli dari file js terlebih dahulu jika ada pembaruan versi
       const baseConfig = typeof RESTOSYNC_CONFIG !== 'undefined' ? RESTOSYNC_CONFIG : {};
       const saved = localStorage.getItem('RESTOSYNC_WORKING_CONFIG');
       
       if (saved) {
         try { 
           activeConfig = JSON.parse(saved); 
+          // Jika data localStorage tidak memiliki jam Rabu yang sesuai, lakukan autosync
+          if (!activeConfig.operatingHours || !activeConfig.operatingHours.wed) {
+            activeConfig = baseConfig;
+          }
         } catch(e) { 
           activeConfig = baseConfig; 
         }
@@ -404,7 +415,6 @@
 
       if (!list) return;
 
-      // Mengambil data riil tanpa fallback yang salah
       const days = [
         { label: "Monday", val: op.mon || "Closed" },
         { label: "Tuesday", val: op.tue || "Closed" },
@@ -732,9 +742,12 @@
         const isEnabled = i.isAvailable !== false;
         if (!isEnabled) return false;
 
+        const isFav = (i.isFavorite === true || i.isFavorite === 'true' || i.isFavorite === 1);
+        const hasPromo = (i.promoPrice && Number(i.promoPrice) < Number(i.price));
+
         if (currentCategory === 'ALL') return true;
-        if (currentCategory === 'FILTER_PROMO') return (i.promoPrice && Number(i.promoPrice) < Number(i.price));
-        if (currentCategory === 'FILTER_FAVORITES') return (i.isFavorite === true || i.isFavorite === 'true');
+        if (currentCategory === 'FILTER_PROMO') return hasPromo;
+        if (currentCategory === 'FILTER_FAVORITES') return isFav;
 
         return i.category === currentCategory;
       });
@@ -762,7 +775,7 @@
               const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
               const finalPrice = hasPromo ? Number(item.promoPrice) : Number(item.price);
               const promoTag = item.promoTag || (hasPromo ? "SPECIAL OFFER" : "");
-              const isFav = (item.isFavorite === true || item.isFavorite === 'true');
+              const isFav = (item.isFavorite === true || item.isFavorite === 'true' || item.isFavorite === 1);
 
               return `
                 <div class="rounded-xl p-4 border border-zinc-700/60 hover:border-zinc-600 transition space-y-3" style="background-color: ${theme.cardBg || '#27272a'};">
@@ -811,7 +824,7 @@
               const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
               const finalPrice = hasPromo ? Number(item.promoPrice) : Number(item.price);
               const promoTag = item.promoTag || (hasPromo ? "SPECIAL OFFER" : "");
-              const isFav = (item.isFavorite === true || item.isFavorite === 'true');
+              const isFav = (item.isFavorite === true || item.isFavorite === 'true' || item.isFavorite === 1);
 
               return `
                 <div class="rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden border border-zinc-700/60 flex flex-col justify-between group relative" style="background-color: ${theme.cardBg || '#27272a'};">
