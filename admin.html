@@ -899,5 +899,54 @@
       URL.revokeObjectURL(url);
     }
   </script>
+
+<!-- Firebase SDKs via CDN -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+<script>
+  // Konfigurasi Firebase RestoSync
+  const firebaseConfig = {
+    apiKey: "AIzaSyCMd3tOM2g8FNL96UIlGRE9cbq3UUvssrQ",
+    authDomain: "restosync-saas.firebaseapp.com",
+    projectId: "restosync-saas",
+    storageBucket: "restosync-saas.firebasestorage.app",
+    messagingSenderId: "780544019719",
+    appId: "1:780544019719:web:e5fccb00a4981f2579c9a2"
+  };
+
+  // Inisialisasi Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  // ID Tenant untuk Bangkok Thai
+  const TENANT_ID = "bangkokthaipalmy";
+
+  // Fungsi untuk menyimpan perubahan dari Admin ke Firebase
+  async function saveToFirebase(configData) {
+    try {
+      await db.collection("tenants").doc(TENANT_ID).set({
+        config: configData,
+        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+      
+      console.log("Data berhasil tersimpan di Cloud Firebase!");
+      alert("Perubahan berhasil di-save ke Cloud! Seluruh HP pembeli otomatis diperbarui.");
+    } catch (error) {
+      console.error("Gagal menyimpan ke Firebase:", error);
+      alert("Gagal menyimpan data ke Cloud.");
+    }
+  }
+
+  // Panggil fungsi ini saat tombol 'Save All Changes' di Admin diklik
+  document.getElementById('btnSaveAll')?.addEventListener('click', function() {
+    // Ambil data konfigurasi aktif dari form/state Admin Bapak
+    const activeConfig = typeof getAdminFormData === 'function' ? getAdminFormData() : RESTOSYNC_CONFIG;
+    
+    // Simpan ke Firebase
+    saveToFirebase(activeConfig);
+  });
+</script>
+
 </body>
 </html>
