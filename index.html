@@ -241,23 +241,23 @@
     }
 
     /* MENERAPKAN WARNA DINAMIS SECARA FLEKSIBEL 100% */
-    function applyCustomTheme() {
-    const theme = activeConfig.theme || {};
-    const branding = activeConfig.branding || {};
+function applyCustomTheme() {
+  const theme = activeConfig.theme || {};
+  const branding = activeConfig.branding || {};
 
-    // Logo Height
-    const logoImg = document.getElementById('storeLogo');
-    if (logoImg && branding.logoHeight) {
-        logoImg.style.height = `${branding.logoHeight}px`;
-    }
+  // Logo Height
+  const logoImg = document.getElementById('storeLogo');
+  if (logoImg && branding.logoHeight) {
+    logoImg.style.height = `${branding.logoHeight}px`;
+  }
 
-  // Header Background & Text
+  // Header Background, Text & Dynamic Border Line Fix
   const header = document.getElementById('mainHeader');
   if (header) {
     if (theme.headerBg) {
       header.style.backgroundColor = theme.headerBg;
-      // Garis border bawah header menyesuaikan ke Hitam/Gelap atau transparan
-      header.style.borderColor = theme.headerBg === '#000000' || theme.headerBg === '#18181b' 
+      // Menghilangkan/menyesuaikan border merah tua dengan warna header dinamis
+      header.style.borderColor = (theme.headerBg === '#000000' || theme.headerBg === '#18181b') 
         ? '#27272a' 
         : 'rgba(255, 255, 255, 0.1)';
     }
@@ -281,14 +281,17 @@
   const title2 = document.getElementById('menuSubTitle');
   if (title2 && theme.title2) title2.style.color = theme.title2;
 
-  // Primary Buttons (Cart, Explore, Checkout)
-  ['cartBtn', 'exploreBtn', 'checkoutBtn'].forEach(id => {
-    const btn = document.getElementById(id);
-    if (btn && theme.btnBg) {
-      btn.style.backgroundColor = theme.btnBg;
-      btn.style.color = theme.btnText || '#000000';
-    }
-  });
+  // Primary Buttons (Cart, Explore & Checkout)
+  const primaryBtnStyle = `background-color: ${theme.btnBg || '#f59e0b'}; color: ${theme.btnText || '#09090b'};`;
+  
+  const cartBtn = document.getElementById('cartBtn');
+  if (cartBtn) cartBtn.style.cssText += primaryBtnStyle;
+
+  const exploreBtn = document.getElementById('exploreBtn');
+  if (exploreBtn) exploreBtn.style.cssText += primaryBtnStyle;
+
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  if (checkoutBtn) checkoutBtn.style.cssText += primaryBtnStyle;
 
   // Footer Background & Text
   const footer = document.getElementById('footerSection');
