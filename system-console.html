@@ -4,11 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RestoSync SaaS - System Operator Console</title>
-  <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- CryptoJS Library for AES Encryption -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body class="bg-zinc-950 text-stone-200 min-h-screen flex flex-col font-sans selection:bg-amber-500 selection:text-zinc-950">
@@ -25,12 +22,10 @@
       </div>
       <div class="flex items-center space-x-3">
         <a href="index.html" target="_blank" class="text-xs font-semibold text-stone-300 hover:text-white transition flex items-center space-x-1 border border-zinc-700 bg-zinc-800 px-3 py-1.5 rounded-lg">
-          <i class="fa-solid fa-store"></i>
-          <span>Live Store</span>
+          <i class="fa-solid fa-store"></i><span>Live Store</span>
         </a>
         <a href="admin.html" target="_blank" class="text-xs font-semibold text-amber-400 hover:text-amber-300 transition flex items-center space-x-1 border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 rounded-lg">
-          <i class="fa-solid fa-user-gear"></i>
-          <span>Manager Portal</span>
+          <i class="fa-solid fa-user-gear"></i><span>Manager Portal</span>
         </a>
       </div>
     </div>
@@ -39,13 +34,12 @@
   <!-- MAIN CONTAINER -->
   <main class="max-w-4xl mx-auto px-4 py-8 flex-grow w-full space-y-6">
     
-    <!-- PAGE TITLE -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800 pb-4">
       <div>
         <h1 class="text-2xl font-bold text-stone-100 flex items-center">
           <i class="fa-solid fa-gears text-amber-400 mr-3"></i> System Operator Console
         </h1>
-        <p class="text-xs text-stone-400 mt-1">AES-256 encrypted license management, automated email notification setups, and SaaS feature toggles.</p>
+        <p class="text-xs text-stone-400 mt-1">AES-256 encrypted license management & dynamic tier-based feature toggles.</p>
       </div>
       <button onclick="saveSystemConfig()" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-6 py-2.5 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-sm">
         <i class="fa-solid fa-lock"></i>
@@ -53,209 +47,112 @@
       </button>
     </div>
 
-    <!-- FORM SECTION 1: TENANT LICENSE & CONTRACT -->
+    <!-- SECTION 1: TENANT LICENSE & CONTRACT -->
     <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-4">
       <h2 class="font-bold text-base text-stone-100 flex items-center border-b border-zinc-800 pb-3">
         <i class="fa-solid fa-id-card text-amber-400 mr-2.5"></i> Tenant License & Contract
       </h2>
-
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
         <div>
           <label class="block text-stone-400 mb-1 font-medium">Tenant ID Key</label>
-          <input type="text" id="sysTenantId" placeholder="e.g. bangkokthai" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100 focus:outline-none focus:border-amber-400 font-mono">
+          <input type="text" id="sysTenantId" value="bangkokthaipalmy" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100 font-mono">
         </div>
         <div>
           <label class="block text-stone-400 mb-1 font-medium">Tenant Legal Name</label>
-          <input type="text" id="sysLegalName" placeholder="e.g. Bangkok Thai Takeaway" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100 focus:outline-none focus:border-amber-400">
+          <input type="text" id="sysLegalName" value="Bangkok Thai Takeaway" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100">
         </div>
       </div>
-
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs bg-red-950/20 border border-red-900/40 p-4 rounded-xl">
         <div>
-          <label class="block text-amber-300 mb-1 font-bold flex items-center">
-            <i class="fa-solid fa-calendar-day mr-1.5"></i> Subscription Expiry Date
-          </label>
-          <input type="date" id="sysExpiryDate" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100 focus:outline-none focus:border-amber-400">
-          <span class="block text-[10px] text-stone-400 mt-1">Store will automatically trigger a Lockdown screen after this date if not renewed.</span>
+          <label class="block text-amber-300 mb-1 font-bold">Subscription Expiry Date</label>
+          <input type="date" id="sysExpiryDate" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100">
         </div>
-
         <div>
           <label class="block text-stone-300 mb-1 font-bold">Contract Status</label>
-          <select id="sysContractStatus" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100 font-semibold focus:outline-none focus:border-amber-400">
+          <select id="sysContractStatus" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100 font-semibold">
             <option value="active">Active & Subscribed</option>
             <option value="suspended">Suspended / Paused</option>
             <option value="expired">Expired & Locked</option>
           </select>
-          <span class="block text-[10px] text-stone-400 mt-1">Set back to Active upon payment renewal to unlock store immediately.</span>
         </div>
       </div>
     </div>
 
-    <!-- FORM SECTION 2: CLIENT CONTACT & AUTOMATED NOTIFICATIONS -->
+    <!-- SECTION 2: SUBSCRIPTION FEATURE TOGGLE MATRIX -->
     <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-4">
       <h2 class="font-bold text-base text-stone-100 flex items-center border-b border-zinc-800 pb-3">
-        <i class="fa-solid fa-envelope-open-text text-amber-400 mr-2.5"></i> Client Contact & Expiry Email Alerts
+        <i class="fa-solid fa-cubes text-amber-400 mr-2.5"></i> Subscription Feature Toggle Matrix (Enable / Disable Modules)
       </h2>
-
-      <p class="text-xs text-stone-400 leading-relaxed">
-        Configure client email addresses for automated invoice reminders (sent 30 days and 7 days prior to expiry).
-      </p>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-        <div>
-          <label class="block text-stone-400 mb-1 font-medium">Client Contact Person</label>
-          <input type="text" id="sysContactPerson" placeholder="e.g. John Doe (Owner)" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100 focus:outline-none focus:border-amber-400">
-        </div>
-        <div>
-          <label class="block text-stone-400 mb-1 font-medium">Client Notification Email</label>
-          <input type="email" id="sysContactEmail" placeholder="e.g. manager@bangkokthai.co.nz" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-amber-300 font-mono focus:outline-none focus:border-amber-400">
-        </div>
-      </div>
-
-      <div class="text-xs space-y-2 pt-2 border-t border-zinc-800">
-        <label class="block text-stone-400 font-medium">Google Apps Script Auto-Notifier Webhook URL (Optional)</label>
-        <input type="url" id="sysWebhookUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-300 font-mono text-[11px] focus:outline-none focus:border-amber-400">
-        <span class="block text-[10px] text-stone-500">Connects to TargetedScripts email trigger engine to send automated warnings.</span>
-      </div>
-    </div>
-
-    <!-- FORM SECTION 3: SAAS MODULE FEATURE TOGGLES -->
-    <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-xl space-y-4">
-      <h2 class="font-bold text-base text-stone-100 flex items-center border-b border-zinc-800 pb-3">
-        <i class="fa-solid fa-cubes text-amber-400 mr-2.5"></i> Enabled SaaS Modules
-      </h2>
+      <p class="text-xs text-stone-400">Modul yang dimatikan (*off*) tidak akan muncul atau aktif pada sistem restoran klien.</p>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
         <label class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex items-center justify-between cursor-pointer">
-          <div>
-            <span class="block font-bold text-stone-200">Digital Menu & Ordering</span>
-            <span class="text-[10px] text-stone-400">Core online catalogue module</span>
-          </div>
+          <div><span class="block font-bold text-stone-200">Digital Menu & Ordering</span><span class="text-[10px] text-stone-400">Katalog menu utama</span></div>
           <input type="checkbox" id="modMenu" checked class="w-4 h-4 accent-amber-500 rounded">
         </label>
-
         <label class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex items-center justify-between cursor-pointer">
-          <div>
-            <span class="block font-bold text-stone-200">Hero Carousel Showcase</span>
-            <span class="text-[10px] text-stone-400">Featured dish banner slider</span>
-          </div>
+          <div><span class="block font-bold text-stone-200">Hero Carousel Showcase</span><span class="text-[10px] text-stone-400">Banner promosi melayang</span></div>
           <input type="checkbox" id="modHero" checked class="w-4 h-4 accent-amber-500 rounded">
         </label>
-
         <label class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex items-center justify-between cursor-pointer">
-          <div>
-            <span class="block font-bold text-stone-200">Cart Estimator & GST</span>
-            <span class="text-[10px] text-stone-400">Order calculator with NZ GST</span>
-          </div>
+          <div><span class="block font-bold text-stone-200">Cart Estimator & GST 15%</span><span class="text-[10px] text-stone-400">Kalkulator pajak NZ</span></div>
           <input type="checkbox" id="modCart" checked class="w-4 h-4 accent-amber-500 rounded">
         </label>
-
         <label class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex items-center justify-between cursor-pointer">
-          <div>
-            <span class="block font-bold text-stone-200">POS Integration Sync</span>
-            <span class="text-[10px] text-stone-400">Advanced thermal receipt module</span>
-          </div>
-          <input type="checkbox" id="modPos" class="w-4 h-4 accent-amber-500 rounded">
+          <div><span class="block font-bold text-stone-200">POS Integration & Thermal Receipt</span><span class="text-[10px] text-stone-400">Pencetakan struk kasir</span></div>
+          <input type="checkbox" id="modPos" checked class="w-4 h-4 accent-amber-500 rounded">
+        </label>
+        <label class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex items-center justify-between cursor-pointer">
+          <div><span class="block font-bold text-stone-200">Table Booking & Floor Plan</span><span class="text-[10px] text-stone-400">Khusus Fine Dining / Resto Besar</span></div>
+          <input type="checkbox" id="modTableBooking" class="w-4 h-4 accent-amber-500 rounded">
+        </label>
+        <label class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex items-center justify-between cursor-pointer">
+          <div><span class="block font-bold text-stone-200">Kitchen Display System (KDS)</span><span class="text-[10px] text-stone-400">Layar pesanan dapur real-time</span></div>
+          <input type="checkbox" id="modKds" class="w-4 h-4 accent-amber-500 rounded">
         </label>
       </div>
     </div>
 
     <!-- ACTION BUTTONS -->
-    <div class="pt-4 flex flex-col sm:flex-row justify-end gap-3">
-      <button onclick="exportConfigFile()" class="bg-red-800 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl text-xs shadow-xl transition flex items-center justify-center space-x-2">
-        <i class="fa-solid fa-file-export"></i>
-        <span>Export Updated bangkokthaipalmy.js</span>
+    <div class="pt-4 flex justify-end">
+      <button onclick="exportConfigFile()" class="bg-red-800 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl text-xs shadow-xl transition flex items-center space-x-2">
+        <i class="fa-solid fa-file-export"></i><span>Export Config & Encrypted Token</span>
       </button>
     </div>
-
   </main>
-
-  <!-- INTEGRASI SCRIPT -->
-  <script src="assets/js/bangkokthaipalmy.js"></script>
 
   <script>
     const SECRET_KEY = "TargetedScripts-Master-Secret-2026!Key";
-    let activeConfig = {};
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const saved = localStorage.getItem('RESTOSYNC_WORKING_CONFIG');
-      if (saved) {
-        try { activeConfig = JSON.parse(saved); } catch(e) { activeConfig = RESTOSYNC_CONFIG; }
-      } else {
-        activeConfig = typeof RESTOSYNC_CONFIG !== 'undefined' ? RESTOSYNC_CONFIG : {};
-      }
-
-      populateConsoleForm();
-    });
-
-    function populateConsoleForm() {
-      if (!activeConfig) return;
-
-      document.getElementById('sysTenantId').value = activeConfig.tenantId || 'bangkokthai';
-      document.getElementById('sysLegalName').value = activeConfig.store?.name || 'Bangkok Thai Takeaway';
-
-      // Load Client Contact Details
-      document.getElementById('sysContactPerson').value = activeConfig.clientContact?.name || '';
-      document.getElementById('sysContactEmail').value = activeConfig.clientContact?.email || '';
-      document.getElementById('sysWebhookUrl').value = activeConfig.clientContact?.webhookUrl || '';
-
-      // Load Contract Parameters
-      const contract = activeConfig.contract || {};
-      document.getElementById('sysExpiryDate').value = contract.expiryDate || '2027-10-31';
-      document.getElementById('sysContractStatus').value = contract.status || 'active';
-
-      // Load Features
-      const feat = activeConfig.features || {};
-      document.getElementById('modMenu').checked = feat.digitalMenu !== false;
-      document.getElementById('modHero').checked = feat.heroShowcase !== false;
-      document.getElementById('modCart').checked = feat.cartEstimator !== false;
-      document.getElementById('modPos').checked = feat.posSync === true;
-    }
 
     function saveSystemConfig() {
-      activeConfig.tenantId = document.getElementById('sysTenantId').value;
-      if (!activeConfig.store) activeConfig.store = {};
-      activeConfig.store.name = document.getElementById('sysLegalName').value;
-
-      // Save Client Contact Details
-      activeConfig.clientContact = {
-        name: document.getElementById('sysContactPerson').value,
-        email: document.getElementById('sysContactEmail').value,
-        webhookUrl: document.getElementById('sysWebhookUrl').value
-      };
-
-      // Save Contract Info
-      activeConfig.contract = {
-        expiryDate: document.getElementById('sysExpiryDate').value,
-        status: document.getElementById('sysContractStatus').value
-      };
-
-      // Save Feature Flags
-      activeConfig.features = {
-        digitalMenu: document.getElementById('modMenu').checked,
-        heroShowcase: document.getElementById('modHero').checked,
-        cartEstimator: document.getElementById('modCart').checked,
-        posSync: document.getElementById('modPos').checked
-      };
-
-      // GENERATE ENCRYPTED AES TOKEN
-      const payloadToEncrypt = {
-        tenantId: activeConfig.tenantId,
-        expiryDate: activeConfig.contract.expiryDate,
-        status: activeConfig.contract.status,
-        features: activeConfig.features,
+      const configPayload = {
+        tenantId: document.getElementById('sysTenantId').value,
+        store: { name: document.getElementById('sysLegalName').value },
+        contract: {
+          expiryDate: document.getElementById('sysExpiryDate').value,
+          status: document.getElementById('sysContractStatus').value
+        },
+        features: {
+          digitalMenu: document.getElementById('modMenu').checked,
+          heroShowcase: document.getElementById('modHero').checked,
+          cartEstimator: document.getElementById('modCart').checked,
+          posSync: document.getElementById('modPos').checked,
+          tableBooking: document.getElementById('modTableBooking').checked,
+          kds: document.getElementById('modKds').checked
+        },
         generatedAt: new Date().toISOString()
       };
 
-      activeConfig.encryptedToken = CryptoJS.AES.encrypt(JSON.stringify(payloadToEncrypt), SECRET_KEY).toString();
-
-      localStorage.setItem('RESTOSYNC_WORKING_CONFIG', JSON.stringify(activeConfig));
-      alert('System Configuration & AES Token successfully saved and encrypted!');
+      // Enkripsi payload menjadi AES-256 Token
+      configPayload.encryptedToken = CryptoJS.AES.encrypt(JSON.stringify(configPayload), SECRET_KEY).toString();
+      localStorage.setItem('RESTOSYNC_WORKING_CONFIG', JSON.stringify(configPayload));
+      alert('Konfigurasi Sistem & Token AES-256 berhasil disimpan dan dienkripsi!');
     }
 
     function exportConfigFile() {
       saveSystemConfig();
-      const fileContent = `/**\n * RestoSync SaaS - Master Configuration & Encrypted Token\n * Tenant: ${activeConfig.store.name}\n * Provider: TargetedScripts.com\n */\n\nconst RESTOSYNC_CONFIG = ${JSON.stringify(activeConfig, null, 2)};\n`;
+      const saved = localStorage.getItem('RESTOSYNC_WORKING_CONFIG');
+      const fileContent = `const RESTOSYNC_CONFIG = ${saved};\n`;
       const blob = new Blob([fileContent], { type: 'text/javascript' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
