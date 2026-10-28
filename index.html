@@ -39,7 +39,7 @@
   <!-- Category Pills Bar -->
   <nav class="sticky top-[57px] z-30 bg-zinc-950/95 border-b border-zinc-800 px-4 py-2.5 overflow-x-auto whitespace-nowrap scrollbar-none">
     <div id="category-container" class="inline-flex space-x-2">
-      <!-- Rendered dynamically by CatalogEngine -->
+      <!-- Rendered dynamically -->
     </div>
   </nav>
 
@@ -65,9 +65,7 @@
     import { AppState } from './assets/js/core/state.js';
     import { StoreStatusEngine } from './assets/js/modules/store-status.js';
     import { CatalogEngine } from './assets/js/modules/catalog-engine.js';
-    import { CartCheckoutEngine } from './assets/js/modules/cart-checkout.js';
 
-    // Global helper functions attached to window for DOM onclick events
     window.filterCat = function(category) {
       AppState.currentCategory = category;
       renderAppUI();
@@ -85,20 +83,20 @@
           : Number(item.price);
         AppState.addToCart(item, effectivePrice);
         document.getElementById('cart-counter').innerText = AppState.getCartItemCount();
-        console.log("Added to cart:", AppState.cart);
       }
     };
 
     function renderAppUI() {
       const config = AppState.config;
-      if (!config.store) return;
+      if (!config) return;
 
-      // Render Header Details
-      document.getElementById('store-name').innerText = config.store.name || 'RestoSync Store';
-      document.getElementById('store-tagline').innerText = config.store.tagline || '';
-      document.getElementById('store-address').innerHTML = `<i class="fa-solid fa-location-dot mr-1"></i> ${config.store.address || ''} | <i class="fa-solid fa-phone ml-2 mr-1"></i> ${config.store.phone || ''}`;
+      // Render Store Info safely
+      const store = config.store || {};
+      document.getElementById('store-name').innerText = store.name || 'RestoSync Store';
+      document.getElementById('store-tagline').innerText = store.tagline || '';
+      document.getElementById('store-address').innerHTML = `<i class="fa-solid fa-location-dot mr-1"></i> ${store.address || ''} | <i class="fa-solid fa-phone ml-2 mr-1"></i> ${store.phone || ''}`;
 
-      // Check Store Status using isolated engine
+      // Check Store Status
       const status = StoreStatusEngine.checkStatus(config.operatingHours);
       const statusBadge = document.getElementById('store-status-badge');
       if (status.isOpen) {
@@ -152,10 +150,9 @@
       gridEl.innerHTML = gridHtml;
     }
 
-    // Inisialisasi Real-Time Listener dari TenantLoader
+    // Inisialisasi Real-Time Listener
     document.addEventListener("DOMContentLoaded", () => {
       TenantLoader.initTenantListener((data) => {
-        console.log("Real-time tenant data updated:", data);
         renderAppUI();
       });
     });
