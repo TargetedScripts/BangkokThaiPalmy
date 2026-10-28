@@ -148,7 +148,6 @@
       document.getElementById('footerPhone').innerText = store.phone || '';
       document.getElementById('footerPhone').href = `tel:${store.phone || ''}`;
 
-      // Jam Operasional Sinkron
       const op = activeConfig.operatingHours || {};
       const validDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
       const hoursHtml = Object.keys(op)
@@ -163,10 +162,11 @@
       }
     }
 
-    // Slider Otomatis Mengambil Menu yang Ditag isHero atau isPromo + Fallback Gambar
     function initHeroSlider() {
       const container = document.getElementById('heroSlidesContainer');
-      const items = (activeConfig.menuItems || []).filter(i => (i.isHero || i.isPromo) && i.image);
+      if (!container) return;
+
+      const items = (activeConfig.menuItems || []).filter(i => (i.isHero || i.isPromo) && i.image && i.image.trim() !== '');
       let slides = items.map(i => i.image);
 
       const defaultImages = [
@@ -174,7 +174,10 @@
         'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=1200&q=80',
         'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1200&q=80'
       ];
-      if (slides.length === 0) slides = defaultImages;
+      
+      if (slides.length === 0) {
+        slides = defaultImages;
+      }
 
       container.innerHTML = slides.map((img, idx) => `
         <div class="hero-slide absolute inset-0 w-full h-full ${idx === 0 ? 'opacity-100' : 'opacity-0'}">
