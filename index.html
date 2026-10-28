@@ -20,7 +20,7 @@
 </head>
 <body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen pb-16">
 
-  <!-- LICENSE SUSPENDED MODAL -->
+  <!-- LICENSE SUSPENDED MODAL (Bypassed for testing) -->
   <div id="licenseSuspendedScreen" class="fixed inset-0 bg-zinc-950 z-[100] hidden flex items-center justify-center p-6 text-center">
     <div class="bg-zinc-900 border border-red-900/50 p-8 rounded-3xl max-w-md shadow-2xl space-y-4">
       <div class="w-16 h-16 bg-red-950 text-red-500 rounded-full flex items-center justify-center mx-auto text-2xl"><i class="fa-solid fa-lock"></i></div>
@@ -120,6 +120,8 @@
       db.collection("tenants").doc(TENANT_ID).onSnapshot((doc) => {
         if (doc.exists && doc.data().config) {
           activeConfig = doc.data().config;
+          
+          // Bypass sementara untuk testing di HP
           if (!validateAESLicense(activeConfig.licenseToken)) return;
 
           applyThemeEngine();
@@ -132,13 +134,8 @@
     });
 
     function validateAESLicense(token) {
-      if (!token) { triggerSuspension("Token lisensi tidak ditemukan."); return false; }
-      try {
-        const bytes = CryptoJS.AES.decrypt(token, MASTER_SECRET);
-        const data = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-        if (new Date() > new Date(data.expiryDate)) { triggerSuspension(`Masa berlaku habis pada ${data.expiryDate}.`); return false; }
-        return true;
-      } catch (e) { triggerSuspension("Gagal mendekripsi token AES-256."); return false; }
+      // Bypass aktif agar langsung bisa dibuka di HP tanpa kendala status suspended
+      return true; 
     }
 
     function triggerSuspension(msg) {
