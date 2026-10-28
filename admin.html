@@ -109,13 +109,13 @@
         </div>
       </div>
 
-      <!-- Operating Hours Block -->
+      <!-- Operating Hours Block (Flexibel 7 Hari) -->
       <div class="bg-navy-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
         <h3 class="text-amber-400 font-bold text-sm flex items-center gap-2">
-          🕒 Operating Hours
+          🕒 Operating Hours (Individual Daily Schedule)
         </h3>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
           <div>
             <label class="block text-slate-400 font-semibold mb-1">Monday</label>
             <input type="text" id="hours-mon" value="Closed" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-2.5">
@@ -125,8 +125,24 @@
             <input type="text" id="hours-tue" value="Closed" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-2.5">
           </div>
           <div>
-            <label class="block text-slate-400 font-semibold mb-1">Wednesday - Sunday</label>
-            <input type="text" id="hours-wed-sun" value="4:30 PM - 9:00 PM" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-2.5">
+            <label class="block text-slate-400 font-semibold mb-1">Wednesday</label>
+            <input type="text" id="hours-wed" value="4:30 PM - 9:00 PM" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-2.5">
+          </div>
+          <div>
+            <label class="block text-slate-400 font-semibold mb-1">Thursday</label>
+            <input type="text" id="hours-thu" value="4:30 PM - 9:00 PM" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-2.5">
+          </div>
+          <div>
+            <label class="block text-slate-400 font-semibold mb-1">Friday</label>
+            <input type="text" id="hours-fri" value="4:30 PM - 9:00 PM" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-2.5">
+          </div>
+          <div>
+            <label class="block text-slate-400 font-semibold mb-1">Saturday</label>
+            <input type="text" id="hours-sat" value="4:30 PM - 9:00 PM" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-2.5">
+          </div>
+          <div>
+            <label class="block text-slate-400 font-semibold mb-1">Sunday</label>
+            <input type="text" id="hours-sun" value="4:30 PM - 9:00 PM" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-2.5">
           </div>
         </div>
       </div>
@@ -142,42 +158,101 @@
         
         <input type="file" id="logo-upload" accept="image/*" onchange="previewLogo(event)" class="block w-full text-xs text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-black hover:file:bg-amber-400 cursor-pointer" />
         
-        <div class="p-4 bg-black rounded-xl flex justify-center border border-slate-800">
-          <img id="logo-preview" src="Images/BangkokThaiLogo.png" class="max-h-20 object-contain" alt="Client Logo Preview" />
+        <div class="p-6 bg-black rounded-xl flex justify-center items-center border border-slate-800 min-h-[100px]">
+          <img id="logo-preview" src="Images/BangkokThaiLogo.png" class="max-h-20 object-contain" alt="Client Logo Preview" onerror="this.onerror=null; this.src='https://via.placeholder.com/200x60/000000/ffffff?text=Bangkok+Thai+Logo';" />
         </div>
       </div>
 
-      <!-- Palette Color Picker Block -->
+      <!-- Palette Color Picker Block (4 Pilihan Warna) -->
       <div class="bg-navy-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
         <h3 class="text-amber-400 font-bold text-sm flex items-center gap-2">
-          🎨 Theme Accent &amp; Colors
+          🎨 Theme Accent &amp; Color Palette
         </h3>
         
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-xs">
           <div>
-            <label class="block text-slate-400 font-semibold mb-2">Primary Accent Color (Buttons &amp; Badges)</label>
-            <div class="flex items-center gap-3">
-              <input type="color" id="primary-color-picker" value="#f59e0b" onchange="syncColorInput('picker', 'primary')" class="h-10 w-16 bg-slate-800 border border-slate-700 rounded-lg cursor-pointer p-1">
-              <input type="text" id="primary-color-text" value="#f59e0b" onchange="syncColorInput('text', 'primary')" class="bg-slate-950 border border-slate-800 text-slate-200 rounded-xl p-2.5 font-mono w-32 uppercase">
+            <label class="block text-slate-400 font-semibold mb-2">Primary Accent</label>
+            <div class="flex items-center gap-2">
+              <input type="color" id="primary-color-picker" value="#f59e0b" onchange="syncColorInput('picker', 'primary')" class="h-10 w-12 bg-slate-800 border border-slate-700 rounded-lg cursor-pointer p-1">
+              <input type="text" id="primary-color-text" value="#F59E0B" onchange="syncColorInput('text', 'primary')" class="bg-slate-950 border border-slate-800 text-slate-200 rounded-xl p-2.5 font-mono w-full uppercase">
             </div>
           </div>
 
           <div>
-            <label class="block text-slate-400 font-semibold mb-2">Background Color (Header &amp; Layout)</label>
-            <div class="flex items-center gap-3">
-              <input type="color" id="bg-color-picker" value="#0f172a" onchange="syncColorInput('picker', 'bg')" class="h-10 w-16 bg-slate-800 border border-slate-700 rounded-lg cursor-pointer p-1">
-              <input type="text" id="bg-color-text" value="#0f172a" onchange="syncColorInput('text', 'bg')" class="bg-slate-950 border border-slate-800 text-slate-200 rounded-xl p-2.5 font-mono w-32 uppercase">
+            <label class="block text-slate-400 font-semibold mb-2">Secondary Accent</label>
+            <div class="flex items-center gap-2">
+              <input type="color" id="secondary-color-picker" value="#22c55e" onchange="syncColorInput('picker', 'secondary')" class="h-10 w-12 bg-slate-800 border border-slate-700 rounded-lg cursor-pointer p-1">
+              <input type="text" id="secondary-color-text" value="#22C55E" onchange="syncColorInput('text', 'secondary')" class="bg-slate-950 border border-slate-800 text-slate-200 rounded-xl p-2.5 font-mono w-full uppercase">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-slate-400 font-semibold mb-2">Background Color</label>
+            <div class="flex items-center gap-2">
+              <input type="color" id="bg-color-picker" value="#0f172a" onchange="syncColorInput('picker', 'bg')" class="h-10 w-12 bg-slate-800 border border-slate-700 rounded-lg cursor-pointer p-1">
+              <input type="text" id="bg-color-text" value="#0F172A" onchange="syncColorInput('text', 'bg')" class="bg-slate-950 border border-slate-800 text-slate-200 rounded-xl p-2.5 font-mono w-full uppercase">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-slate-400 font-semibold mb-2">Text / Headings Color</label>
+            <div class="flex items-center gap-2">
+              <input type="color" id="text-color-picker" value="#ffffff" onchange="syncColorInput('picker', 'text')" class="h-10 w-12 bg-slate-800 border border-slate-700 rounded-lg cursor-pointer p-1">
+              <input type="text" id="text-color-text" value="#FFFFFF" onchange="syncColorInput('text', 'text')" class="bg-slate-950 border border-slate-800 text-slate-200 rounded-xl p-2.5 font-mono w-full uppercase">
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 3. TAB: MENU CATALOGUE -->
+    <!-- 3. TAB: MENU CATALOGUE MANAGEMENT -->
     <div id="tab-menu" class="tab-content hidden space-y-6">
-      <div class="bg-navy-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-        <h3 class="text-amber-400 font-bold text-sm mb-4">🍽️ Menu Catalogue Management</h3>
-        <p class="text-xs text-slate-400">Integrated with RestoSync SaaS database for Bangkok Thai Takeaway.</p>
+      <div class="bg-navy-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+          <div>
+            <h3 class="text-amber-400 font-bold text-sm">🍽️ Menu Catalogue Management</h3>
+            <p class="text-xs text-slate-400">Add, edit, and manage menu items for Bangkok Thai Takeaway.</p>
+          </div>
+          <button onclick="addNewMenuItem()" class="bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs px-4 py-2 rounded-xl transition-all">
+            + Add New Item
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950 text-slate-400 font-mono uppercase">
+              <tr>
+                <th class="p-3">Item Name</th>
+                <th class="p-3">Category</th>
+                <th class="p-3">Price (NZD)</th>
+                <th class="p-3">Status</th>
+                <th class="p-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="menu-items-table-body" class="divide-y divide-slate-800">
+              <tr>
+                <td class="p-3 font-semibold text-white">Pad Thai Noodles</td>
+                <td class="p-3">Noodles &amp; Rice</td>
+                <td class="p-3 font-mono text-amber-400">$18.50</td>
+                <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">Available</span></td>
+                <td class="p-3 text-right space-x-2">
+                  <button class="text-amber-400 hover:underline">Edit</button>
+                  <button class="text-red-400 hover:underline">Delete</button>
+                </td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-white">Tom Yum Soup</td>
+                <td class="p-3">Soup</td>
+                <td class="p-3 font-mono text-amber-400">$16.00</td>
+                <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">Available</span></td>
+                <td class="p-3 text-right space-x-2">
+                  <button class="text-amber-400 hover:underline">Edit</button>
+                  <button class="text-red-400 hover:underline">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -230,7 +305,6 @@
         loadSavedTheme();
     });
 
-    // 1. Tab Switching Function
     function switchTab(tabName) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
         document.querySelectorAll('.tab-btn').forEach(el => {
@@ -244,32 +318,20 @@
         activeBtn.classList.add('text-amber-400', 'border-amber-400');
     }
 
-    // 2. Load Read-Only License Data from System Console (localStorage)
     function loadLicenseDataFromConsole() {
         const savedConfig = localStorage.getItem('restoSync_tenant_config');
         if (savedConfig) {
             const config = JSON.parse(savedConfig);
-            
-            if (document.getElementById('display-tenant-id')) {
-                document.getElementById('display-tenant-id').textContent = config.tenantId || 'bangkokthaipalmy';
-            }
-            if (document.getElementById('display-company-name')) {
-                document.getElementById('display-company-name').textContent = config.tenantName || 'Bangkok Thai Takeaway';
-            }
-            if (document.getElementById('display-expiry-date')) {
-                document.getElementById('display-expiry-date').textContent = config.expiryDate || '2027-04-01';
-            }
-            if (document.getElementById('display-contract-badge')) {
-                document.getElementById('display-contract-badge').textContent = config.contractStatus || 'Active & Subscribed';
-            }
+            if (document.getElementById('display-tenant-id')) document.getElementById('display-tenant-id').textContent = config.tenantId || 'bangkokthaipalmy';
+            if (document.getElementById('display-company-name')) document.getElementById('display-company-name').textContent = config.tenantName || 'Bangkok Thai Takeaway';
+            if (document.getElementById('display-expiry-date')) document.getElementById('display-expiry-date').textContent = config.expiryDate || '2027-04-01';
+            if (document.getElementById('display-contract-badge')) document.getElementById('display-contract-badge').textContent = config.contractStatus || 'Active & Subscribed';
         }
     }
 
-    // 3. Color Picker Syncing Helper
     function syncColorInput(source, type) {
         const picker = document.getElementById(`${type}-color-picker`);
         const text = document.getElementById(`${type}-color-text`);
-        
         if (source === 'picker') {
             text.value = picker.value.toUpperCase();
         } else {
@@ -277,27 +339,36 @@
         }
     }
 
-    // 4. Logo Preview Function
     function previewLogo(event) {
         const reader = new FileReader();
         reader.onload = function() {
             const output = document.getElementById('logo-preview');
             output.src = reader.result;
         };
-        if (event.target.files[0]) {
+        if (event.target.files && event.target.files[0]) {
             reader.readAsDataURL(event.target.files[0]);
         }
     }
 
-    // 5. Save Admin Settings
     function saveAdminSettings() {
         const adminData = {
             storeName: document.getElementById('store-name').value,
             tagline: document.getElementById('store-tagline').value,
             phone: document.getElementById('store-phone').value,
             address: document.getElementById('store-address').value,
+            hours: {
+                mon: document.getElementById('hours-mon').value,
+                tue: document.getElementById('hours-tue').value,
+                wed: document.getElementById('hours-wed').value,
+                thu: document.getElementById('hours-thu').value,
+                fri: document.getElementById('hours-fri').value,
+                sat: document.getElementById('hours-sat').value,
+                sun: document.getElementById('hours-sun').value
+            },
             primaryColor: document.getElementById('primary-color-text').value,
-            bgColor: document.getElementById('bg-color-text').value
+            secondaryColor: document.getElementById('secondary-color-text').value,
+            bgColor: document.getElementById('bg-color-text').value,
+            textColor: document.getElementById('text-color-text').value
         };
 
         localStorage.setItem('restoSync_admin_settings', JSON.stringify(adminData));
@@ -312,10 +383,25 @@
                 document.getElementById('primary-color-text').value = data.primaryColor;
                 document.getElementById('primary-color-picker').value = data.primaryColor;
             }
+            if (data.secondaryColor) {
+                document.getElementById('secondary-color-text').value = data.secondaryColor;
+                document.getElementById('secondary-color-picker').value = data.secondaryColor;
+            }
             if (data.bgColor) {
                 document.getElementById('bg-color-text').value = data.bgColor;
                 document.getElementById('bg-color-picker').value = data.bgColor;
             }
+            if (data.textColor) {
+                document.getElementById('text-color-text').value = data.textColor;
+                document.getElementById('text-color-picker').value = data.textColor;
+            }
+        }
+    }
+
+    function addNewMenuItem() {
+        const name = prompt("Enter item name:");
+        if (name) {
+            alert(`Item "${name}" added to catalogue draft!`);
         }
     }
   </script>
