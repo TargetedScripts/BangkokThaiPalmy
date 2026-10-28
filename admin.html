@@ -28,41 +28,36 @@
           <i class="fa-solid fa-arrow-up-right-from-square"></i>
           <span>View Live Store</span>
         </a>
-        <button onclick="exportConfigFile()" class="bg-red-800 hover:bg-red-700 text-white font-bold px-4 py-1.5 rounded-lg text-xs shadow transition flex items-center space-x-1">
+        <button id="btnExportConfig" onclick="exportConfigFile()" class="bg-red-800 hover:bg-red-700 text-white font-bold px-4 py-1.5 rounded-lg text-xs shadow transition flex items-center space-x-1">
           <i class="fa-solid fa-download"></i>
           <span>Export Config JS</span>
         </button>
       </div>
     </div>
 
-    <!-- TAB NAVIGATION BAR (BERDASARKAN TIER & OVERRIDE OTORITAS) -->
+    <!-- TAB NAVIGATION BAR -->
     <div class="bg-zinc-950 border-t border-zinc-800 px-4 sm:px-6 flex space-x-2 overflow-x-auto no-scrollbar text-xs font-semibold">
       
-      <!-- TAB MENU CATALOGUE -->
       <button id="tabBtn-menu" onclick="switchAdminTab('menu')" class="py-3 px-4 text-amber-400 border-b-2 border-amber-400 flex items-center space-x-2 transition">
         <i class="fa-solid fa-utensils"></i><span>Menu Catalogue</span>
         <span class="bg-emerald-950 text-emerald-400 text-[9px] px-1.5 py-0.5 rounded font-bold border border-emerald-800">FREE</span>
       </button>
 
-      <!-- TAB THEME & BRANDING -->
       <button id="tabBtn-store" onclick="switchAdminTab('store')" class="py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition">
         <i class="fa-solid fa-palette"></i><span>Theme & Branding</span>
         <span class="bg-emerald-950 text-emerald-400 text-[9px] px-1.5 py-0.5 rounded font-bold border border-emerald-800">FREE</span>
       </button>
 
-      <!-- TAB STAFF & ROSTER -->
       <button id="tabBtn-roster" onclick="switchAdminTab('roster')" class="py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition">
         <i class="fa-solid fa-calendar-days"></i><span>Staff & Roster</span>
         <span id="badge-roster" class="bg-zinc-800 text-stone-500 text-[9px] px-1.5 py-0.5 rounded font-bold">PRO</span>
       </button>
 
-      <!-- TAB USER & ACCESS ROLES -->
       <button id="tabBtn-users" onclick="switchAdminTab('users')" class="py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition">
         <i class="fa-solid fa-users-gear"></i><span>User & Access Roles</span>
         <span id="badge-users" class="bg-zinc-800 text-stone-500 text-[9px] px-1.5 py-0.5 rounded font-bold">ENT</span>
       </button>
 
-      <!-- TAB SYSTEM & LICENSE (SUPER ADMIN) -->
       <button id="tabBtn-system" onclick="switchAdminTab('system')" class="py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition">
         <i class="fa-solid fa-sliders"></i><span>System & License</span>
       </button>
@@ -82,13 +77,13 @@
         <p id="tabDescDisplay" class="text-xs text-stone-400 mt-1">Manage food categories, pricing, stock levels, promo prices, and favorite flags.</p>
       </div>
 
-      <button onclick="saveAllChanges()" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-6 py-2.5 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-sm shrink-0">
+      <button id="btnSaveGlobal" onclick="saveAllChanges()" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-6 py-2.5 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-sm shrink-0">
         <i class="fa-solid fa-floppy-disk"></i>
         <span>Save All Changes</span>
       </button>
     </div>
 
-    <!-- TAB CONTENT 1: MENU CATALOGUE (FREE) -->
+    <!-- TAB CONTENT 1: MENU CATALOGUE -->
     <div id="tabContent-menu" class="tab-panel space-y-6">
       <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-zinc-800 pb-3 gap-2">
@@ -120,7 +115,7 @@
       </div>
     </div>
 
-    <!-- TAB CONTENT 2: THEME & BRANDING (FREE INCLUDED) -->
+    <!-- TAB CONTENT 2: THEME & BRANDING -->
     <div id="tabContent-store" class="tab-panel hidden space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
@@ -149,7 +144,7 @@
           </div>
         </div>
 
-        <!-- LOGO ADJUSTMENT -->
+        <!-- LOGO BRANDING -->
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
           <h2 class="font-bold text-sm text-stone-100 border-b border-zinc-800 pb-3 flex items-center">
             <i class="fa-solid fa-image text-amber-400 mr-2"></i> Logo Branding
@@ -174,7 +169,7 @@
           </div>
         </div>
 
-        <!-- THEME COLOR PALETTE -->
+        <!-- CUSTOM COLOR PALETTE (TERMASUK ACCENT COLOR) -->
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
           <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
             <h2 class="font-bold text-sm text-stone-100 flex items-center">
@@ -182,15 +177,25 @@
             </h2>
             <button onclick="resetDefaultColors()" class="text-[10px] font-semibold text-amber-400 hover:underline">Reset Default</button>
           </div>
+
           <div class="grid grid-cols-2 gap-3 text-xs">
             <div><label class="block text-stone-400 mb-1">Header Bg</label><input type="color" id="themeHeaderBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
             <div><label class="block text-stone-400 mb-1">Header Text</label><input type="color" id="themeHeaderText" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+            
             <div><label class="block text-stone-400 mb-1">Body Bg</label><input type="color" id="themeBodyBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
             <div><label class="block text-stone-400 mb-1">Card Box Bg</label><input type="color" id="themeCardBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+            
             <div><label class="block text-stone-400 mb-1">Primary Title</label><input type="color" id="themeTitle1" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
             <div><label class="block text-stone-400 mb-1">Sub Title</label><input type="color" id="themeTitle2" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
-            <div><label class="block text-stone-400 mb-1">Button Bg</label><input type="color" id="themeBtnBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
-            <div><label class="block text-stone-400 mb-1">Button Text</label><input type="color" id="themeBtnText" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+            
+            <!-- PRIMARY BUTTON COLOR -->
+            <div><label class="block text-amber-400 font-semibold mb-1">Primary Btn Bg</label><input type="color" id="themeBtnBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+            <div><label class="block text-amber-400 font-semibold mb-1">Primary Btn Text</label><input type="color" id="themeBtnText" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+
+            <!-- ACCENT / PROMO BUTTON COLOR -->
+            <div><label class="block text-red-400 font-semibold mb-1">Promo/Accent Btn Bg</label><input type="color" id="themeAccentBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+            <div><label class="block text-red-400 font-semibold mb-1">Promo/Accent Text</label><input type="color" id="themeAccentText" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
+
             <div><label class="block text-stone-400 mb-1">Footer Bg</label><input type="color" id="themeFooterBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
             <div><label class="block text-stone-400 mb-1">Footer Text</label><input type="color" id="themeFooterText" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
           </div>
@@ -227,7 +232,7 @@
       </div>
     </div>
 
-    <!-- TAB CONTENT 5: SYSTEM & LICENSE (SUPER ADMIN CONTROL) -->
+    <!-- TAB CONTENT 5: SYSTEM & LICENSE -->
     <div id="tabContent-system" class="tab-panel hidden space-y-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         
@@ -252,7 +257,6 @@
           </div>
         </div>
 
-        <!-- SUPER ADMIN OVERRIDE CONTROLS -->
         <div class="bg-zinc-900 border border-amber-500/30 rounded-2xl p-5 shadow-lg space-y-4">
           <h2 class="font-bold text-sm text-amber-400 border-b border-zinc-800 pb-3 flex items-center">
             <i class="fa-solid fa-user-shield mr-2"></i> Super Admin Feature Overrides
@@ -401,17 +405,13 @@
       ['store', 'menu', 'roster', 'users', 'system'].forEach(t => {
         const btn = document.getElementById(`tabBtn-${t}`);
         const panel = document.getElementById(`tabContent-${t}`);
-        if (btn) {
-          btn.className = "py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition";
-        }
+        if (btn) btn.className = "py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition";
         if (panel) panel.classList.add('hidden');
       });
 
       const activeBtn = document.getElementById(`tabBtn-${tabId}`);
       const activePanel = document.getElementById(`tabContent-${tabId}`);
-      if (activeBtn) {
-        activeBtn.className = "py-3 px-4 text-amber-400 border-b-2 border-amber-400 flex items-center space-x-2 transition font-bold";
-      }
+      if (activeBtn) activeBtn.className = "py-3 px-4 text-amber-400 border-b-2 border-amber-400 flex items-center space-x-2 transition font-bold";
       if (activePanel) activePanel.classList.remove('hidden');
 
       const title = document.getElementById('tabTitleDisplay');
@@ -434,20 +434,16 @@
       }
     }
 
-    /* OTORISASI HARMONIS DENGAN OVERRIDE SUPER ADMIN */
     function updateTierAccessUI() {
       const tier = document.getElementById('cfgLicenseTier').value || activeConfig.licenseTier || 'community';
-      
       const rosterOverride = document.getElementById('overrideRoster').checked;
       const usersOverride = document.getElementById('overrideUsers').checked;
 
       const rosterBadge = document.getElementById('badge-roster');
       const usersBadge = document.getElementById('badge-users');
-
       const rosterLock = document.getElementById('rosterLockNotice');
       const usersLock = document.getElementById('usersLockNotice');
 
-      // Evaluasi Akses Shift Roster (Berlaku untuk Pro, Enterprise, ATAU Super Admin Override)
       const hasRosterAccess = (tier === 'pro' || tier === 'enterprise' || rosterOverride);
       if (hasRosterAccess) {
         rosterBadge.className = "bg-emerald-950 text-emerald-400 text-[9px] px-1.5 py-0.5 rounded font-bold border border-emerald-800";
@@ -457,7 +453,6 @@
         rosterLock.classList.remove('hidden');
       }
 
-      // Evaluasi Akses User Roles (Berlaku untuk Enterprise ATAU Super Admin Override)
       const hasUsersAccess = (tier === 'enterprise' || usersOverride);
       if (hasUsersAccess) {
         usersBadge.className = "bg-emerald-950 text-emerald-400 text-[9px] px-1.5 py-0.5 rounded font-bold border border-emerald-800";
@@ -493,10 +488,31 @@
       document.getElementById('themeCardBg').value = theme.cardBg || '#27272a';
       document.getElementById('themeTitle1').value = theme.title1 || '#fbbf24';
       document.getElementById('themeTitle2').value = theme.title2 || '#f5f5f4';
+      
+      // Default Primary & Accent Button Color
       document.getElementById('themeBtnBg').value = theme.btnBg || '#f59e0b';
       document.getElementById('themeBtnText').value = theme.btnText || '#09090b';
+      document.getElementById('themeAccentBg').value = theme.accentBg || '#991b1b';
+      document.getElementById('themeAccentText').value = theme.accentText || '#fef3c7';
+
       document.getElementById('themeFooterBg').value = theme.footerBg || '#000000';
       document.getElementById('themeFooterText').value = theme.footerText || '#78716c';
+
+      applyAdminDynamicColors(theme);
+    }
+
+    function applyAdminDynamicColors(theme) {
+      const btnSave = document.getElementById('btnSaveGlobal');
+      if (btnSave && theme.btnBg) {
+        btnSave.style.backgroundColor = theme.btnBg;
+        if (theme.btnText) btnSave.style.color = theme.btnText;
+      }
+
+      const btnExport = document.getElementById('btnExportConfig');
+      if (btnExport && theme.accentBg) {
+        btnExport.style.backgroundColor = theme.accentBg;
+        if (theme.accentText) btnExport.style.color = theme.accentText;
+      }
     }
 
     function handleLogoUpload(event) {
@@ -552,6 +568,8 @@
       document.getElementById('themeTitle2').value = '#f5f5f4';
       document.getElementById('themeBtnBg').value = '#f59e0b';
       document.getElementById('themeBtnText').value = '#09090b';
+      document.getElementById('themeAccentBg').value = '#991b1b';
+      document.getElementById('themeAccentText').value = '#fef3c7';
       document.getElementById('themeFooterBg').value = '#000000';
       document.getElementById('themeFooterText').value = '#78716c';
     }
@@ -656,11 +674,14 @@
         title2: document.getElementById('themeTitle2').value,
         btnBg: document.getElementById('themeBtnBg').value,
         btnText: document.getElementById('themeBtnText').value,
+        accentBg: document.getElementById('themeAccentBg').value,
+        accentText: document.getElementById('themeAccentText').value,
         footerBg: document.getElementById('themeFooterBg').value,
         footerText: document.getElementById('themeFooterText').value
       };
 
       localStorage.setItem('RESTOSYNC_WORKING_CONFIG', JSON.stringify(activeConfig));
+      applyAdminDynamicColors(activeConfig.theme);
       alert('All settings and license overrides saved successfully!');
     }
 
