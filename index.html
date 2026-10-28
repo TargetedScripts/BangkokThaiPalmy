@@ -37,9 +37,9 @@
     <div class="w-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-4">
       
       <!-- LOGO AREA -->
-      <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
-        <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain drop-shadow max-h-8 sm:max-h-10">
-        <span id="headerLogoText" class="hidden sm:inline-block font-bold text-lg sm:text-xl tracking-wider uppercase text-amber-300 whitespace-nowrap">Takeaway</span>
+      <div class="flex items-center space-x-3 shrink-0">
+        <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain drop-shadow" style="height: 48px;">
+        <span class="font-bold text-lg sm:text-xl tracking-wider uppercase text-amber-300 whitespace-nowrap">TAKEAWAY</span>
         <span id="headerStatusBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider transition-all"></span>
       </div>
       
@@ -55,10 +55,11 @@
     </div>
   </header>
 
-  <!-- HERO BANNER CAROUSEL -->
+  <!-- HERO BANNER SLIDESHOW -->
   <section id="heroSection" class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden shadow-2xl">
     <div id="heroSlidesContainer" class="relative w-full h-full"></div>
 
+    <!-- Default / Standard Banner Overlay (Akan disembunyikan otomatis jika slide aktif adalah Menu Hero) -->
     <div id="defaultHeroOverlay" class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/50 to-black/70 flex flex-col justify-center items-center text-center p-6 text-white transition-opacity duration-700 opacity-100 pointer-events-auto">
       <img id="heroLogo" src="" alt="Store Logo" class="w-auto object-contain mb-3 filter drop-shadow-lg" style="height: 80px;">
       <h2 id="heroTaglineTitle" class="text-2xl md:text-3xl font-extrabold tracking-widest uppercase mb-2">Store Name</h2>
@@ -68,6 +69,16 @@
         <i class="fa-solid fa-utensils"></i>
         <span>Explore Menu & Order</span>
       </a>
+    </div>
+
+    <!-- Custom Overlay Khusus untuk Slide Menu Hero -->
+    <div id="menuHeroOverlay" class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-black/60 to-transparent flex flex-col justify-end p-6 text-white opacity-0 pointer-events-none transition-opacity duration-500">
+      <div class="max-w-3xl">
+        <span id="menuHeroBadge" class="bg-amber-500 text-zinc-950 text-[10px] font-black px-2.5 py-1 rounded uppercase tracking-wider mb-2 inline-block">CHEF SPECIAL HERO</span>
+        <h3 id="menuHeroTitle" class="text-2xl md:text-4xl font-black text-amber-300">Menu Name</h3>
+        <p id="menuHeroDesc" class="text-xs md:text-sm text-stone-300 mt-1 line-clamp-2">Description</p>
+        <div id="menuHeroPrice" class="text-lg md:text-2xl font-black text-white mt-2">$0.00</div>
+      </div>
     </div>
   </section>
 
@@ -83,7 +94,7 @@
         <span class="text-xs text-stone-400">Layout Mode:</span>
         <button onclick="toggleUserLayout()" id="layoutSwitchBtn" class="text-xs font-bold bg-zinc-800 hover:bg-zinc-700 text-amber-400 border border-zinc-700 px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition shadow-sm">
           <i class="fa-solid fa-arrows-rotate"></i>
-          <span id="layoutSwitchText">Switch View</span>
+          <span id="layoutSwitchText">Switch to Classic List</span>
         </button>
       </div>
     </div>
@@ -97,21 +108,22 @@
     <div id="menuContentBox" class="w-full"></div>
   </section>
 
-  <!-- CART ESTIMATOR MODAL -->
+  <!-- CART ESTIMATOR MODAL (LENGKAP DENGAN GST 15%) -->
   <div id="cartModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex justify-end">
     <div class="bg-zinc-900 w-full max-w-md h-full flex flex-col shadow-2xl border-l border-zinc-800">
       <div class="p-4 bg-red-800 text-white flex justify-between items-center shadow-md">
-        <h3 class="font-bold text-lg flex items-center"><i class="fa-solid fa-cart-shopping mr-2 text-amber-400"></i> Your Order</h3>
+        <h3 class="font-bold text-lg flex items-center"><i class="fa-solid fa-cart-shopping mr-2 text-amber-400"></i> Your Order & Estimate</h3>
         <button onclick="toggleCartModal()" class="text-stone-300 hover:text-white text-2xl font-bold transition">&times;</button>
       </div>
       <div id="cartItemsList" class="flex-grow p-4 overflow-y-auto space-y-4 divide-y divide-zinc-800">
         <p class="text-center text-stone-500 py-8">Your cart is empty.</p>
       </div>
       <div class="p-4 border-t border-zinc-800 bg-zinc-950 space-y-2.5">
-        <div class="flex justify-between text-xs text-stone-400"><span>Subtotal</span><span id="cartSubtotal" class="text-stone-200">$0.00</span></div>
+        <div class="flex justify-between text-xs text-stone-400"><span>Subtotal (Excl. GST)</span><span id="cartSubtotal" class="text-stone-200">$0.00</span></div>
+        <div class="flex justify-between text-xs text-stone-400"><span>GST (15% Included)</span><span id="cartGST" class="text-stone-200">$0.00</span></div>
         <div class="flex justify-between text-base font-bold text-stone-100 pt-2 border-t border-zinc-800"><span>Total (NZD)</span><span id="cartTotal" class="text-amber-400">$0.00</span></div>
         <button onclick="handleCheckoutAction()" class="w-full bg-amber-500 text-zinc-950 py-3.5 rounded-xl font-bold text-center transition shadow-xl">
-          Proceed to Checkout
+          Proceed to Checkout / Cashier
         </button>
       </div>
     </div>
@@ -127,22 +139,26 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer class="bg-black text-stone-500 text-xs py-8 border-t border-zinc-900 mt-12">
-    <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
-      <p>
-        <span id="footerStoreName">Store Name</span> | 
-        <a id="storeAddressLink" href="#" target="_blank" class="hover:text-stone-300 underline">Loading address...</a> | 
-        Phone: <a id="storePhoneLink" href="#" class="hover:text-amber-400 text-stone-300 font-semibold underline">Loading phone...</a>
-      </p>
-      <div class="flex justify-center space-x-4 pt-1">
-        <a id="adminPortalLink" href="admin.html" class="text-amber-400/80 hover:text-amber-300 underline"><i class="fa-solid fa-user-gear mr-1"></i> Manager Portal (Admin)</a>
+  <!-- FOOTER (DENGAN OFFICE HOURS, ALAMAT & TELEPON DINAMIS) -->
+  <footer id="mainFooter" class="text-stone-400 text-xs py-10 border-t border-zinc-800 mt-12 bg-black">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div>
+        <h4 id="footerStoreName" class="font-bold text-stone-200 text-sm mb-2">Store Name</h4>
+        <p id="footerAddress" class="text-stone-400 mb-1">Loading address...</p>
+        <p class="text-stone-400">Phone: <a id="footerPhone" href="#" class="text-amber-400 font-semibold underline">Loading...</a></p>
       </div>
-      <p>Powered by <strong class="text-stone-300 font-bold">RestoSync SaaS</strong> &copy; 2026 TargetedScripts.com</p>
+      <div>
+        <h4 class="font-bold text-stone-200 text-sm mb-2">Office & Restaurant Hours</h4>
+        <ul id="footerHoursList" class="space-y-1 text-stone-400"><li>Loading hours...</li></ul>
+      </div>
+      <div class="flex flex-col justify-between items-start md:items-end">
+        <a id="adminPortalLink" href="admin.html" class="text-amber-400 hover:text-amber-300 font-bold underline"><i class="fa-solid fa-user-gear mr-1"></i> Manager Portal (Admin)</a>
+        <p class="text-[10px] text-stone-600 mt-4 md:mt-0">Powered by <strong>RestoSync SaaS</strong> &copy; 2026</p>
+      </div>
     </div>
   </footer>
 
-  <!-- FIREBASE SDKs & CLIENT LOGIC -->
+  <!-- FIREBASE SDKs & CLIENT SCRIPT -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -168,6 +184,9 @@
     let currentCategory = 'ALL';
     let cart = [];
     let activeLayoutMode = 'grid';
+    let slideshowInterval = null;
+    let currentSlideIndex = 0;
+    let computedSlides = [];
 
     document.addEventListener('DOMContentLoaded', () => {
       const adminLink = document.getElementById('adminPortalLink');
@@ -177,7 +196,8 @@
         if (doc.exists && doc.data().config) {
           activeConfig = doc.data().config;
           initStoreBranding();
-          initHeroCarousel();
+          applyCustomTheme();
+          initHeroSlideshow();
           renderCategoryPills();
           renderMenuContentBox();
           checkStoreStatus();
@@ -187,35 +207,142 @@
       });
     });
 
+    function applyCustomTheme() {
+      const theme = activeConfig.theme || {};
+      const branding = activeConfig.branding || {};
+
+      const logoImg = document.getElementById('storeLogo');
+      if (logoImg && branding.logoHeight) logoImg.style.height = `${branding.logoHeight}px`;
+
+      const header = document.getElementById('mainHeader');
+      if (header && theme.headerBg) header.style.backgroundColor = theme.headerBg;
+
+      const body = document.getElementById('mainBody');
+      if (body && theme.bodyBg) body.style.backgroundColor = theme.bodyBg;
+
+      const footer = document.getElementById('mainFooter');
+      if (footer && theme.footerBg) footer.style.backgroundColor = theme.footerBg;
+
+      const btnBg = theme.btnBg || '#f59e0b';
+      ['cartBtn', 'exploreBtn'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.backgroundColor = btnBg;
+      });
+    }
+
     function initStoreBranding() {
       const store = activeConfig.store || {};
       const branding = activeConfig.branding || {};
       const storeName = store.name || 'Store Name';
       
-      document.getElementById('headerLogoText').innerText = storeName;
       document.getElementById('heroTaglineTitle').innerText = storeName;
       document.getElementById('bannerTagline').innerText = store.tagline || '';
       document.getElementById('footerStoreName').innerText = storeName;
-      document.getElementById('storeAddressLink').innerText = store.address || '';
-      document.getElementById('storePhoneLink').innerText = store.phone || '';
+      document.getElementById('footerAddress').innerText = store.address || '';
+      document.getElementById('footerPhone').innerText = store.phone || '';
+      document.getElementById('footerPhone').href = `tel:${store.phone || ''}`;
 
       const logoUrl = branding.logo || '';
       if (logoUrl) {
         document.getElementById('storeLogo').src = logoUrl;
         document.getElementById('heroLogo').src = logoUrl;
       }
+
+      renderFooterHours();
     }
 
-    function initHeroCarousel() {
-      const container = document.getElementById('heroSlidesContainer');
-      const heroImages = activeConfig.branding?.heroImages || [];
-      if (heroImages.length === 0) return;
+    function renderFooterHours() {
+      const op = activeConfig.operatingHours || {};
+      const list = document.getElementById('footerHoursList');
+      if (!list) return;
+      const days = [
+        { k: 'mon', label: 'Monday' },
+        { k: 'tue', label: 'Tuesday' },
+        { k: 'wed', label: 'Wednesday' },
+        { k: 'thu', label: 'Thursday' },
+        { k: 'fri', label: 'Friday' },
+        { k: 'sat', label: 'Saturday' },
+        { k: 'sun', label: 'Sunday' }
+      ];
+      list.innerHTML = days.map(d => `<li><span class="font-medium text-stone-300">${d.label}:</span> ${op[d.k] || 'Closed'}</li>`).join('');
+    }
 
-      container.innerHTML = heroImages.map((src, idx) => `
+    function initHeroSlideshow() {
+      const container = document.getElementById('heroSlidesContainer');
+      const branding = activeConfig.branding || {};
+      const menuItems = activeConfig.menuItems || [];
+
+      computedSlides = [];
+      const defaultImgs = branding.heroImages || [
+        "https://images.unsplash.com/photo-1552566626-52f8b828add9",
+        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4"
+      ];
+      defaultImgs.forEach(src => computedSlides.push({ type: 'default', src: src }));
+
+      menuItems.forEach(item => {
+        const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
+        const finalPrice = hasPromo ? Number(item.promoPrice) : Number(item.price);
+        if (item.isHero === true || hasPromo) {
+          if (item.image) {
+            computedSlides.push({
+              type: 'menu',
+              src: item.image,
+              title: `${item.id}: ${item.name}`,
+              desc: item.description || '',
+              price: `$${finalPrice.toFixed(2)}`,
+              badge: item.isHero ? 'CHEF SPECIAL HERO' : 'SPECIAL PROMO'
+            });
+          }
+        }
+      });
+
+      container.innerHTML = computedSlides.map((s, idx) => `
         <div class="hero-slide absolute inset-0 w-full h-full ${idx === 0 ? 'opacity-100' : 'opacity-0'}">
-          <img src="${src}" class="w-full h-full object-cover">
+          <img src="${s.src}" class="w-full h-full object-cover">
         </div>
       `).join('');
+
+      if (slideshowInterval) clearInterval(slideshowInterval);
+      currentSlideIndex = 0;
+      if (computedSlides.length > 1) {
+        slideshowInterval = setInterval(nextHeroSlide, 5000);
+      }
+      updateSlideOverlay(0);
+    }
+
+    function nextHeroSlide() {
+      if (computedSlides.length === 0) return;
+      currentSlideIndex = (currentSlideIndex + 1) % computedSlides.length;
+      const slides = document.querySelectorAll('.hero-slide');
+      slides.forEach((el, idx) => {
+        el.style.opacity = idx === currentSlideIndex ? '1' : '0';
+      });
+      updateSlideOverlay(currentSlideIndex);
+    }
+
+    function updateSlideOverlay(idx) {
+      const slide = computedSlides[idx];
+      const defaultOverlay = document.getElementById('defaultHeroOverlay');
+      const menuOverlay = document.getElementById('menuHeroOverlay');
+
+      if (!slide) return;
+      if (slide.type === 'menu') {
+        defaultOverlay.style.opacity = '0';
+        defaultOverlay.style.pointerEvents = 'none';
+
+        menuOverlay.style.opacity = '1';
+        menuOverlay.style.pointerEvents = 'auto';
+        document.getElementById('menuHeroBadge').innerText = slide.badge;
+        document.getElementById('menuHeroTitle').innerText = slide.title;
+        document.getElementById('menuHeroDesc').innerText = slide.desc;
+        document.getElementById('menuHeroPrice').innerText = slide.price;
+      } else {
+        defaultOverlay.style.opacity = '1';
+        defaultOverlay.style.pointerEvents = 'auto';
+
+        menuOverlay.style.opacity = '0';
+        menuOverlay.style.pointerEvents = 'none';
+      }
     }
 
     function checkStoreStatus() {
@@ -283,38 +410,71 @@
         return;
       }
 
-      contentBox.innerHTML = `
-        <div class="${activeLayoutMode === 'classic' ? 'space-y-4 max-w-4xl mx-auto' : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'}">
-          ${visibleItems.map(item => {
-            const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
-            const finalPrice = hasPromo ? Number(item.promoPrice) : Number(item.price);
-
-            return `
-              <div class="rounded-2xl shadow-lg overflow-hidden border border-zinc-700/60 flex flex-col justify-between bg-zinc-800 group">
-                <div>
-                  <div class="relative overflow-hidden h-48 bg-zinc-900">
-                    <img src="${item.image || ''}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                  </div>
-                  <div class="p-4">
-                    <div class="flex justify-between items-start gap-2">
-                      <h3 class="font-bold text-stone-100 text-base">${item.id}: ${item.name}</h3>
-                      <div class="text-right">
-                        ${hasPromo ? `<div><span class="strike-red-diagonal text-sm font-bold">$${Number(item.price).toFixed(2)}</span></div><div class="font-black text-amber-400 text-lg">$${finalPrice.toFixed(2)}</div>` : `<div class="font-black text-amber-400 text-lg">$${Number(item.price).toFixed(2)}</div>`}
-                      </div>
+      if (activeLayoutMode === 'classic') {
+        // Classic Restaurant List Layout
+        contentBox.innerHTML = `
+          <div class="max-w-4xl mx-auto space-y-3 bg-zinc-900/60 p-6 rounded-2xl border border-zinc-800 shadow-xl">
+            ${visibleItems.map(item => {
+              const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
+              const finalPrice = hasPromo ? Number(item.promoPrice) : Number(item.price);
+              return `
+                <div class="flex items-center justify-between py-3 border-b border-zinc-800/60 hover:bg-zinc-800/30 px-3 rounded-xl transition">
+                  <div class="space-y-1 pr-4">
+                    <div class="flex items-center space-x-2">
+                      <span class="font-bold text-amber-400 text-sm">${item.id}.</span>
+                      <h4 class="font-bold text-stone-100 text-sm">${item.name}</h4>
+                      ${item.spiceLevel > 0 ? `<span class="text-xs text-amber-500 font-mono" title="Spice Level">🌶️ x${item.spiceLevel}</span>` : ''}
                     </div>
-                    <p class="text-xs text-stone-400 mt-1.5 line-clamp-2">${item.description || ''}</p>
+                    <p class="text-xs text-stone-400">${item.description || ''}</p>
+                  </div>
+                  <div class="flex items-center space-x-4 shrink-0">
+                    <div class="text-right">
+                      ${hasPromo ? `<div><span class="strike-red-diagonal text-xs">$${Number(item.price).toFixed(2)}</span></div><div class="font-extrabold text-amber-400 text-base">$${finalPrice.toFixed(2)}</div>` : `<div class="font-bold text-stone-200 text-base">$${Number(item.price).toFixed(2)}</div>`}
+                    </div>
+                    <button onclick="addToCart('${item.id}')" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-3 py-1.5 rounded-lg text-xs transition shadow">
+                      <i class="fa-solid fa-plus"></i>
+                    </button>
                   </div>
                 </div>
-                <div class="p-4 pt-0">
-                  <button onclick="addToCart('${item.id}')" class="w-full bg-amber-500 text-zinc-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md hover:bg-amber-400 flex items-center justify-center space-x-1">
-                    <i class="fa-solid fa-plus"></i><span>Add to Order</span>
-                  </button>
+              `;
+            }).join('')}
+          </div>
+        `;
+      } else {
+        // Modern Grid Layout
+        contentBox.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            ${visibleItems.map(item => {
+              const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
+              const finalPrice = hasPromo ? Number(item.promoPrice) : Number(item.price);
+
+              return `
+                <div class="rounded-2xl shadow-lg overflow-hidden border border-zinc-700/60 flex flex-col justify-between bg-zinc-800 group">
+                  <div>
+                    <div class="relative overflow-hidden h-48 bg-zinc-900">
+                      <img src="${item.image || ''}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    </div>
+                    <div class="p-4">
+                      <div class="flex justify-between items-start gap-2">
+                        <h3 class="font-bold text-stone-100 text-base">${item.id}: ${item.name}</h3>
+                        <div class="text-right">
+                          ${hasPromo ? `<div><span class="strike-red-diagonal text-sm font-bold">$${Number(item.price).toFixed(2)}</span></div><div class="font-black text-amber-400 text-lg">$${finalPrice.toFixed(2)}</div>` : `<div class="font-black text-amber-400 text-lg">$${Number(item.price).toFixed(2)}</div>`}
+                        </div>
+                      </div>
+                      <p class="text-xs text-stone-400 mt-1.5 line-clamp-2">${item.description || ''}</p>
+                    </div>
+                  </div>
+                  <div class="p-4 pt-0">
+                    <button onclick="addToCart('${item.id}')" class="w-full bg-amber-500 text-zinc-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md hover:bg-amber-400 flex items-center justify-center space-x-1">
+                      <i class="fa-solid fa-plus"></i><span>Add to Order</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      `;
+              `;
+            }).join('')}
+          </div>
+        `;
+      }
     }
 
     function addToCart(id) {
@@ -328,9 +488,13 @@
 
     function updateCartUI() {
       document.getElementById('cartCount').innerText = cart.reduce((s,i)=>s+i.qty,0);
-      const subtotal = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+      const totalGross = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+      const subtotal = totalGross / 1.15; // Kalkulasi dasar sebelum GST 15%
+      const gst = totalGross - subtotal;  // Komponen GST 15%
+
       document.getElementById('cartSubtotal').innerText = `$${subtotal.toFixed(2)}`;
-      document.getElementById('cartTotal').innerText = `$${subtotal.toFixed(2)}`;
+      document.getElementById('cartGST').innerText = `$${gst.toFixed(2)}`;
+      document.getElementById('cartTotal').innerText = `$${totalGross.toFixed(2)}`;
 
       const list = document.getElementById('cartItemsList');
       if (cart.length === 0) {
@@ -350,7 +514,8 @@
     }
 
     function handleCheckoutAction() {
-      alert('Order placed successfully!');
+      const totalGross = cart.reduce((s,i)=>s+(i.price*i.qty),0);
+      alert(`Order ready for cashier!\nTotal to Pay (Incl. GST 15%): $${totalGross.toFixed(2)}`);
     }
   </script>
 </body>
