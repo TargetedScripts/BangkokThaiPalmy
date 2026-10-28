@@ -6,7 +6,6 @@
   <title>RestoSync SaaS - Live Store Enterprise</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   <style>
     .hero-slide { transition: opacity 1s ease-in-out; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -14,15 +13,6 @@
   </style>
 </head>
 <body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen pb-16">
-
-  <!-- LICENSE SUSPENDED SCREEN -->
-  <div id="licenseSuspendedScreen" class="fixed inset-0 bg-zinc-950 z-[100] hidden flex items-center justify-center p-6 text-center">
-    <div class="bg-zinc-900 border border-red-900/50 p-8 rounded-3xl max-w-md shadow-2xl space-y-4">
-      <div class="w-16 h-16 bg-red-950 text-red-500 rounded-full flex items-center justify-center mx-auto text-2xl"><i class="fa-solid fa-lock"></i></div>
-      <h2 class="text-2xl font-black text-white">Store Access Suspended</h2>
-      <p class="text-xs text-stone-400 leading-relaxed" id="suspendReason">Lisensi langganan kedaluwarsa.</p>
-    </div>
-  </div>
 
   <!-- HEADER -->
   <header id="mainHeader" class="sticky top-0 z-50 border-b border-zinc-800/60 w-full bg-black"> 
@@ -99,7 +89,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
   <script>
-    const MASTER_SECRET = "TargetedScripts-Master-Secret-2026!Key";
     const firebaseConfig = {
       apiKey: "AIzaSyCMd3tOM2g8FNL96UIlGRE9cbq3UUvssrQ",
       authDomain: "restosync-saas.firebaseapp.com",
@@ -123,6 +112,9 @@
       db.collection("tenants").doc(TENANT_ID).onSnapshot((doc) => {
         if (doc.exists && doc.data().config) {
           activeConfig = doc.data().config;
+          
+          // LISENSI DI-BYPASS (Tidak ada pemeriksaan tanggal kedaluwarsa)
+          
           initStoreBranding();
           renderCategoryPills();
           renderMenuContentBox();
