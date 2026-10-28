@@ -3,56 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RestoSync SaaS - Live Store</title>
-  <!-- Tailwind CSS CDN -->
+  <title>RestoSync SaaS - Debugging Mode</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-zinc-950 text-stone-100 font-sans antialiased min-h-screen flex flex-col">
+<body class="bg-zinc-950 text-stone-100 p-8">
+  <div class="max-w-xl mx-auto bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
+    <h1 class="text-xl font-bold text-amber-400">Panel Diagnostik RestoSync</h1>
+    <p id="debug-status" class="text-sm text-stone-300">Menghubungkan ke Firebase Firestore...</p>
+    <div id="debug-result" class="bg-zinc-950 p-4 rounded text-xs font-mono text-emerald-400 overflow-x-auto"></div>
+  </div>
 
-  <!-- Sticky Header -->
-  <header class="sticky top-0 z-40 bg-zinc-950/90 backdrop-blur border-b border-zinc-800 px-4 py-3 flex items-center justify-between">
-    <div class="flex items-center space-x-3">
-      <span class="text-amber-500 text-xl"><i class="fa-solid fa-store"></i></span>
-      <h1 id="store-name" class="font-bold text-lg tracking-wide text-amber-400">Memuat Toko...</h1>
-    </div>
-    <div class="flex items-center space-x-4">
-      <span id="store-status-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-zinc-800 text-stone-300 border border-zinc-700">Mengecek...</span>
-      <button onclick="alert('Keranjang belanja aktif')" class="relative bg-amber-500 text-zinc-950 px-3 py-1.5 rounded-lg font-bold text-sm flex items-center space-x-1.5 shadow">
-        <i class="fa-solid fa-cart-shopping"></i>
-        <span id="cart-counter">0</span>
-      </button>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="bg-zinc-900 border-b border-zinc-800 px-4 py-8 text-center">
-    <div class="max-w-2xl mx-auto space-y-2">
-      <h2 id="store-tagline" class="text-xl md:text-2xl font-extrabold text-stone-100">Selamat Datang</h2>
-      <p id="store-address" class="text-xs text-stone-400"><i class="fa-solid fa-location-dot mr-1"></i> Memuat alamat...</p>
-    </div>
-  </section>
-
-  <!-- Main Catalog Grid Container -->
-  <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6">
-    <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <!-- Dynamic Item Cards -->
-    </div>
-  </main>
-
-  <!-- Footer -->
-  <footer class="bg-zinc-900 border-t border-zinc-800 text-center py-4 text-xs text-stone-500">
-    <p>&copy; 2026 RestoSync SaaS. Powered by Firebase Firestore.</p>
-  </footer>
-
-  <!-- Firebase SDKs (Compat v9) -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-  <!-- Script Langsung (Tanpa Modular Kompleks) -->
   <script>
-    // 1. Inisialisasi Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyCMd3tOM2g8FNL96UIlGRE9cbq3UUvssrQ",
       authDomain: "restosync-saas.firebaseapp.com",
@@ -62,75 +27,26 @@
       appId: "1:780544019719:web:e5fccb00a4981f2579c9a2"
     };
 
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
+    firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // 2. Ambil parameter tenant dari URL
     const urlParams = new URLSearchParams(window.location.search);
     const tenantId = urlParams.get('tenant') || 'bangkokthaipalmy';
 
-    // 3. Tarik data langsung dari Firestore
+    document.getElementById('debug-status').innerText = `Mencari Tenant ID: "${tenantId}" di database...`;
+
     db.collection('tenants').doc(tenantId).get().then((doc) => {
       if (doc.exists) {
-        const data = doc.data();
-        const config = data.config || {};
-        
-        // Tampilkan Nama & Alamat Toko
-        const store = config.store || {};
-        document.getElementById('store-name').innerText = store.name || 'RestoSync Store';
-        document.getElementById('store-tagline').innerText = store.tagline || '';
-        document.getElementById('store-address').innerHTML = `<i class="fa-solid fa-location-dot mr-1"></i> ${store.address || ''} | <i class="fa-solid fa-phone ml-2 mr-1"></i> ${store.phone || ''}`;
-
-        // Status Toko Buka/Tutup
-        const statusBadge = document.getElementById('store-status-badge');
-        statusBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-950 text-emerald-300 border border-emerald-800";
-        statusBadge.innerHTML = `<i class="fa-solid fa-circle text-[8px] mr-1"></i> BUKA`;
-
-        // Tampilkan Menu / Katalog
-        const menuItems = config.menuItems || [];
-        const gridEl = document.getElementById('catalog-grid');
-        
-        if (menuItems.length === 0) {
-          gridEl.innerHTML = `<div class="col-span-full text-center py-12 text-stone-500">Tidak ada menu tersedia.</div>`;
-          return;
-        }
-
-        let gridHtml = '';
-        menuItems.forEach(item => {
-          gridHtml += `
-            <div class="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden shadow flex flex-col justify-between">
-              <div>
-                <div class="h-40 bg-zinc-800 relative overflow-hidden">
-                  <img src="${item.image || 'https://images.unsplash.com/photo-1541658016709-82535e94bc69'}" alt="${item.name}" class="w-full h-full object-cover">
-                </div>
-                <div class="p-4 space-y-1">
-                  <div class="flex justify-between items-start">
-                    <h3 class="font-bold text-stone-100 text-base">${item.name}</h3>
-                    <span class="text-amber-400 font-bold">$${Number(item.price).toFixed(2)}</span>
-                  </div>
-                  <p class="text-xs text-stone-400 line-clamp-2">${item.description || ''}</p>
-                </div>
-              </div>
-              <div class="p-4 pt-0">
-                <button onclick="alert('Ditambahkan ke pesanan: ${item.name}')" class="w-full bg-zinc-800 hover:bg-amber-500 hover:text-zinc-950 text-stone-200 text-xs font-bold py-2.5 rounded-lg transition border border-zinc-700 flex items-center justify-center space-x-1.5">
-                  <i class="fa-solid fa-plus"></i>
-                  <span>Tambah ke Pesanan</span>
-                </button>
-              </div>
-            </div>
-          `;
-        });
-        gridEl.innerHTML = gridHtml;
-
+        const rawData = doc.data();
+        document.getElementById('debug-status').innerText = "SUKSES! Dokumen ditemukan di Firebase.";
+        document.getElementById('debug-result').innerText = JSON.stringify(rawData, null, 2);
       } else {
-        document.getElementById('store-name').innerText = "Tenant Tidak Ditemukan";
-        console.error("Tenant tidak ditemukan di Firestore:", tenantId);
+        document.getElementById('debug-status').innerText = `GAGAL: Dokumen dengan ID "${tenantId}" tidak ditemukan di database!`;
+        document.getElementById('debug-result').innerText = "Periksa kembali apakah nama dokumen di koleksi 'tenants' benar-benar 'bangkokthaipalmy'.";
       }
     }).catch((error) => {
-      console.error("Gagal mengambil data dari Firebase:", error);
-      document.getElementById('store-name').innerText = "Gagal Memuat Data";
+      document.getElementById('debug-status').innerText = "TERJADI ERROR KONEKSI/IZIN KE FIREBASE:";
+      document.getElementById('debug-result').innerText = error.message;
     });
   </script>
 </body>
