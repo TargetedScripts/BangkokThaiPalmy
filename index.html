@@ -6,62 +6,53 @@
   <title>RestoSync SaaS - Live Store Enterprise</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- CryptoJS for AES-256 Validation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   <style>
     .hero-slide { transition: opacity 1s ease-in-out; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .strike-red-diagonal { position: relative; display: inline-block; color: #a1a1aa; font-weight: 700; }
-    .strike-red-diagonal::after { content: ""; position: absolute; left: -3px; right: -3px; top: 50%; height: 3px; background: #ef4444; transform: translateY(-50%) rotate(-12deg); pointer-events: none; }
   </style>
 </head>
 <body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen pb-16">
 
-  <!-- STORE ACCESS SUSPENDED SCREEN (AES-256 LICENSE LOCK) -->
+  <!-- LICENSE SUSPENDED SCREEN -->
   <div id="licenseSuspendedScreen" class="fixed inset-0 bg-zinc-950 z-[100] hidden flex items-center justify-center p-6 text-center">
     <div class="bg-zinc-900 border border-red-900/50 p-8 rounded-3xl max-w-md shadow-2xl space-y-4">
       <div class="w-16 h-16 bg-red-950 text-red-500 rounded-full flex items-center justify-center mx-auto text-2xl"><i class="fa-solid fa-lock"></i></div>
       <h2 class="text-2xl font-black text-white">Store Access Suspended</h2>
-      <p class="text-xs text-stone-400 leading-relaxed" id="suspendReason">Lisensi langganan RestoSync SaaS untuk tenant ini telah kedaluwarsa atau tidak valid. Silakan hubungi System Admin (TargetedScripts.com) untuk memperpanjang kontrak.</p>
-      <div class="pt-2 text-[10px] text-stone-600 font-mono">Secured by AES-256 Master Key</div>
+      <p class="text-xs text-stone-400 leading-relaxed" id="suspendReason">Lisensi langganan kedaluwarsa.</p>
     </div>
   </div>
 
   <!-- HEADER -->
-  <header id="mainHeader" class="text-white shadow-xl sticky top-0 z-50 border-b border-zinc-800/60 w-full bg-black"> 
-    <div class="w-full px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
-      <div class="flex items-center space-x-3 shrink-0">
-        <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain" style="height: 48px;">
-        <span class="font-bold text-lg uppercase text-amber-300">TAKEAWAY</span>
+  <header id="mainHeader" class="sticky top-0 z-50 border-b border-zinc-800/60 w-full bg-black"> 
+    <div class="w-full px-4 py-3 flex items-center justify-between gap-4">
+      <div class="flex items-center space-x-2 shrink-0">
+        <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain" style="height: 38px;">
+        <span class="font-bold text-sm uppercase tracking-wider text-amber-300">TAKEAWAY</span>
       </div>
-      <button onclick="toggleCartModal()" id="cartBtn" class="font-bold px-4 py-2 rounded-lg text-xs flex items-center space-x-2 bg-amber-500 text-zinc-950 shadow">
-        <i class="fa-solid fa-basket-shopping"></i><span>Cart</span><span id="cartCount" class="bg-zinc-950 text-amber-400 text-xs px-1.5 py-0.5 rounded-full">0</span>
+      <button onclick="toggleCartModal()" id="cartBtn" class="font-bold px-3 py-1.5 rounded-lg text-xs flex items-center space-x-1.5 bg-amber-500 text-zinc-950 shadow">
+        <i class="fa-solid fa-basket-shopping"></i><span>Cart</span><span id="cartCount" class="bg-zinc-950 text-amber-400 text-xs px-1.5 py-0.2 rounded-full">0</span>
       </button>
     </div>
   </header>
 
-  <!-- FEATURE HIGHLIGHTS BAR (3 Lencana Keunggulan) -->
-  <div id="featureHighlightsBar" class="bg-zinc-950 border-b border-zinc-800 py-2.5 px-4 hidden">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-4 text-xs font-semibold text-amber-300">
-      <span id="hlBadge1" class="hidden items-center bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full"><i class="fa-solid fa-check mr-1.5 text-amber-400"></i><span id="hlText1"></span></span>
-      <span id="hlBadge2" class="hidden items-center bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full"><i class="fa-solid fa-check mr-1.5 text-amber-400"></i><span id="hlText2"></span></span>
-      <span id="hlBadge3" class="hidden items-center bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full"><i class="fa-solid fa-check mr-1.5 text-amber-400"></i><span id="hlText3"></span></span>
-    </div>
-  </div>
-
   <!-- HERO BANNER -->
-  <section class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden">
-    <div id="heroSlidesContainer" class="relative w-full h-full"></div>
-    <div id="defaultHeroOverlay" class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/50 to-black/70 flex flex-col justify-center items-center text-center p-6 text-white">
-      <h2 id="heroTaglineTitle" class="text-2xl md:text-3xl font-extrabold tracking-widest uppercase mb-2">Store Name</h2>
-      <p id="bannerTagline" class="text-sm text-stone-300 mb-6">Authentic flavours cooked fresh.</p>
+  <section class="relative w-full h-[320px] md:h-[420px] bg-zinc-950 overflow-hidden">
+    <div id="heroSlidesContainer" class="absolute inset-0 w-full h-full">
+      <div class="absolute inset-0 w-full h-full">
+        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80" class="w-full h-full object-cover">
+      </div>
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/40 to-black/60 flex flex-col justify-center items-center text-center p-4 text-white z-10">
+      <h2 id="heroTaglineTitle" class="text-xl md:text-3xl font-extrabold tracking-widest uppercase mb-1">Store Name</h2>
+      <p id="bannerTagline" class="text-xs md:text-sm text-stone-300">Authentic flavours cooked fresh.</p>
     </div>
   </section>
 
   <!-- MENU SECTION -->
   <section class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
-    <div class="sticky top-[61px] z-30 bg-zinc-900/95 py-3 -mx-4 px-4 mb-6 border-b border-zinc-800">
+    <div class="sticky top-[57px] z-35 bg-zinc-900/95 py-3 -mx-4 px-4 mb-6 border-b border-zinc-800">
       <div id="categoryPills" class="flex space-x-2 overflow-x-auto no-scrollbar py-1"></div>
     </div>
     <div id="menuContentBox" class="w-full"></div>
@@ -82,6 +73,27 @@
       </div>
     </div>
   </div>
+
+  <!-- FOOTER -->
+  <footer id="mainFooter" class="text-xs py-8 border-t border-zinc-800 mt-12 bg-black text-stone-400">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div>
+        <h4 id="footerStoreName" class="font-bold text-sm mb-1 text-stone-200">Store Name</h4>
+        <p id="footerAddress" class="mb-1 text-xs">Address...</p>
+        <p class="text-xs">Phone: <a id="footerPhone" href="#" class="underline">Phone...</a></p>
+      </div>
+      <div>
+        <h4 class="font-bold text-sm mb-1 text-stone-200"><i class="fa-solid fa-clock mr-1 text-amber-400"></i> Operating Hours</h4>
+        <div id="footerOperatingHours" class="space-y-1 text-xs"><p>Loading hours...</p></div>
+      </div>
+      <div>
+        <h4 class="font-bold text-sm mb-1 text-stone-200"><i class="fa-solid fa-toolbox mr-1 text-amber-400"></i> Quick Links</h4>
+        <div class="flex flex-col space-y-1 text-xs">
+          <a href="admin.html" class="text-amber-400 hover:underline"><i class="fa-solid fa-user-gear mr-1"></i> Open Manager Portal</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -111,114 +123,77 @@
       db.collection("tenants").doc(TENANT_ID).onSnapshot((doc) => {
         if (doc.exists && doc.data().config) {
           activeConfig = doc.data().config;
-          
-          // 1. Jalankan Validasi Lisensi AES-256
-          if (!validateAESLicense(activeConfig.licenseToken)) {
-            return; // Hentikan render jika lisensi kedaluwarsa/invalid
-          }
-
           initStoreBranding();
-          renderHighlightsBar();
           renderCategoryPills();
           renderMenuContentBox();
         }
       });
     });
 
-    // Validasi AES-256 License Token
-    function validateAESLicense(token) {
-      if (!token) {
-        triggerSuspension("Token lisensi tidak ditemukan pada konfigurasi tenant.");
-        return false;
-      }
-
-      try {
-        const bytes = CryptoJS.AES.decrypt(token, MASTER_SECRET);
-        const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-
-        if (!decryptedData || !decryptedData.expiryDate) {
-          triggerSuspension("Struktur payload lisensi rusak atau tidak valid.");
-          return false;
-        }
-
-        const expiryDate = new Date(decryptedData.expiryDate);
-        const today = new Date();
-
-        if (today > expiryDate) {
-          triggerSuspension(`Masa berlaku kontrak telah habis pada ${decryptedData.expiryDate}.`);
-          return false;
-        }
-
-        return true;
-      } catch (e) {
-        triggerSuspension("Gagal mendekripsi token lisensi AES-256 (Tamper Detected).");
-        return false;
-      }
-    }
-
-    function triggerSuspension(reason) {
-      document.getElementById('suspendReason').innerText = reason;
-      document.getElementById('licenseSuspendedScreen').classList.remove('hidden');
-    }
-
-    // Render Feature Highlights Bar
-    function renderHighlightsBar() {
-      const hl = activeConfig.highlights || {};
-      const bar = document.getElementById('featureHighlightsBar');
-      let hasActive = false;
-
-      [1, 2, 3].forEach(i => {
-        const item = hl[`hl${i}`];
-        const badge = document.getElementById(`hlBadge${i}`);
-        const textSpan = document.getElementById(`hlText${i}`);
-        if (item && item.active && item.text) {
-          textSpan.innerText = item.text;
-          badge.classList.remove('hidden');
-          badge.classList.add('inline-flex');
-          hasActive = true;
-        } else {
-          badge.classList.add('hidden');
-          badge.classList.remove('inline-flex');
-        }
-      });
-
-      if (hasActive) bar.classList.remove('hidden');
-      else bar.classList.add('hidden');
-    }
-
     function initStoreBranding() {
       const store = activeConfig.store || {};
+      const branding = activeConfig.branding || {};
       document.getElementById('heroTaglineTitle').innerText = store.name || 'Store Name';
       document.getElementById('bannerTagline').innerText = store.tagline || '';
+      document.getElementById('footerStoreName').innerText = store.name || 'Store Name';
+      document.getElementById('footerAddress').innerText = store.address || '';
+      document.getElementById('footerPhone').innerText = store.phone || '';
+      document.getElementById('footerPhone').href = `tel:${store.phone || ''}`;
+
+      const op = activeConfig.operatingHours || {};
+      const validDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+      const hoursHtml = Object.keys(op)
+        .filter(key => validDays.includes(key.toLowerCase()))
+        .map(day => `<div class="flex justify-between capitalize"><span>${day}:</span><span class="text-stone-200">${op[day] || 'Closed'}</span></div>`)
+        .join('');
+      document.getElementById('footerOperatingHours').innerHTML = hoursHtml || '<p>Hours not set</p>';
+
+      if (branding.logo) {
+        document.getElementById('storeLogo').src = branding.logo;
+      }
     }
 
     function renderCategoryPills() {
       const items = (activeConfig.menuItems || []).filter(i => !i.isHidden);
       const categories = [...new Set(items.map(i => i.category))];
       const pills = document.getElementById('categoryPills');
-      pills.innerHTML = `<button onclick="filterCategory('ALL')" class="px-4 py-2 rounded-full text-xs font-semibold bg-amber-500 text-zinc-950">ALL</button>` +
-        categories.map(c => `<button onclick="filterCategory('${c}')" class="px-4 py-2 rounded-full text-xs font-semibold bg-zinc-800 text-stone-300">${c}</button>`).join('');
+      pills.innerHTML = `<button onclick="filterCategory('ALL')" class="px-3.5 py-1.5 rounded-full text-xs font-semibold ${currentFilter === 'ALL' ? 'bg-amber-500 text-zinc-950 font-bold' : 'bg-zinc-800 text-stone-300'}">ALL</button>` +
+        categories.map(c => `<button onclick="filterCategory('${c}')" class="px-3.5 py-1.5 rounded-full text-xs font-semibold ${currentFilter === c ? 'bg-amber-500 text-zinc-950 font-bold' : 'bg-zinc-800 text-stone-300'}">${c}</button>`).join('');
     }
 
     function filterCategory(cat) {
       currentFilter = cat;
+      renderCategoryPills();
       renderMenuContentBox();
     }
 
     function renderMenuContentBox() {
       const items = (activeConfig.menuItems || []).filter(i => !i.isHidden && (currentFilter === 'ALL' || i.category === currentFilter));
+      
+      if (items.length === 0) {
+        document.getElementById('menuContentBox').innerHTML = `<div class="text-center py-12 text-stone-500 text-xs">No menu items found.</div>`;
+        return;
+      }
+
       document.getElementById('menuContentBox').innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          ${items.map(item => `
-            <div class="bg-zinc-800 rounded-2xl p-4 border border-zinc-700 flex flex-col justify-between">
-              <div>
-                <h3 class="font-bold text-stone-100">${item.id}: ${item.name}</h3>
-                <p class="text-xs text-stone-400 mt-1">${item.description || ''}</p>
-                <div class="mt-2 font-black text-amber-400">$${Number(item.price).toFixed(2)}</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          ${items.map(item => {
+            const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
+            return `
+              <div class="bg-zinc-800 rounded-2xl p-3.5 border border-zinc-700 flex flex-col justify-between shadow-lg text-xs">
+                <div>
+                  ${item.image ? `<div class="w-full h-36 bg-zinc-950 mb-3 rounded-xl overflow-hidden"><img src="${item.image}" class="w-full h-full object-cover"></div>` : ''}
+                  <h3 class="font-bold text-stone-100 text-sm">${item.id}: ${item.name}</h3>
+                  <p class="text-[11px] text-stone-400 mt-1">${item.description || ''}</p>
+                  <div class="mt-2.5 flex items-baseline space-x-2">
+                    <span class="${hasPromo ? 'line-through text-zinc-500 text-xs' : 'font-black text-amber-400 text-base'}">$${Number(item.price).toFixed(2)}</span>
+                    ${hasPromo ? `<span class="font-black text-amber-400 text-base">$${Number(item.promoPrice).toFixed(2)}</span>` : ''}
+                  </div>
+                </div>
+                <button onclick="addToCart('${item.id}')" class="mt-3 bg-amber-500 text-zinc-950 font-bold py-2 rounded-xl text-xs shadow w-full">Add to Order</button>
               </div>
-              <button onclick="addToCart('${item.id}')" class="mt-4 bg-amber-500 text-zinc-950 font-bold py-2 rounded-xl text-xs">Add to Order</button>
-            </div>
-          `).join('')}
+            `;
+          }).join('')}
         </div>
       `;
     }
@@ -226,7 +201,8 @@
     function addToCart(id) {
       const item = activeConfig.menuItems.find(i => i.id === id);
       if (!item) return;
-      cart.push({ ...item, price: item.price, qty: 1 });
+      const finalPrice = item.promoPrice && Number(item.promoPrice) < Number(item.price) ? Number(item.promoPrice) : Number(item.price);
+      cart.push({ ...item, price: finalPrice, qty: 1 });
       document.getElementById('cartCount').innerText = cart.length;
       updateCartUI();
     }
@@ -236,7 +212,7 @@
       document.getElementById('cartSubtotal').innerText = `$${(total/1.15).toFixed(2)}`;
       document.getElementById('cartGST').innerText = `$${(total - total/1.15).toFixed(2)}`;
       document.getElementById('cartTotal').innerText = `$${total.toFixed(2)}`;
-      document.getElementById('cartItemsList').innerHTML = cart.map(i => `<div>${i.name} - $${i.price}</div>`).join('');
+      document.getElementById('cartItemsList').innerHTML = cart.map(i => `<div class="flex justify-between py-1 border-b border-zinc-800 text-stone-300 text-xs"><span>${i.name}</span><span class="text-amber-400 font-bold">$${i.price}</span></div>`).join('');
     }
 
     function toggleCartModal() {
