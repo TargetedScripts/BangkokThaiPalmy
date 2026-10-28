@@ -131,12 +131,12 @@
     </div>
   </div>
 
-  <!-- POPUP ANNOUNCEMENT / VACATION MODAL (POPUP WINDOW) -->
+  <!-- POPUP ANNOUNCEMENT / VACATION MODAL -->
   <div id="storeNoticeModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="bg-zinc-900 border border-zinc-700 w-full max-w-md rounded-2xl shadow-2xl p-6 text-center space-y-4 relative">
       <button onclick="closeStoreNoticeModal()" class="absolute top-4 right-4 text-stone-400 hover:text-white text-xl font-bold">&times;</button>
       <div class="w-14 h-14 bg-amber-500/10 text-amber-400 rounded-2xl flex items-center justify-center mx-auto text-2xl border border-amber-500/30 shadow-inner">
-        <i id="noticeIcon" class="fa-solid fa-umbrella-beach"></i>
+        <i class="fa-solid fa-umbrella-beach"></i>
       </div>
       <h3 id="noticeTitle" class="text-xl font-extrabold text-stone-100">Store Temporarily Closed</h3>
       <p id="noticeMessage" class="text-xs text-stone-300 leading-relaxed max-w-xs mx-auto">We are currently closed for holidays. Please check back later!</p>
@@ -151,16 +151,7 @@
     </div>
   </div>
 
-  <!-- FLYING WINDOW / BOTTOM BANNER NOTIFICATION -->
-  <div id="flyingStatusBanner" class="fixed bottom-0 inset-x-0 bg-amber-500 text-zinc-950 font-bold px-4 py-2.5 z-40 shadow-2xl hidden flex items-center justify-between text-xs border-t border-amber-400">
-    <div class="flex items-center space-x-2">
-      <i class="fa-solid fa-clock text-sm"></i>
-      <span id="flyingBannerText">Store is currently outside normal operating hours.</span>
-    </div>
-    <button onclick="document.getElementById('flyingStatusBanner').classList.add('hidden')" class="text-zinc-950 font-extrabold text-base leading-none">&times;</button>
-  </div>
-
-  <!-- LOCATION & MAPS SECTION -->
+  <!-- LOCATION & MAPS SECTION WITH DAILY OPERATING HOURS DISPLAY -->
   <section id="locationSection" class="bg-zinc-950 py-12 border-t border-zinc-800 mt-12">
     <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
       <div class="space-y-4">
@@ -172,21 +163,19 @@
           <i class="fa-solid fa-phone text-amber-400 mr-3 text-lg"></i> Loading phone...
         </p>
 
-        <!-- OPERATING HOURS DISPLAY DARI CONFIG ADMIN -->
+        <!-- RENDER OPERATING HOURS MON - SUN -->
         <div class="pt-2">
           <h4 class="font-semibold text-stone-200 mb-2 flex items-center">
             <i class="fa-regular fa-clock text-amber-400 mr-2"></i> Opening Hours:
           </h4>
-          <ul id="operatingHoursList" class="text-sm text-stone-400 space-y-1 max-w-xs">
-            <li class="flex justify-between"><span>Monday - Saturday:</span> <span class="font-medium text-stone-200">4:30 PM - 9:00 PM</span></li>
-            <li class="flex justify-between"><span>Sunday:</span> <span class="font-medium text-stone-200">Closed</span></li>
-          </ul>
-          <p id="surchargeNoticeFooter" class="text-[11px] text-amber-400/90 mt-2 italic hidden">
-            <i class="fa-solid fa-circle-info mr-1"></i> A public holiday surcharge applies on selected open holidays.
+          <ul id="operatingHoursList" class="text-xs text-stone-400 space-y-1.5 max-w-xs divide-y divide-zinc-800/60"></ul>
+          
+          <p id="surchargeNoticeFooter" class="text-[11px] text-amber-400/90 mt-3 italic hidden">
+            <i class="fa-solid fa-circle-info mr-1"></i> Public holiday surcharge applies on selected open holidays.
           </p>
         </div>
       </div>
-      <div class="bg-zinc-900 border border-zinc-800/80 rounded-2xl h-64 flex items-center justify-center text-stone-400 font-medium shadow-inner overflow-hidden">
+      <div class="bg-zinc-900 border border-zinc-800/80 rounded-2xl h-72 flex items-center justify-center text-stone-400 font-medium shadow-inner overflow-hidden">
         <iframe id="googleMapsIframe" class="w-full h-full border-0" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2975.234567890123!2d175.609!3d-40.355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d4043f29a0a0000%3A0x0!2s287%20Main%20St%2C%20Palmerston%20North%20Central%2C%20Palmerston%20North%204410!5e0!3m2!1sen!2snz!4v1700000000000!5m2!1sen!2snz"></iframe>
       </div>
     </div>
@@ -233,8 +222,6 @@
       renderHighlightsBar();
       renderCategoryPills();
       renderMenuContentBox();
-
-      // CEK STATUS TOTAL CLOSURE & OPERATING HOURS
       checkStoreStatusAndNotice();
     });
 
@@ -284,7 +271,6 @@
       `;
     }
 
-    /* MENERAPKAN WARNA DINAMIS SECARA FLEKSIBEL 100% */
     function applyCustomTheme() {
       const theme = activeConfig.theme || {};
       const branding = activeConfig.branding || {};
@@ -351,11 +337,10 @@
         document.getElementById('googleMapsIframe').src = activeConfig.store.googleMapsEmbedUrl;
       }
 
-      // Render Display Jam Operasional di Footer Bottom
       renderOperatingHoursFooter();
     }
 
-    /* RENDER OPERATING HOURS & SURCHARGE DI BOTTOM HOMEPAGE */
+    /* RENDER DAILY OPERATING HOURS (MON - SUN) IN FOOTER */
     function renderOperatingHoursFooter() {
       const op = activeConfig.operatingHours || {};
       const list = document.getElementById('operatingHoursList');
@@ -363,13 +348,22 @@
 
       if (!list) return;
 
-      const weekText = op.weekdayHours || "Mon - Sat: 4:30 PM - 9:00 PM";
-      const sunText = op.sundayHours || "Sun: Closed";
+      const days = [
+        { label: "Monday", val: op.mon || op.weekdayHours || "4:30 PM - 9:00 PM" },
+        { label: "Tuesday", val: op.tue || op.weekdayHours || "4:30 PM - 9:00 PM" },
+        { label: "Wednesday", val: op.wed || op.weekdayHours || "4:30 PM - 9:00 PM" },
+        { label: "Thursday", val: op.thu || op.weekdayHours || "4:30 PM - 9:00 PM" },
+        { label: "Friday", val: op.fri || op.weekdayHours || "4:30 PM - 9:30 PM" },
+        { label: "Saturday", val: op.sat || op.weekdayHours || "4:30 PM - 9:30 PM" },
+        { label: "Sunday", val: op.sun || "Closed" }
+      ];
 
-      list.innerHTML = `
-        <li class="flex justify-between"><span>Mon - Sat:</span> <span class="font-medium text-stone-200">${weekText}</span></li>
-        <li class="flex justify-between"><span>Sunday:</span> <span class="font-medium text-stone-200">${sunText}</span></li>
-      `;
+      list.innerHTML = days.map(d => `
+        <li class="flex justify-between pt-1">
+          <span>${d.label}:</span> 
+          <span class="font-medium ${d.val.toLowerCase() === 'closed' ? 'text-red-400' : 'text-stone-200'}">${d.val}</span>
+        </li>
+      `).join('');
 
       if (op.hasHolidaySurcharge && op.surchargePercent > 0) {
         surchargeNotice.innerText = `* ${op.surchargeName || 'Public Holiday Surcharge'} (${op.surchargePercent}%) applies today.`;
@@ -379,14 +373,11 @@
       }
     }
 
-    /* CHECK TOTAL CLOSURE & OPERATING HOURS STATUS */
     function checkStoreStatusAndNotice() {
       const op = activeConfig.operatingHours || {};
       const badge = document.getElementById('headerStatusBadge');
       const noticeModal = document.getElementById('storeNoticeModal');
-      const flyingBanner = document.getElementById('flyingStatusBanner');
 
-      // 1. KONDISI TUTUP TOTAL (OWNER VACATION / EMERGENCY)
       if (op.isTotallyClosed === true) {
         if (badge) {
           badge.innerText = "TEMPORARILY CLOSED";
@@ -394,7 +385,7 @@
         }
 
         document.getElementById('noticeTitle').innerText = op.closureTitle || "Store Temporarily Closed";
-        document.getElementById('noticeMessage').innerText = op.closureMessage || "We are currently away for annual holidays and will return soon!";
+        document.getElementById('noticeMessage').innerText = op.closureMessage || "We are currently away on holidays. Please check back soon!";
         
         if (op.reopenDate) {
           document.getElementById('reopenDateText').innerText = `Re-opening on ${op.reopenDate}`;
@@ -407,16 +398,9 @@
         return;
       }
 
-      // 2. CEK STATUS OPERASIONAL NORMAL
       if (badge) {
         badge.innerText = "OPEN NOW";
         badge.className = "text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-800";
-      }
-
-      // 3. JIKA OUTSIDE HOURS (TUKAR DENGAN FLYING BANNER MELAYANG)
-      if (op.isOutsideHours === true) {
-        document.getElementById('flyingBannerText').innerText = op.outsideHoursMessage || "We are currently closed for online orders. Our opening hours are 4:30 PM - 9:00 PM.";
-        flyingBanner.classList.remove('hidden');
       }
     }
 
@@ -731,7 +715,7 @@
                       ? `<button onclick="addToCart('${item.id}')" style="${accentBtnStyle}" class="w-full font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 border border-white/10 shadow-md hover:opacity-90">
                            <i class="fa-solid fa-plus"></i> <span>Add to Order</span>
                          </button>`
-                      : `<button disabled class="bg-zinc-900 text-stone-600 font-bold py-2.5 rounded-xl text-xs text-center border border-zinc-800 cursor-not-allowed">
+                      : `<button disabled class="w-full bg-zinc-900 text-stone-600 font-bold py-2.5 rounded-xl text-xs text-center border border-zinc-800 cursor-not-allowed">
                            Out of Stock
                          </button>`
                     }
@@ -768,7 +752,6 @@
       updateCartUI();
     }
 
-    /* RENDER CART DENGAN DYNAMIC PUBLIC HOLIDAY SURCHARGE */
     function updateCartUI() {
       document.getElementById('cartCount').innerText = cart.reduce((s,i)=>s+i.qty,0);
       const subtotal = cart.reduce((s,i)=>s+(i.price*i.qty),0);
