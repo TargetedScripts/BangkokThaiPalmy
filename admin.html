@@ -3,408 +3,229 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RestoSync Admin Panel • TargetedScripts</title>
-  
-  <!-- Tailwind CSS CDN -->
+  <title>RestoSync SaaS - Manager Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            vgreen: {
-              400: '#4ade80',
-              500: '#22c55e',
-              600: '#16a34a',
-            },
-            navy: {
-              800: '#1e293b',
-              900: '#0f172a',
-              950: '#020617',
-            }
-          }
-        }
-      }
-    }
-  </script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; }
-  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
-<body class="bg-navy-950 text-slate-100 min-h-screen antialiased">
+<body class="bg-zinc-950 text-stone-200 min-h-screen flex flex-col">
 
-  <!-- TOP HEADER BAR -->
-  <header class="bg-navy-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
-    <div class="flex items-center gap-3">
-      <span class="text-amber-500 font-extrabold text-lg tracking-wider">RESTOSYNC ADMIN</span>
-      <span id="tenant-badge" class="bg-slate-800 text-slate-300 font-mono text-xs px-3 py-1 rounded-md border border-slate-700">bangkokthaipalmy</span>
+  <!-- TOP BAR -->
+  <header class="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 bg-amber-500 text-zinc-950 rounded-xl flex items-center justify-center font-black"><i class="fa-solid fa-utensils"></i></div>
+      <div>
+        <h1 class="font-bold text-white text-base">RestoSync Manager Portal</h1>
+        <p class="text-xs text-stone-400">Tenant: <span id="currentTenantId" class="text-amber-400 font-mono">bangkokthaipalmy</span></p>
+      </div>
     </div>
-
-    <div class="flex items-center gap-3">
-      <a href="index.html?tenant=bangkokthaipalmy" target="_blank" class="bg-navy-800 hover:bg-navy-700 text-amber-400 border border-amber-500/30 text-xs font-bold px-4 py-2 rounded-xl transition-all flex items-center gap-1.5">
-        <span>↗</span> Live Store
+    <div class="flex items-center space-x-3">
+      <a href="index.html?tenant=bangkokthaipalmy" target="_blank" class="bg-zinc-800 hover:bg-zinc-700 text-stone-200 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-700 flex items-center space-x-2">
+        <i class="fa-solid fa-eye text-amber-400"></i><span>View Live Store</span>
       </a>
-      <button onclick="saveAdminSettings()" class="bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs px-5 py-2 rounded-xl shadow-lg transition-all flex items-center gap-1.5">
-        💾 Save Changes
+      <button onclick="saveConfigToFirebase()" class="bg-amber-500 hover:bg-amber-400 text-zinc-950 px-5 py-2 rounded-xl text-xs font-black shadow-lg flex items-center space-x-2">
+        <i class="fa-solid fa-floppy-disk"></i><span>Save Changes</span>
       </button>
     </div>
   </header>
 
-  <!-- MAIN NAVIGATION TABS -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-    <div class="flex border-b border-slate-800 space-x-8 text-sm font-bold">
-      <!-- Tab 1: Company & Store Info -->
-      <button id="tab-btn-company" onclick="switchTab('company')" class="tab-btn pb-4 text-amber-400 border-b-2 border-amber-400 flex items-center gap-2">
-        <span>🏪</span> Company &amp; Store
-      </button>
-      
-      <!-- Tab 2: Theme & Logo -->
-      <button id="tab-btn-theme" onclick="switchTab('theme')" class="tab-btn pb-4 text-slate-400 hover:text-slate-200 border-b-2 border-transparent flex items-center gap-2">
-        <span>🎨</span> Theme &amp; Logo
-      </button>
-
-      <!-- Tab 3: Menu Catalogue -->
-      <button id="tab-btn-menu" onclick="switchTab('menu')" class="tab-btn pb-4 text-slate-400 hover:text-slate-200 border-b-2 border-transparent flex items-center gap-2">
-        <span>🍽️</span> Menu Catalogue
-      </button>
-
-      <!-- Tab 4: License Info (Read-Only) -->
-      <button id="tab-btn-license" onclick="switchTab('license')" class="tab-btn pb-4 text-slate-400 hover:text-slate-200 border-b-2 border-transparent flex items-center gap-2">
-        <span>🛡️</span> License
-      </button>
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-6 py-8 w-full flex-grow space-y-8">
+    
+    <!-- NOTIFICATION BANNER -->
+    <div id="saveNotification" class="hidden bg-emerald-950/80 border border-emerald-500/50 text-emerald-300 px-4 py-3 rounded-2xl text-xs flex items-center space-x-3">
+      <i class="fa-solid fa-circle-check text-base"></i>
+      <span id="saveNotifText">Konfigurasi berhasil disimpan ke Firebase Firestore!</span>
     </div>
-  </div>
 
-  <!-- MAIN CONTENT AREA -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-    <!-- 1. TAB: COMPANY & STORE INFO -->
-    <div id="tab-company" class="tab-content space-y-6">
-      <div class="bg-navy-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-        <h3 class="text-amber-400 font-bold text-sm flex items-center gap-2">
-          🏪 Store Information
-        </h3>
-
-        <div class="space-y-4 text-xs">
-          <div>
-            <label class="block text-slate-400 font-semibold mb-1">Restaurant / Business Name</label>
-            <input type="text" id="store-name" value="Bangkok Thai Takeaway" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-3 focus:outline-none focus:border-amber-500">
-          </div>
-
-          <div>
-            <label class="block text-slate-400 font-semibold mb-1">Tagline / Subtitle</label>
-            <input type="text" id="store-tagline" value="Authentic Thai Cuisine in Palmerston North" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-3 focus:outline-none focus:border-amber-500">
-          </div>
-
-          <div>
-            <label class="block text-slate-400 font-semibold mb-1">Phone Number</label>
-            <input type="text" id="store-phone" value="06 222 3375" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-3 focus:outline-none focus:border-amber-500">
-          </div>
-
-          <div>
-            <label class="block text-slate-400 font-semibold mb-1">Physical Address</label>
-            <textarea id="store-address" rows="2" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-3 focus:outline-none focus:border-amber-500">287 Main Street, Palmerston North Central</textarea>
-          </div>
+    <!-- STORE PROFILE & BRANDING SECTION -->
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-6 shadow-xl">
+      <h2 class="text-sm font-bold uppercase tracking-wider text-amber-400 flex items-center space-x-2">
+        <i class="fa-solid fa-store"></i><span>Store Information & Branding</span>
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+        <div>
+          <label class="block text-stone-400 mb-1 font-semibold">Store Name</label>
+          <input type="text" id="inputStoreName" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-stone-200 focus:outline-none focus:border-amber-500">
         </div>
-      </div>
-
-      <!-- Operating Hours Block (Flexibel 7 Hari) -->
-      <div class="bg-navy-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-        <h3 class="text-amber-400 font-bold text-sm flex items-center gap-2">
-          🕒 Operating Hours (Individual Daily Schedule)
-        </h3>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-          <div>
-            <label class="block text-slate-400 font-semibold mb-1">Monday</label>
-            <input type="text" id="hours-mon" value="Closed" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-2.5">
-          </div>
-          <div>
-            <label class="block text-slate-400 font-semibold mb-1">Tuesday</label>
-            <input type="text" id="hours-tue" value="Closed" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-2.5">
-          </div>
-          <div>
-            <label class="block text-slate-400 font-semibold mb-1">Wednesday</label>
-            <input type="text" id="hours-wed" value="4:30 PM - 9:00 PM" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-2.5">
-          </div>
-          <div>
-            <label class="block text-slate-400 font-semibold mb-1">Thursday</label>
-            <input type="text" id="hours-thu" value="4:30 PM - 9:00 PM" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-2.5">
-          </div>
-          <div>
-            <label class="block text-slate-400 font-semibold mb-1">Friday</label>
-            <input type="text" id="hours-fri" value="4:30 PM - 9:00 PM" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-2.5">
-          </div>
-          <div>
-            <label class="block text-slate-400 font-semibold mb-1">Saturday</label>
-            <input type="text" id="hours-sat" value="4:30 PM - 9:00 PM" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-2.5">
-          </div>
-          <div>
-            <label class="block text-slate-400 font-semibold mb-1">Sunday</label>
-            <input type="text" id="hours-sun" value="4:30 PM - 9:00 PM" class="w-full bg-slate-950 border border-slate-800 text-slate-100 rounded-xl p-2.5">
-          </div>
+        <div>
+          <label class="block text-stone-400 mb-1 font-semibold">Tagline</label>
+          <input type="text" id="inputStoreTagline" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-stone-200 focus:outline-none focus:border-amber-500">
+        </div>
+        <div>
+          <label class="block text-stone-400 mb-1 font-semibold">Phone Number</label>
+          <input type="text" id="inputStorePhone" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-stone-200 focus:outline-none focus:border-amber-500">
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-stone-400 mb-1 font-semibold">Physical Address</label>
+          <input type="text" id="inputStoreAddress" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-stone-200 focus:outline-none focus:border-amber-500">
+        </div>
+        <div>
+          <label class="block text-stone-400 mb-1 font-semibold">Logo Image URL</label>
+          <input type="text" id="inputStoreLogo" class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2 text-stone-200 focus:outline-none focus:border-amber-500" placeholder="./assets/images/logo.png">
         </div>
       </div>
     </div>
 
-    <!-- 2. TAB: THEME & LOGO -->
-    <div id="tab-theme" class="tab-content hidden space-y-6">
-      <!-- Client Logo Block -->
-      <div class="bg-navy-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-        <h3 class="text-amber-400 font-bold text-sm flex items-center gap-2">
-          🖼️ Client Logo
-        </h3>
-        
-        <input type="file" id="logo-upload" accept="image/*" onchange="previewLogo(event)" class="block w-full text-xs text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-black hover:file:bg-amber-400 cursor-pointer" />
-        
-        <div class="p-6 bg-black rounded-xl flex justify-center items-center border border-slate-800 min-h-[100px]">
-          <img id="logo-preview" src="Images/BangkokThaiLogo.png" class="max-h-20 object-contain" alt="Client Logo Preview" onerror="this.onerror=null; this.src='https://via.placeholder.com/200x60/000000/ffffff?text=Bangkok+Thai+Logo';" />
-        </div>
+    <!-- MENU MANAGEMENT SECTION -->
+    <div class="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-6 shadow-xl">
+      <div class="flex justify-between items-center">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-amber-400 flex items-center space-x-2">
+          <i class="fa-solid fa-utensils"></i><span>Menu Catalogue Management</span>
+        </h2>
+        <button onclick="addNewMenuItem()" class="bg-zinc-800 hover:bg-zinc-700 text-amber-400 px-3 py-1.5 rounded-xl text-xs font-bold border border-zinc-700 flex items-center space-x-1.5">
+          <i class="fa-solid fa-plus"></i><span>Add New Menu Item</span>
+        </button>
       </div>
 
-      <!-- Palette Color Picker Block (4 Pilihan Warna) -->
-      <div class="bg-navy-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-        <h3 class="text-amber-400 font-bold text-sm flex items-center gap-2">
-          🎨 Theme Accent &amp; Color Palette
-        </h3>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-xs">
-          <div>
-            <label class="block text-slate-400 font-semibold mb-2">Primary Accent</label>
-            <div class="flex items-center gap-2">
-              <input type="color" id="primary-color-picker" value="#f59e0b" onchange="syncColorInput('picker', 'primary')" class="h-10 w-12 bg-slate-800 border border-slate-700 rounded-lg cursor-pointer p-1">
-              <input type="text" id="primary-color-text" value="#F59E0B" onchange="syncColorInput('text', 'primary')" class="bg-slate-950 border border-slate-800 text-slate-200 rounded-xl p-2.5 font-mono w-full uppercase">
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-slate-400 font-semibold mb-2">Secondary Accent</label>
-            <div class="flex items-center gap-2">
-              <input type="color" id="secondary-color-picker" value="#22c55e" onchange="syncColorInput('picker', 'secondary')" class="h-10 w-12 bg-slate-800 border border-slate-700 rounded-lg cursor-pointer p-1">
-              <input type="text" id="secondary-color-text" value="#22C55E" onchange="syncColorInput('text', 'secondary')" class="bg-slate-950 border border-slate-800 text-slate-200 rounded-xl p-2.5 font-mono w-full uppercase">
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-slate-400 font-semibold mb-2">Background Color</label>
-            <div class="flex items-center gap-2">
-              <input type="color" id="bg-color-picker" value="#0f172a" onchange="syncColorInput('picker', 'bg')" class="h-10 w-12 bg-slate-800 border border-slate-700 rounded-lg cursor-pointer p-1">
-              <input type="text" id="bg-color-text" value="#0F172A" onchange="syncColorInput('text', 'bg')" class="bg-slate-950 border border-slate-800 text-slate-200 rounded-xl p-2.5 font-mono w-full uppercase">
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-slate-400 font-semibold mb-2">Text / Headings Color</label>
-            <div class="flex items-center gap-2">
-              <input type="color" id="text-color-picker" value="#ffffff" onchange="syncColorInput('picker', 'text')" class="h-10 w-12 bg-slate-800 border border-slate-700 rounded-lg cursor-pointer p-1">
-              <input type="text" id="text-color-text" value="#FFFFFF" onchange="syncColorInput('text', 'text')" class="bg-slate-950 border border-slate-800 text-slate-200 rounded-xl p-2.5 font-mono w-full uppercase">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. TAB: MENU CATALOGUE MANAGEMENT -->
-    <div id="tab-menu" class="tab-content hidden space-y-6">
-      <div class="bg-navy-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
-          <div>
-            <h3 class="text-amber-400 font-bold text-sm">🍽️ Menu Catalogue Management</h3>
-            <p class="text-xs text-slate-400">Add, edit, and manage menu items for Bangkok Thai Takeaway.</p>
-          </div>
-          <button onclick="addNewMenuItem()" class="bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs px-4 py-2 rounded-xl transition-all">
-            + Add New Item
-          </button>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-300">
-            <thead class="bg-slate-950 text-slate-400 font-mono uppercase">
-              <tr>
-                <th class="p-3">Item Name</th>
-                <th class="p-3">Category</th>
-                <th class="p-3">Price (NZD)</th>
-                <th class="p-3">Status</th>
-                <th class="p-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="menu-items-table-body" class="divide-y divide-slate-800">
-              <tr>
-                <td class="p-3 font-semibold text-white">Pad Thai Noodles</td>
-                <td class="p-3">Noodles &amp; Rice</td>
-                <td class="p-3 font-mono text-amber-400">$18.50</td>
-                <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">Available</span></td>
-                <td class="p-3 text-right space-x-2">
-                  <button class="text-amber-400 hover:underline">Edit</button>
-                  <button class="text-red-400 hover:underline">Delete</button>
-                </td>
-              </tr>
-              <tr>
-                <td class="p-3 font-semibold text-white">Tom Yum Soup</td>
-                <td class="p-3">Soup</td>
-                <td class="p-3 font-mono text-amber-400">$16.00</td>
-                <td class="p-3"><span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">Available</span></td>
-                <td class="p-3 text-right space-x-2">
-                  <button class="text-amber-400 hover:underline">Edit</button>
-                  <button class="text-red-400 hover:underline">Delete</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- 4. TAB: LICENSE (READ-ONLY DISPLAY FROM SYSTEM CONSOLE) -->
-    <div id="tab-license" class="tab-content hidden space-y-6">
-      <div class="bg-navy-900 border border-amber-500/30 rounded-2xl p-6 shadow-xl space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-          <h3 class="text-amber-400 font-bold text-sm flex items-center gap-2">
-            🛡️ Active License &amp; Contract Details
-          </h3>
-          <span id="display-contract-badge" class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-            Active &amp; Subscribed
-          </span>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-            <span class="text-slate-500 block text-[10px] uppercase mb-1">Tenant ID Key</span>
-            <span id="display-tenant-id" class="text-slate-200 font-bold text-sm">bangkokthaipalmy</span>
-          </div>
-
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-            <span class="text-slate-500 block text-[10px] uppercase mb-1">Company Legal Name</span>
-            <span id="display-company-name" class="text-slate-200 font-bold text-sm">Bangkok Thai Takeaway</span>
-          </div>
-
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-            <span class="text-slate-500 block text-[10px] uppercase mb-1">Subscription Expiry Date</span>
-            <span id="display-expiry-date" class="text-amber-400 font-bold text-sm">2027-04-01</span>
-          </div>
-
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-            <span class="text-slate-500 block text-[10px] uppercase mb-1">License Reference #</span>
-            <span id="display-license-no" class="text-slate-400 text-sm">LIC-RESTO-2026-BKKPALMY</span>
-          </div>
-        </div>
-
-        <p class="text-[11px] text-slate-500 italic pt-2">
-          🔒 Note: License parameters are synchronized directly from the System Operator Console and cannot be edited within this Admin Screen.
-        </p>
+      <div id="adminMenuList" class="space-y-4">
+        <!-- Dynamic Menu List Generated Here -->
       </div>
     </div>
 
   </main>
 
-  <!-- ADMIN CORE LOGIC -->
+  <!-- FOOTER -->
+  <footer class="bg-black border-t border-zinc-900 py-6 text-center text-xs text-stone-500">
+    RestoSync SaaS Enterprise Manager Portal &bull; Secured via Firebase Firestore
+  </footer>
+
+  <!-- FIREBASE & ADMIN LOGIC -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        loadLicenseDataFromConsole();
-        loadSavedTheme();
+    const firebaseConfig = {
+      apiKey: "AIzaSyCMd3tOM2g8FNL96UIlGRE9cbq3UUvssrQ",
+      authDomain: "restosync-saas.firebaseapp.com",
+      projectId: "restosync-saas",
+      storageBucket: "restosync-saas.firebasestorage.app",
+      messagingSenderId: "780544019719",
+      appId: "1:780544019719:web:e5fccb00a4981f2579c9a2"
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const TENANT_ID = urlParams.get('tenant') || 'bangkokthaipalmy';
+    document.getElementById('currentTenantId').innerText = TENANT_ID;
+
+    let activeConfig = {};
+
+    document.addEventListener('DOMContentLoaded', () => {
+      db.collection("tenants").doc(TENANT_ID).get().then((doc) => {
+        if (doc.exists && doc.data().config) {
+          activeConfig = doc.data().config;
+          populateAdminForm();
+        } else {
+          alert("Konfigurasi tenant tidak ditemukan di database.");
+        }
+      }).catch(err => {
+        console.error("Error loading config:", err);
+      });
     });
 
-    function switchTab(tabName) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-        document.querySelectorAll('.tab-btn').forEach(el => {
-            el.classList.remove('text-amber-400', 'border-amber-400');
-            el.classList.add('text-slate-400', 'border-transparent');
-        });
+    function populateAdminForm() {
+      const store = activeConfig.store || {};
+      const branding = activeConfig.branding || {};
 
-        document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-        const activeBtn = document.getElementById(`tab-btn-${tabName}`);
-        activeBtn.classList.remove('text-slate-400', 'border-transparent');
-        activeBtn.classList.add('text-amber-400', 'border-amber-400');
+      document.getElementById('inputStoreName').value = store.name || '';
+      document.getElementById('inputStoreTagline').value = store.tagline || '';
+      document.getElementById('inputStorePhone').value = store.phone || '';
+      document.getElementById('inputStoreAddress').value = store.address || '';
+      document.getElementById('inputStoreLogo').value = branding.logo || '';
+
+      renderAdminMenuList();
     }
 
-    function loadLicenseDataFromConsole() {
-        const savedConfig = localStorage.getItem('restoSync_tenant_config');
-        if (savedConfig) {
-            const config = JSON.parse(savedConfig);
-            if (document.getElementById('display-tenant-id')) document.getElementById('display-tenant-id').textContent = config.tenantId || 'bangkokthaipalmy';
-            if (document.getElementById('display-company-name')) document.getElementById('display-company-name').textContent = config.tenantName || 'Bangkok Thai Takeaway';
-            if (document.getElementById('display-expiry-date')) document.getElementById('display-expiry-date').textContent = config.expiryDate || '2027-04-01';
-            if (document.getElementById('display-contract-badge')) document.getElementById('display-contract-badge').textContent = config.contractStatus || 'Active & Subscribed';
-        }
+    function renderAdminMenuList() {
+      const items = activeConfig.menuItems || [];
+      const container = document.getElementById('adminMenuList');
+
+      if (items.length === 0) {
+        container.innerHTML = `<p class="text-xs text-stone-500 text-center py-4">Belum ada menu item.</p>`;
+        return;
+      }
+
+      container.innerHTML = items.map((item, idx) => `
+        <div class="bg-zinc-950 border border-zinc-800 rounded-2xl p-4 grid grid-cols-1 md:grid-cols-6 gap-4 items-center text-xs">
+          <div>
+            <label class="block text-stone-500 text-[10px] mb-1">ID</label>
+            <input type="text" value="${item.id || ''}" onchange="updateItemField(${idx}, 'id', this.value)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-stone-200 font-mono">
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-stone-500 text-[10px] mb-1">Name</label>
+            <input type="text" value="${item.name || ''}" onchange="updateItemField(${idx}, 'name', this.value)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-stone-200">
+          </div>
+          <div>
+            <label class="block text-stone-500 text-[10px] mb-1">Category</label>
+            <input type="text" value="${item.category || ''}" onchange="updateItemField(${idx}, 'category', this.value)" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-stone-200">
+          </div>
+          <div>
+            <label class="block text-stone-500 text-[10px] mb-1">Price ($)</label>
+            <input type="number" step="0.01" value="${item.price || 0}" onchange="updateItemField(${idx}, 'price', parseFloat(this.value))" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2.5 py-1 text-stone-200">
+          </div>
+          <div class="flex justify-end items-center space-x-2 pt-4">
+            <label class="flex items-center space-x-1 cursor-pointer text-stone-400">
+              <input type="checkbox" ${item.isHidden ? 'checked' : ''} onchange="updateItemField(${idx}, 'isHidden', this.checked)" class="rounded bg-zinc-900 border-zinc-700 text-amber-500">
+              <span>Hide</span>
+            </label>
+            <button onclick="removeMenuItem(${idx})" class="bg-red-950/60 hover:bg-red-900 text-red-400 px-2.5 py-1.5 rounded-lg border border-red-900/50"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
     }
 
-    function syncColorInput(source, type) {
-        const picker = document.getElementById(`${type}-color-picker`);
-        const text = document.getElementById(`${type}-color-text`);
-        if (source === 'picker') {
-            text.value = picker.value.toUpperCase();
-        } else {
-            picker.value = text.value;
-        }
-    }
-
-    function previewLogo(event) {
-        const reader = new FileReader();
-        reader.onload = function() {
-            const output = document.getElementById('logo-preview');
-            output.src = reader.result;
-        };
-        if (event.target.files && event.target.files[0]) {
-            reader.readAsDataURL(event.target.files[0]);
-        }
-    }
-
-    function saveAdminSettings() {
-        const adminData = {
-            storeName: document.getElementById('store-name').value,
-            tagline: document.getElementById('store-tagline').value,
-            phone: document.getElementById('store-phone').value,
-            address: document.getElementById('store-address').value,
-            hours: {
-                mon: document.getElementById('hours-mon').value,
-                tue: document.getElementById('hours-tue').value,
-                wed: document.getElementById('hours-wed').value,
-                thu: document.getElementById('hours-thu').value,
-                fri: document.getElementById('hours-fri').value,
-                sat: document.getElementById('hours-sat').value,
-                sun: document.getElementById('hours-sun').value
-            },
-            primaryColor: document.getElementById('primary-color-text').value,
-            secondaryColor: document.getElementById('secondary-color-text').value,
-            bgColor: document.getElementById('bg-color-text').value,
-            textColor: document.getElementById('text-color-text').value
-        };
-
-        localStorage.setItem('restoSync_admin_settings', JSON.stringify(adminData));
-        alert("Admin settings saved successfully!");
-    }
-
-    function loadSavedTheme() {
-        const savedAdmin = localStorage.getItem('restoSync_admin_settings');
-        if (savedAdmin) {
-            const data = JSON.parse(savedAdmin);
-            if (data.primaryColor) {
-                document.getElementById('primary-color-text').value = data.primaryColor;
-                document.getElementById('primary-color-picker').value = data.primaryColor;
-            }
-            if (data.secondaryColor) {
-                document.getElementById('secondary-color-text').value = data.secondaryColor;
-                document.getElementById('secondary-color-picker').value = data.secondaryColor;
-            }
-            if (data.bgColor) {
-                document.getElementById('bg-color-text').value = data.bgColor;
-                document.getElementById('bg-color-picker').value = data.bgColor;
-            }
-            if (data.textColor) {
-                document.getElementById('text-color-text').value = data.textColor;
-                document.getElementById('text-color-picker').value = data.textColor;
-            }
-        }
+    function updateItemField(idx, field, val) {
+      if (activeConfig.menuItems[idx]) {
+        activeConfig.menuItems[idx][field] = val;
+      }
     }
 
     function addNewMenuItem() {
-        const name = prompt("Enter item name:");
-        if (name) {
-            alert(`Item "${name}" added to catalogue draft!`);
-        }
+      if (!activeConfig.menuItems) activeConfig.menuItems = [];
+      activeConfig.menuItems.push({
+        id: "M" + (activeConfig.menuItems.length + 1),
+        name: "New Menu Item",
+        category: "Appetisers",
+        price: 12.50,
+        description: "Delicious freshly prepared dish.",
+        isHidden: false
+      });
+      renderAdminMenuList();
+    }
+
+    function removeMenuItem(idx) {
+      if (confirm("Apakah Anda yakin ingin menghapus menu ini?")) {
+        activeConfig.menuItems.splice(idx, 1);
+        renderAdminMenuList();
+      }
+    }
+
+    function saveConfigToFirebase() {
+      // Gather general store details from inputs
+      if (!activeConfig.store) activeConfig.store = {};
+      if (!activeConfig.branding) activeConfig.branding = {};
+
+      activeConfig.store.name = document.getElementById('inputStoreName').value;
+      activeConfig.store.tagline = document.getElementById('inputStoreTagline').value;
+      activeConfig.store.phone = document.getElementById('inputStorePhone').value;
+      activeConfig.store.address = document.getElementById('inputStoreAddress').value;
+      activeConfig.branding.logo = document.getElementById('inputStoreLogo').value;
+
+      db.collection("tenants").doc(TENANT_ID).update({
+        config: activeConfig
+      }).then(() => {
+        const notif = document.getElementById('saveNotification');
+        notif.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => notif.classList.add('hidden'), 4000);
+      }).catch(err => {
+        console.error("Error saving:", err);
+        alert("Gagal menyimpan ke Firebase: " + err.message);
+      });
     }
   </script>
-
 </body>
 </html>
