@@ -37,42 +37,34 @@
 
     <!-- TAB NAVIGATION BAR -->
     <div class="bg-zinc-950 border-t border-zinc-800 px-4 sm:px-6 flex space-x-2 overflow-x-auto no-scrollbar text-xs font-semibold">
-      
-      <!-- TAB 1: STORE & HOURS -->
       <button id="tabBtn-profile" onclick="switchAdminTab('profile')" class="py-3 px-4 text-amber-400 border-b-2 border-amber-400 flex items-center space-x-2 transition font-bold">
         <i class="fa-solid fa-store"></i><span>Store Info & Hours</span>
         <span class="bg-emerald-950 text-emerald-400 text-[9px] px-1.5 py-0.5 rounded font-bold border border-emerald-800">FREE</span>
       </button>
 
-      <!-- TAB 2: THEME & BRANDING -->
       <button id="tabBtn-theme" onclick="switchAdminTab('theme')" class="py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition">
         <i class="fa-solid fa-palette"></i><span>Theme & Branding</span>
         <span class="bg-emerald-950 text-emerald-400 text-[9px] px-1.5 py-0.5 rounded font-bold border border-emerald-800">FREE</span>
       </button>
 
-      <!-- TAB 3: MENU CATALOGUE -->
       <button id="tabBtn-menu" onclick="switchAdminTab('menu')" class="py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition">
         <i class="fa-solid fa-utensils"></i><span>Menu Catalogue</span>
         <span class="bg-emerald-950 text-emerald-400 text-[9px] px-1.5 py-0.5 rounded font-bold border border-emerald-800">FREE</span>
       </button>
 
-      <!-- TAB 4: ROSTER -->
       <button id="tabBtn-roster" onclick="switchAdminTab('roster')" class="py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition">
         <i class="fa-solid fa-calendar-days"></i><span>Staff & Roster</span>
         <span id="badge-roster" class="bg-zinc-800 text-stone-500 text-[9px] px-1.5 py-0.5 rounded font-bold">PRO</span>
       </button>
 
-      <!-- TAB 5: USERS -->
       <button id="tabBtn-users" onclick="switchAdminTab('users')" class="py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition">
         <i class="fa-solid fa-users-gear"></i><span>User & Access Roles</span>
         <span id="badge-users" class="bg-zinc-800 text-stone-500 text-[9px] px-1.5 py-0.5 rounded font-bold">ENT</span>
       </button>
 
-      <!-- TAB 6: SYSTEM -->
       <button id="tabBtn-system" onclick="switchAdminTab('system')" class="py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition">
         <i class="fa-solid fa-sliders"></i><span>System & License</span>
       </button>
-
     </div>
   </header>
 
@@ -123,7 +115,7 @@
           </div>
         </div>
 
-        <!-- FLEXIBLE OPERATING HOURS (MON - SUN INDEPENDENT BOXES) -->
+        <!-- FLEXIBLE OPERATING HOURS (MON - SUN) -->
         <div class="lg:col-span-2 bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
           <h2 class="font-bold text-sm text-stone-100 border-b border-zinc-800 pb-3 flex items-center justify-between">
             <span class="flex items-center"><i class="fa-solid fa-clock text-amber-400 mr-2"></i> Flexible Daily Operating Hours</span>
@@ -163,7 +155,6 @@
 
           <!-- HOLIDAY SURCHARGE & VACATION SETTINGS -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-zinc-800">
-            <!-- HOLIDAY SURCHARGE -->
             <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-3">
               <label class="flex items-center justify-between cursor-pointer">
                 <span class="font-bold text-amber-300 text-xs">Enable Holiday Surcharge Today</span>
@@ -181,7 +172,6 @@
               </div>
             </div>
 
-            <!-- VACATION / EMERGENCY CLOSURE -->
             <div class="bg-red-950/30 p-4 rounded-xl border border-red-900/50 space-y-3">
               <label class="flex items-center justify-between cursor-pointer">
                 <span class="font-bold text-red-400 text-xs">Total Closure (Vacation / Holiday)</span>
@@ -203,17 +193,13 @@
               </div>
             </div>
           </div>
-
         </div>
-
       </div>
     </div>
 
     <!-- TAB CONTENT 2: THEME & BRANDING -->
     <div id="tabContent-theme" class="tab-panel hidden space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
-        <!-- LOGO BRANDING -->
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
           <h2 class="font-bold text-sm text-stone-100 border-b border-zinc-800 pb-3 flex items-center">
             <i class="fa-solid fa-image text-amber-400 mr-2"></i> Logo Branding
@@ -238,7 +224,6 @@
           </div>
         </div>
 
-        <!-- CUSTOM COLOR PALETTE -->
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
           <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
             <h2 class="font-bold text-sm text-stone-100 flex items-center">
@@ -250,24 +235,18 @@
           <div class="grid grid-cols-2 gap-3 text-xs">
             <div><label class="block text-stone-400 mb-1">Header Bg</label><input type="color" id="themeHeaderBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
             <div><label class="block text-stone-400 mb-1">Header Text</label><input type="color" id="themeHeaderText" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
-            
             <div><label class="block text-stone-400 mb-1">Body Bg</label><input type="color" id="themeBodyBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
             <div><label class="block text-stone-400 mb-1">Card Box Bg</label><input type="color" id="themeCardBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
-            
             <div><label class="block text-stone-400 mb-1">Primary Title</label><input type="color" id="themeTitle1" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
             <div><label class="block text-stone-400 mb-1">Sub Title</label><input type="color" id="themeTitle2" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
-            
             <div><label class="block text-amber-400 font-semibold mb-1">Primary Btn Bg</label><input type="color" id="themeBtnBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
             <div><label class="block text-amber-400 font-semibold mb-1">Primary Btn Text</label><input type="color" id="themeBtnText" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
-
             <div><label class="block text-red-400 font-semibold mb-1">Promo/Accent Btn Bg</label><input type="color" id="themeAccentBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
             <div><label class="block text-red-400 font-semibold mb-1">Promo/Accent Text</label><input type="color" id="themeAccentText" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
-
             <div><label class="block text-stone-400 mb-1">Footer Bg</label><input type="color" id="themeFooterBg" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
             <div><label class="block text-stone-400 mb-1">Footer Text</label><input type="color" id="themeFooterText" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
           </div>
         </div>
-
       </div>
     </div>
 
@@ -334,7 +313,6 @@
     <!-- TAB CONTENT 6: SYSTEM & LICENSE -->
     <div id="tabContent-system" class="tab-panel hidden space-y-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
           <h2 class="font-bold text-sm text-stone-100 border-b border-zinc-800 pb-3 flex items-center">
             <i class="fa-solid fa-key text-amber-400 mr-2"></i> Subscription Tier
@@ -380,10 +358,8 @@
             </label>
           </div>
         </div>
-
       </div>
     </div>
-
   </main>
 
   <!-- MODAL ADD/EDIT MENU ITEM -->
@@ -480,7 +456,25 @@
 
   <script src="assets/js/bangkokthaipalmy.js"></script>
 
+  <!-- Firebase SDKs via CDN -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
   <script>
+    // Konfigurasi Firebase RestoSync
+    const firebaseConfig = {
+      apiKey: "AIzaSyCMd3tOM2g8FNL96UIlGRE9cbq3UUvssrQ",
+      authDomain: "restosync-saas.firebaseapp.com",
+      projectId: "restosync-saas",
+      storageBucket: "restosync-saas.firebasestorage.app",
+      messagingSenderId: "780544019719",
+      appId: "1:780544019719:web:e5fccb00a4981f2579c9a2"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const TENANT_ID = "bangkokthaipalmy";
+
     let activeConfig = {};
     let currentLogoHeight = 48;
     let activeTab = 'profile';
@@ -583,7 +577,6 @@
       currentLogoHeight = activeConfig.branding?.logoHeight || 48;
       updateLogoSizeUI();
 
-      // POPULATE FLEXIBLE DAILY HOURS (MON - SUN)
       const op = activeConfig.operatingHours || {};
       document.getElementById('hoursMon').value = op.mon || "4:30 PM - 9:00 PM";
       document.getElementById('hoursTue').value = op.tue || "4:30 PM - 9:00 PM";
@@ -601,7 +594,6 @@
       document.getElementById('cfgClosureMessage').value = op.closureMessage || "We are currently away on annual holidays. Thank you!";
       document.getElementById('cfgReopenDate').value = op.reopenDate || "Monday, 15 Nov";
 
-      // POPULATE THEME COLORS
       const theme = activeConfig.theme || {};
       document.getElementById('themeHeaderBg').value = theme.headerBg || '#000000';
       document.getElementById('themeHeaderText').value = theme.headerText || '#fef3c7';
@@ -768,7 +760,8 @@
       }
     }
 
-    function saveAllChanges() {
+    // FUNGSI SIMPAN KE LOKAL & CLOUD FIREBASE
+    async function saveAllChanges() {
       activeConfig.store.name = document.getElementById('cfgStoreName').value;
       activeConfig.store.tagline = document.getElementById('cfgTagline').value;
       activeConfig.store.phone = document.getElementById('cfgPhone').value;
@@ -783,7 +776,6 @@
       if (!activeConfig.branding) activeConfig.branding = {};
       activeConfig.branding.logoHeight = currentLogoHeight;
 
-      // SIMPAN JAM OPERASIONAL PER HARI INDEPENDEN (MON - SUN)
       activeConfig.operatingHours = {
         mon: document.getElementById('hoursMon').value,
         tue: document.getElementById('hoursTue').value,
@@ -801,7 +793,6 @@
         reopenDate: document.getElementById('cfgReopenDate').value
       };
 
-      // SIMPAN THEME COLORS
       activeConfig.theme = {
         headerBg: document.getElementById('themeHeaderBg').value,
         headerText: document.getElementById('themeHeaderText').value,
@@ -819,7 +810,19 @@
 
       localStorage.setItem('RESTOSYNC_WORKING_CONFIG', JSON.stringify(activeConfig));
       applyAdminDynamicColors(activeConfig.theme);
-      alert('All settings and operating hour closures saved successfully!');
+
+      // SIMPAN KE FIREBASE
+      try {
+        await db.collection("tenants").doc(TENANT_ID).set({
+          config: activeConfig,
+          lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+        
+        alert('Perubahan berhasil di-save ke Cloud Firebase! Seluruh HP pembeli otomatis diperbarui.');
+      } catch (error) {
+        console.error("Gagal menyimpan ke Firebase:", error);
+        alert('Gagal menyimpan ke Cloud Firebase.');
+      }
     }
 
     function openAddMenuModal() {
@@ -899,54 +902,5 @@
       URL.revokeObjectURL(url);
     }
   </script>
-
-<!-- Firebase SDKs via CDN -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
-<script>
-  // Konfigurasi Firebase RestoSync
-  const firebaseConfig = {
-    apiKey: "AIzaSyCMd3tOM2g8FNL96UIlGRE9cbq3UUvssrQ",
-    authDomain: "restosync-saas.firebaseapp.com",
-    projectId: "restosync-saas",
-    storageBucket: "restosync-saas.firebasestorage.app",
-    messagingSenderId: "780544019719",
-    appId: "1:780544019719:web:e5fccb00a4981f2579c9a2"
-  };
-
-  // Inisialisasi Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
-  // ID Tenant untuk Bangkok Thai
-  const TENANT_ID = "bangkokthaipalmy";
-
-  // Fungsi untuk menyimpan perubahan dari Admin ke Firebase
-  async function saveToFirebase(configData) {
-    try {
-      await db.collection("tenants").doc(TENANT_ID).set({
-        config: configData,
-        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-      }, { merge: true });
-      
-      console.log("Data berhasil tersimpan di Cloud Firebase!");
-      alert("Perubahan berhasil di-save ke Cloud! Seluruh HP pembeli otomatis diperbarui.");
-    } catch (error) {
-      console.error("Gagal menyimpan ke Firebase:", error);
-      alert("Gagal menyimpan data ke Cloud.");
-    }
-  }
-
-  // Panggil fungsi ini saat tombol 'Save All Changes' di Admin diklik
-  document.getElementById('btnSaveAll')?.addEventListener('click', function() {
-    // Ambil data konfigurasi aktif dari form/state Admin Bapak
-    const activeConfig = typeof getAdminFormData === 'function' ? getAdminFormData() : RESTOSYNC_CONFIG;
-    
-    // Simpan ke Firebase
-    saveToFirebase(activeConfig);
-  });
-</script>
-
 </body>
 </html>
