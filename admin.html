@@ -11,20 +11,6 @@
   <style>
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .strike-red-diagonal {
-      position: relative;
-      display: inline-block;
-      color: #a1a1aa;
-      font-weight: 700;
-    }
-    .strike-red-diagonal::after {
-      content: "";
-      position: absolute;
-      left: -3px; right: -3px; top: 50%; height: 3px;
-      background: #ef4444;
-      transform: translateY(-50%) rotate(-12deg);
-      pointer-events: none;
-    }
   </style>
 </head>
 <body class="bg-zinc-950 text-stone-200 min-h-screen flex flex-col font-sans selection:bg-amber-500 selection:text-zinc-950">
@@ -69,7 +55,6 @@
   <!-- MAIN CONTAINER -->
   <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
     
-    <!-- HEADER TITLE & GLOBAL SAVE -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800 pb-4">
       <div>
         <h1 id="tabTitleDisplay" class="text-xl font-bold text-stone-100 flex items-center">
@@ -84,42 +69,26 @@
       </button>
     </div>
 
-    <!-- TAB CONTENT 1: STORE INFO & OPERATING HOURS -->
+    <!-- TAB 1: PROFILE -->
     <div id="tabContent-profile" class="tab-panel space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        <!-- RESTAURANT PROFILE -->
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
           <h2 class="font-bold text-sm text-stone-100 border-b border-zinc-800 pb-3 flex items-center">
             <i class="fa-solid fa-store text-amber-400 mr-2"></i> Restaurant Profile
           </h2>
           <div class="space-y-3 text-xs">
-            <div>
-              <label class="block text-stone-400 mb-1">Restaurant Name</label>
-              <input type="text" id="cfgStoreName" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100">
-            </div>
-            <div>
-              <label class="block text-stone-400 mb-1">Tagline</label>
-              <input type="text" id="cfgTagline" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100">
-            </div>
-            <div>
-              <label class="block text-stone-400 mb-1">Phone Number</label>
-              <input type="text" id="cfgPhone" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100">
-            </div>
-            <div>
-              <label class="block text-stone-400 mb-1">Address</label>
-              <textarea id="cfgAddress" rows="2" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100"></textarea>
-            </div>
+            <div><label class="block text-stone-400 mb-1">Restaurant Name</label><input type="text" id="cfgStoreName" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100"></div>
+            <div><label class="block text-stone-400 mb-1">Tagline</label><input type="text" id="cfgTagline" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100"></div>
+            <div><label class="block text-stone-400 mb-1">Phone Number</label><input type="text" id="cfgPhone" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100"></div>
+            <div><label class="block text-stone-400 mb-1">Address</label><textarea id="cfgAddress" rows="2" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100"></textarea></div>
           </div>
         </div>
 
-        <!-- OPERATING HOURS & SURCHARGES -->
         <div class="lg:col-span-2 bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
           <h2 class="font-bold text-sm text-stone-100 border-b border-zinc-800 pb-3 flex items-center justify-between">
             <span class="flex items-center"><i class="fa-solid fa-clock text-amber-400 mr-2"></i> Flexible Daily Operating Hours</span>
             <span class="text-[10px] text-stone-400">Specify hours or type "Closed"</span>
           </h2>
-
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
             <div><label class="block text-stone-400 mb-1 font-semibold">Monday</label><input type="text" id="hoursMon" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100"></div>
             <div><label class="block text-stone-400 mb-1 font-semibold">Tuesday</label><input type="text" id="hoursTue" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100"></div>
@@ -129,48 +98,11 @@
             <div><label class="block text-stone-400 mb-1 font-semibold">Saturday</label><input type="text" id="hoursSat" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100"></div>
             <div class="md:col-span-2"><label class="block text-amber-400 mb-1 font-semibold">Sunday</label><input type="text" id="hoursSun" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100"></div>
           </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-zinc-800 text-xs">
-            <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 space-y-3">
-              <label class="flex items-center justify-between cursor-pointer">
-                <span class="font-bold text-amber-300">Enable Holiday Surcharge</span>
-                <input type="checkbox" id="cfgHasSurcharge" class="w-4 h-4 accent-amber-500 rounded cursor-pointer">
-              </label>
-              <div>
-                <label class="block text-[10px] text-stone-400 mb-1">Surcharge Title</label>
-                <input type="text" id="cfgSurchargeName" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-stone-100">
-              </div>
-              <div>
-                <label class="block text-[10px] text-stone-400 mb-1">Surcharge Rate (%)</label>
-                <input type="number" id="cfgSurchargePercent" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-amber-400 font-bold">
-              </div>
-            </div>
-
-            <div class="bg-red-950/20 p-4 rounded-xl border border-red-900/40 space-y-3">
-              <label class="flex items-center justify-between cursor-pointer">
-                <span class="font-bold text-red-400">Total Closure (Vacation / Holiday)</span>
-                <input type="checkbox" id="cfgIsTotallyClosed" class="w-4 h-4 accent-red-500 rounded cursor-pointer">
-              </label>
-              <div>
-                <label class="block text-[10px] text-stone-400 mb-1">Notice Title</label>
-                <input type="text" id="cfgClosureTitle" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-stone-100">
-              </div>
-              <div>
-                <label class="block text-[10px] text-stone-400 mb-1">Notice Message</label>
-                <input type="text" id="cfgClosureMessage" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-stone-100">
-              </div>
-              <div>
-                <label class="block text-[10px] text-amber-400 font-semibold mb-1">Re-opening Date</label>
-                <input type="text" id="cfgReopenDate" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-stone-100 font-mono">
-              </div>
-            </div>
-          </div>
         </div>
-
       </div>
     </div>
 
-    <!-- TAB CONTENT 2: THEME & BRANDING -->
+    <!-- TAB 2: THEME -->
     <div id="tabContent-theme" class="tab-panel hidden space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
@@ -178,10 +110,7 @@
             <i class="fa-solid fa-image text-amber-400 mr-2"></i> Logo Branding & Compression Upload
           </h2>
           <div class="space-y-3 text-xs">
-            <div>
-              <label class="block text-stone-400 mb-1">Upload New Logo (Auto-Compressed)</label>
-              <input type="file" id="logoFileInput" accept="image/*" onchange="handleLogoUpload(event)" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-2 py-1.5 text-stone-300 file:mr-3 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:bg-amber-500 file:text-zinc-950">
-            </div>
+            <div><label class="block text-stone-400 mb-1">Upload New Logo (Auto-Compressed)</label><input type="file" id="logoFileInput" accept="image/*" onchange="handleLogoUpload(event)" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-2 py-1.5 text-stone-300"></div>
             <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 flex flex-col items-center justify-center space-y-2">
               <span class="text-[10px] text-stone-500">LIVE PREVIEW</span>
               <img id="logoPreview" src="" alt="Logo Preview" class="object-contain" style="height: 48px;">
@@ -189,9 +118,9 @@
             <div class="flex items-center justify-between bg-zinc-950 p-3 rounded-xl border border-zinc-800">
               <span class="text-stone-300 font-semibold">Logo Height:</span>
               <div class="flex items-center space-x-2">
-                <button type="button" onclick="adjustLogoSize(-4)" class="w-7 h-7 bg-zinc-800 hover:bg-zinc-700 text-stone-200 font-bold rounded border border-zinc-700">-</button>
+                <button type="button" onclick="adjustLogoSize(-4)" class="w-7 h-7 bg-zinc-800 hover:bg-zinc-700 text-stone-200 font-bold rounded">-</button>
                 <span id="logoSizeDisplay" class="w-12 text-center font-mono font-bold text-amber-400">48px</span>
-                <button type="button" onclick="adjustLogoSize(4)" class="w-7 h-7 bg-zinc-800 hover:bg-zinc-700 text-stone-200 font-bold rounded border border-zinc-700">+</button>
+                <button type="button" onclick="adjustLogoSize(4)" class="w-7 h-7 bg-zinc-800 hover:bg-zinc-700 text-stone-200 font-bold rounded">+</button>
               </div>
             </div>
           </div>
@@ -199,7 +128,7 @@
 
         <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
           <h2 class="font-bold text-sm text-stone-100 border-b border-zinc-800 pb-3 flex items-center">
-            <i class="fa-solid fa-swatchbook text-amber-400 mr-2"></i> Comprehensive Theme Colors & Sample Preview
+            <i class="fa-solid fa-swatchbook text-amber-400 mr-2"></i> Comprehensive Theme Colors
           </h2>
           <div class="grid grid-cols-2 gap-3 text-xs">
             <div><label class="block text-stone-400 mb-1">Header Bg</label><input type="color" id="themeHeaderBg" oninput="updateColorPreview()" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
@@ -208,19 +137,11 @@
             <div><label class="block text-amber-400 font-semibold mb-1">Primary Button Bg</label><input type="color" id="themeBtnBg" oninput="updateColorPreview()" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
             <div><label class="block text-stone-400 mb-1">Footer Bg</label><input type="color" id="themeFooterBg" oninput="updateColorPreview()" class="w-full h-8 bg-zinc-800 border border-zinc-700 rounded p-0.5"></div>
           </div>
-
-          <div class="mt-4 pt-3 border-t border-zinc-800">
-            <span class="block text-[10px] text-stone-400 mb-2 font-semibold uppercase tracking-wider">Live Sample Output Preview:</span>
-            <div id="themeSampleBox" class="p-4 rounded-xl border border-zinc-700 shadow-inner transition-all space-y-2">
-              <div class="text-xs font-bold" id="sampleHeaderTxt">Sample Header Bar</div>
-              <div class="p-2 rounded text-xs font-medium" id="sampleCardTxt">Sample Card Box with Button <span class="px-2 py-1 rounded font-bold ml-2" id="sampleBtnTxt">Button</span></div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
 
-    <!-- TAB CONTENT 3: MENU CATALOGUE -->
+    <!-- TAB 3: MENU -->
     <div id="tabContent-menu" class="tab-panel hidden space-y-6">
       <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
         <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
@@ -238,11 +159,11 @@
               <tr>
                 <th class="py-3 px-2 text-center">Hero</th>
                 <th class="py-3 px-2 text-center">Fav</th>
+                <th class="py-3 px-2 text-center">Hide</th>
                 <th class="py-3 px-3">ID / Name</th>
                 <th class="py-3 px-3">Category</th>
                 <th class="py-3 px-3">Price / Promo</th>
                 <th class="py-3 px-3 text-center">Stock</th>
-                <th class="py-3 px-3 text-center">Spice</th>
                 <th class="py-3 px-3 text-center">Action</th>
               </tr>
             </thead>
@@ -252,39 +173,20 @@
       </div>
     </div>
 
-    <!-- TAB CONTENT 4: MASTER SYSTEM CONSOLE -->
+    <!-- TAB 4: SYSTEM CONSOLE -->
     <div id="tabContent-console" class="tab-panel hidden space-y-6">
       <div class="bg-zinc-900 border border-amber-500/30 rounded-2xl p-5 shadow-lg space-y-4">
-        <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
-          <h2 class="font-bold text-sm text-amber-400 flex items-center">
-            <i class="fa-solid fa-terminal mr-2"></i> Master System Console (System Admin / Owner)
-          </h2>
-          <span id="tenantLockStatusBadge" class="text-[10px] font-extrabold px-2.5 py-1 rounded uppercase tracking-wider">STATUS: ACTIVE</span>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs bg-zinc-950 p-4 rounded-xl border border-zinc-800">
-          <div class="space-y-2">
-            <div><label class="block text-stone-400 text-[10px]">Tenant Name</label><input type="text" id="sysTenantName" class="w-full bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-stone-100 font-semibold"></div>
-            <div><label class="block text-stone-400 text-[10px]">Email Contact</label><input type="email" id="sysEmail" class="w-full bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-stone-100"></div>
-            <div><label class="block text-stone-400 text-[10px]">Phone Number</label><input type="text" id="sysPhone" class="w-full bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-stone-100"></div>
-          </div>
-          <div class="space-y-2">
-            <div><label class="block text-stone-400 text-[10px]">Contract Number</label><input type="text" id="sysContractNo" class="w-full bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-stone-100 font-mono"></div>
-            <div><label class="block text-stone-400 text-[10px]">Contract Expiry Date</label><input type="date" id="sysExpiryDate" class="w-full bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-amber-400 font-bold"></div>
-            <div class="pt-2 flex items-center space-x-2">
-              <button onclick="toggleTenantLock()" id="lockUnlockBtn" class="px-4 py-1.5 rounded text-xs font-bold transition"></button>
-            </div>
-          </div>
-        </div>
-
+        <h2 class="font-bold text-sm text-amber-400 flex items-center">
+          <i class="fa-solid fa-terminal mr-2"></i> Master System Console (System Admin / Owner)
+        </h2>
         <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 font-mono text-xs text-emerald-400 h-40 overflow-y-auto" id="systemConsoleLog">
-          [System Console] Initializing secure multi-tenant monitor...<br>
+          [System Console] Initialized.<br>
         </div>
       </div>
     </div>
   </main>
 
-  <!-- MODAL ADD/EDIT MENU ITEM -->
+  <!-- MODAL ADD/EDIT MENU -->
   <div id="menuModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-zinc-900 border border-zinc-800 w-full max-w-lg rounded-2xl shadow-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
@@ -307,18 +209,22 @@
           <div><label class="block text-red-400 mb-1">Stock (0 = Sold Out)</label><input type="number" id="mStock" value="50" required class="w-full bg-zinc-800 border border-red-500/50 rounded-lg px-3 py-2 text-red-300 font-bold"></div>
         </div>
 
-        <div class="grid grid-cols-3 gap-3">
-          <div class="bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-xl flex items-center justify-between">
-            <span class="font-bold text-amber-300">Hero Banner</span>
-            <input type="checkbox" id="mIsHero" class="w-4 h-4 accent-amber-500 rounded">
+        <div class="grid grid-cols-4 gap-2">
+          <div class="bg-amber-500/10 border border-amber-500/30 p-2 rounded-xl flex flex-col items-center justify-between">
+            <span class="font-bold text-amber-300 text-[10px]">Hero</span>
+            <input type="checkbox" id="mIsHero" class="w-4 h-4 accent-amber-500 rounded mt-1">
           </div>
-          <div class="bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-xl flex items-center justify-between">
-            <span class="font-bold text-amber-300">Favorite</span>
-            <input type="checkbox" id="mIsFavorite" class="w-4 h-4 accent-amber-500 rounded">
+          <div class="bg-amber-500/10 border border-amber-500/30 p-2 rounded-xl flex flex-col items-center justify-between">
+            <span class="font-bold text-amber-300 text-[10px]">Favorite</span>
+            <input type="checkbox" id="mIsFavorite" class="w-4 h-4 accent-amber-500 rounded mt-1">
+          </div>
+          <div class="bg-red-500/10 border border-red-500/30 p-2 rounded-xl flex flex-col items-center justify-between">
+            <span class="font-bold text-red-400 text-[10px]">Hide Menu</span>
+            <input type="checkbox" id="mIsHidden" class="w-4 h-4 accent-red-500 rounded mt-1">
           </div>
           <div>
-            <label class="block text-stone-400 mb-1">Spice Level (0-3)</label>
-            <input type="number" min="0" max="3" id="mSpice" value="0" class="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-3 py-2 text-stone-100">
+            <label class="block text-stone-400 text-[10px] mb-1">Spice (0-3)</label>
+            <input type="number" min="0" max="3" id="mSpice" value="0" class="w-full bg-zinc-800 border border-zinc-700 rounded px-2 py-1.5 text-stone-100 text-center">
           </div>
         </div>
 
@@ -332,7 +238,6 @@
     </div>
   </div>
 
-  <!-- FIREBASE SDKs & ADMIN SCRIPT -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -346,9 +251,7 @@
       appId: "1:780544019719:web:e5fccb00a4981f2579c9a2"
     };
 
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -360,59 +263,23 @@
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('activeTenantBadge').innerText = `Tenant: ${TENANT_ID}`;
       document.getElementById('liveStoreLink').href = `index.html?tenant=${TENANT_ID}`;
-      logConsole(`Connecting to Firestore for tenant: ${TENANT_ID}`);
 
       db.collection("tenants").doc(TENANT_ID).onSnapshot((doc) => {
         if (doc.exists && doc.data().config) {
           activeConfig = doc.data().config;
-          logConsole(`Tenant data synchronized successfully.`);
           populateAdminForm();
           renderAdminMenuTable();
-          updateColorPreview();
-        } else {
-          logConsole(`Tenant '${TENANT_ID}' not found in Firestore.`);
         }
-      }, (error) => {
-        logConsole(`Sync error: ${error.message}`);
       });
     });
 
-    function logConsole(msg) {
-      const box = document.getElementById('systemConsoleLog');
-      if (box) {
-        box.innerHTML += `[${new Date().toLocaleTimeString()}] ${msg}<br>`;
-        box.scrollTop = box.scrollHeight;
-      }
-    }
-
     function switchAdminTab(tabId) {
       ['profile', 'theme', 'menu', 'console'].forEach(t => {
-        const btn = document.getElementById(`tabBtn-${t}`);
-        const panel = document.getElementById(`tabContent-${t}`);
-        if (btn) btn.className = "py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition whitespace-nowrap";
-        if (panel) panel.classList.add('hidden');
+        document.getElementById(`tabBtn-${t}`).className = "py-3 px-4 text-stone-400 border-b-2 border-transparent hover:text-stone-200 flex items-center space-x-2 transition whitespace-nowrap";
+        document.getElementById(`tabContent-${t}`).classList.add('hidden');
       });
-
-      const activeBtn = document.getElementById(`tabBtn-${tabId}`);
-      const activePanel = document.getElementById(`tabContent-${tabId}`);
-      if (activeBtn) activeBtn.className = "py-3 px-4 text-amber-400 border-b-2 border-amber-400 flex items-center space-x-2 transition font-bold whitespace-nowrap";
-      if (activePanel) activePanel.classList.remove('hidden');
-
-      const title = document.getElementById('tabTitleDisplay');
-      const desc = document.getElementById('tabDescDisplay');
-      if (tabId === 'profile') {
-        title.innerText = "Store Information & Operating Hours";
-        desc.innerText = "Configure restaurant profile, flexible daily opening hours, holiday surcharges, and total closures.";
-      } else if (tabId === 'theme') {
-        title.innerText = "Store Setup & Theme Customization";
-        desc.innerText = "Manage logo uploads, resize controls, and comprehensive theme colors with live output preview.";
-      } else if (tabId === 'menu') {
-        title.innerText = "Menu Catalogue & Item Management";
-        desc.innerText = "Manage categories, prices, stock levels, promo prices, and special flags.";
-      } else if (tabId === 'console') {
-        title.innerText = "Master System Console (System Admin)";
-        desc.innerText = "Monitor contract expiry dates, email notifications, and Lock/Unlock status.";
-      }
+      document.getElementById(`tabBtn-${tabId}`).className = "py-3 px-4 text-amber-400 border-b-2 border-amber-400 flex items-center space-x-2 transition font-bold whitespace-nowrap";
+      document.getElementById(`tabContent-${tabId}`).classList.remove('hidden');
     }
 
     function populateAdminForm() {
@@ -423,27 +290,14 @@
       document.getElementById('cfgAddress').value = activeConfig.store.address || '';
 
       const op = activeConfig.operatingHours || {};
-      document.getElementById('hoursMon').value = op.mon || '';
-      document.getElementById('hoursTue').value = op.tue || '';
-      document.getElementById('hoursWed').value = op.wed || '';
-      document.getElementById('hoursThu').value = op.thu || '';
-      document.getElementById('hoursFri').value = op.fri || '';
-      document.getElementById('hoursSat').value = op.sat || '';
-      document.getElementById('hoursSun').value = op.sun || '';
-
-      document.getElementById('cfgHasSurcharge').checked = op.hasHolidaySurcharge === true;
-      document.getElementById('cfgSurchargeName').value = op.surchargeName || 'Public Holiday Surcharge';
-      document.getElementById('cfgSurchargePercent').value = op.surchargePercent || 15;
-      document.getElementById('cfgIsTotallyClosed').checked = op.isTotallyClosed === true;
-      document.getElementById('cfgClosureTitle').value = op.closureTitle || 'Store Closed for Holidays';
-      document.getElementById('cfgClosureMessage').value = op.closureMessage || 'We are currently away.';
-      document.getElementById('cfgReopenDate').value = op.reopenDate || '';
+      ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].forEach(d => {
+        document.getElementById(`hours${d}`).value = op[d.toLowerCase()] || '';
+      });
 
       const branding = activeConfig.branding || {};
       currentLogoHeight = branding.logoHeight || 48;
       document.getElementById('logoPreview').src = branding.logo || '';
       document.getElementById('logoSizeDisplay').innerText = `${currentLogoHeight}px`;
-      document.getElementById('logoPreview').style.height = `${currentLogoHeight}px`;
 
       const theme = activeConfig.theme || {};
       document.getElementById('themeHeaderBg').value = theme.headerBg || '#000000';
@@ -451,80 +305,6 @@
       document.getElementById('themeCardBg').value = theme.cardBg || '#27272a';
       document.getElementById('themeBtnBg').value = theme.btnBg || '#f59e0b';
       document.getElementById('themeFooterBg').value = theme.footerBg || '#000000';
-
-      const contract = activeConfig.contract || {};
-      document.getElementById('sysTenantName').value = activeConfig.store.name || '';
-      document.getElementById('sysEmail').value = contract.email || 'manager@restaurant.co.nz';
-      document.getElementById('sysPhone').value = activeConfig.store.phone || '';
-      document.getElementById('sysContractNo').value = contract.contractNo || 'RS-2026-001';
-      document.getElementById('sysExpiryDate').value = contract.expiryDate || '2026-12-31';
-
-      const isLocked = contract.isLocked === true;
-      const badge = document.getElementById('tenantLockStatusBadge');
-      const btn = document.getElementById('lockUnlockBtn');
-      if (isLocked) {
-        badge.innerText = "STATUS: LOCKED / DISABLED";
-        badge.className = "text-[10px] font-extrabold px-2.5 py-1 rounded uppercase tracking-wider bg-red-950 text-red-400 border border-red-800";
-        btn.innerText = "Unlock Tenant Access";
-        btn.className = "bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-1.5 rounded text-xs transition";
-      } else {
-        badge.innerText = "STATUS: ACTIVE";
-        badge.className = "text-[10px] font-extrabold px-2.5 py-1 rounded uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-800";
-        btn.innerText = "Lock / Disable Tenant";
-        btn.className = "bg-red-700 hover:bg-red-600 text-white font-bold px-4 py-1.5 rounded text-xs transition";
-      }
-    }
-
-    function updateColorPreview() {
-      const hBg = document.getElementById('themeHeaderBg').value;
-      const bBg = document.getElementById('themeBodyBg').value;
-      const cBg = document.getElementById('themeCardBg').value;
-      const btnBg = document.getElementById('themeBtnBg').value;
-      const fBg = document.getElementById('themeFooterBg').value;
-
-      const sampleBox = document.getElementById('themeSampleBox');
-      const sampleH = document.getElementById('sampleHeaderTxt');
-      const sampleC = document.getElementById('sampleCardTxt');
-      const sampleBtn = document.getElementById('sampleBtnTxt');
-
-      if (sampleBox) sampleBox.style.backgroundColor = bBg;
-      if (sampleH) sampleH.style.backgroundColor = hBg;
-      if (sampleC) sampleC.style.backgroundColor = cBg;
-      if (sampleBtn) sampleBtn.style.backgroundColor = btnBg;
-    }
-
-    function handleLogoUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          const maxDim = 250;
-          let w = img.width, h = img.height;
-          if (w > h && w > maxDim) { h *= maxDim / w; w = maxDim; }
-          else if (h > maxDim) { w *= maxDim / h; h = maxDim; }
-          canvas.width = w; canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
-          const compressedDataUrl = canvas.toDataURL('image/png', 0.85);
-          document.getElementById('logoPreview').src = compressedDataUrl;
-          if (!activeConfig.branding) activeConfig.branding = {};
-          activeConfig.branding.logo = compressedDataUrl;
-          logConsole("Logo compressed and updated locally.");
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function adjustLogoSize(delta) {
-      currentLogoHeight = Math.max(24, Math.min(100, currentLogoHeight + delta));
-      document.getElementById('logoPreview').style.height = `${currentLogoHeight}px`;
-      document.getElementById('logoSizeDisplay').innerText = `${currentLogoHeight}px`;
-      if (!activeConfig.branding) activeConfig.branding = {};
-      activeConfig.branding.logoHeight = currentLogoHeight;
     }
 
     function renderAdminMenuTable() {
@@ -537,26 +317,20 @@
 
       tbody.innerHTML = items.map((item, idx) => {
         const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
-        const isHero = item.isHero === true;
-        const isFav = item.isFavorite === true;
-        const stockVal = item.stock !== undefined ? item.stock : 50;
+        const isHidden = item.isHidden === true;
 
         return `
-          <tr class="hover:bg-zinc-800/40 transition">
-            <td class="py-3 px-2 text-center">
-              <span class="${isHero ? 'text-amber-400 font-bold' : 'text-stone-600'}"><i class="fa-solid fa-star"></i></span>
-            </td>
-            <td class="py-3 px-2 text-center">
-              <span class="${isFav ? 'text-amber-400 font-bold' : 'text-stone-600'}"><i class="fa-solid fa-heart"></i></span>
-            </td>
+          <tr class="hover:bg-zinc-800/40 transition ${isHidden ? 'opacity-50 bg-red-950/10' : ''}">
+            <td class="py-3 px-2 text-center"><span class="${item.isHero ? 'text-amber-400 font-bold' : 'text-stone-600'}"><i class="fa-solid fa-star"></i></span></td>
+            <td class="py-3 px-2 text-center"><span class="${item.isFavorite ? 'text-amber-400 font-bold' : 'text-stone-600'}"><i class="fa-solid fa-heart"></i></span></td>
+            <td class="py-3 px-2 text-center"><span class="${isHidden ? 'text-red-400 font-bold' : 'text-stone-600'}"><i class="fa-solid fa-eye-slash"></i></span></td>
             <td class="py-3 px-3 font-bold text-stone-100">${item.id}: ${item.name}</td>
             <td class="py-3 px-3 text-stone-400">${item.category}</td>
             <td class="py-3 px-3">
               <span class="${hasPromo ? 'line-through text-stone-500 mr-2' : 'text-stone-200'}">$${Number(item.price).toFixed(2)}</span>
               ${hasPromo ? `<span class="font-bold text-amber-400">$${Number(item.promoPrice).toFixed(2)}</span>` : ''}
             </td>
-            <td class="py-3 px-3 text-center font-mono ${stockVal === 0 ? 'text-red-400 font-bold' : 'text-stone-300'}">${stockVal}</td>
-            <td class="py-3 px-3 text-center text-amber-300 font-mono">${item.spiceLevel || 0}</td>
+            <td class="py-3 px-3 text-center font-mono ${item.stock === 0 ? 'text-red-400 font-bold' : 'text-stone-300'}">${item.stock ?? 50}</td>
             <td class="py-3 px-3 text-center space-x-2">
               <button onclick="openEditMenuModal(${idx})" class="text-amber-400 hover:text-amber-300 text-xs"><i class="fa-solid fa-pen-to-square"></i></button>
               <button onclick="deleteMenuItem(${idx})" class="text-red-400 hover:text-red-300 text-xs"><i class="fa-solid fa-trash"></i></button>
@@ -564,13 +338,6 @@
           </tr>
         `;
       }).join('');
-    }
-
-    function toggleTenantLock() {
-      if (!activeConfig.contract) activeConfig.contract = {};
-      activeConfig.contract.isLocked = !activeConfig.contract.isLocked;
-      populateAdminForm();
-      logConsole(`Tenant lock status toggled. Click 'Save All Changes' to apply.`);
     }
 
     async function saveAllChanges() {
@@ -586,14 +353,7 @@
         thu: document.getElementById('hoursThu').value,
         fri: document.getElementById('hoursFri').value,
         sat: document.getElementById('hoursSat').value,
-        sun: document.getElementById('hoursSun').value,
-        hasHolidaySurcharge: document.getElementById('cfgHasSurcharge').checked,
-        surchargeName: document.getElementById('cfgSurchargeName').value,
-        surchargePercent: parseFloat(document.getElementById('cfgSurchargePercent').value) || 0,
-        isTotallyClosed: document.getElementById('cfgIsTotallyClosed').checked,
-        closureTitle: document.getElementById('cfgClosureTitle').value,
-        closureMessage: document.getElementById('cfgClosureMessage').value,
-        reopenDate: document.getElementById('cfgReopenDate').value
+        sun: document.getElementById('hoursSun').value
       };
 
       if (!activeConfig.branding) activeConfig.branding = {};
@@ -607,20 +367,13 @@
         footerBg: document.getElementById('themeFooterBg').value
       };
 
-      if (!activeConfig.contract) activeConfig.contract = {};
-      activeConfig.contract.email = document.getElementById('sysEmail').value;
-      activeConfig.contract.contractNo = document.getElementById('sysContractNo').value;
-      activeConfig.contract.expiryDate = document.getElementById('sysExpiryDate').value;
-
       try {
         await db.collection("tenants").doc(TENANT_ID).set({
           config: activeConfig,
           lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
         }, { merge: true });
-        logConsole(`Successfully saved changes to Firestore.`);
         alert('Perubahan berhasil disimpan ke Cloud Firebase!');
       } catch (error) {
-        logConsole(`Error saving to Firestore: ${error.message}`);
         alert('Gagal menyimpan ke Cloud Firebase.');
       }
     }
@@ -644,9 +397,10 @@
       document.getElementById('mDescription').value = item.description || '';
       document.getElementById('mPrice').value = item.price;
       document.getElementById('mPromoPrice').value = item.promoPrice || '';
-      document.getElementById('mStock').value = item.stock !== undefined ? item.stock : 50;
+      document.getElementById('mStock').value = item.stock ?? 50;
       document.getElementById('mIsHero').checked = item.isHero === true;
       document.getElementById('mIsFavorite').checked = item.isFavorite === true;
+      document.getElementById('mIsHidden').checked = item.isHidden === true;
       document.getElementById('mSpice').value = item.spiceLevel || 0;
       document.getElementById('mImage').value = item.image || '';
       document.getElementById('menuModal').classList.remove('hidden');
@@ -672,6 +426,7 @@
         stock: isNaN(stockVal) ? 0 : stockVal,
         isHero: document.getElementById('mIsHero').checked,
         isFavorite: document.getElementById('mIsFavorite').checked,
+        isHidden: document.getElementById('mIsHidden').checked,
         spiceLevel: parseInt(document.getElementById('mSpice').value) || 0,
         image: document.getElementById('mImage').value,
         isAvailable: true
@@ -683,14 +438,12 @@
 
       closeMenuModal();
       renderAdminMenuTable();
-      logConsole(`Menu item saved locally. Click 'Save All Changes' to sync.`);
     }
 
     function deleteMenuItem(idx) {
       if (confirm(`Delete "${activeConfig.menuItems[idx].name}"?`)) {
         activeConfig.menuItems.splice(idx, 1);
         renderAdminMenuTable();
-        logConsole(`Menu item deleted locally.`);
       }
     }
 
