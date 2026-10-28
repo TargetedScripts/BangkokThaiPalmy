@@ -16,48 +16,39 @@
     .hero-logo-invert { filter: brightness(0) invert(1); }
   </style>
 </head>
-<body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen pb-16">
+<body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen pb-16 font-sans">
 
   <!-- HEADER -->
   <header id="mainHeader" class="sticky top-0 z-50 border-b border-zinc-800/60 w-full bg-black"> 
-    <div class="w-full px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
-      <div class="flex items-center space-x-3 shrink-0">
-        <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain" style="height: 48px;">
-        <span id="headerTitle" class="font-bold text-lg uppercase tracking-wider text-amber-300">TAKEAWAY</span>
+    <div class="w-full px-4 py-3 flex items-center justify-between gap-4">
+      <div class="flex items-center space-x-2 shrink-0">
+        <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain" style="height: 38px;">
+        <span id="headerTitle" class="font-bold text-sm uppercase tracking-wider text-amber-300">TAKEAWAY</span>
       </div>
       <div class="flex items-center space-x-2">
-        <button onclick="toggleViewMode()" id="viewModeBtn" class="bg-zinc-800 text-stone-300 px-3 py-2 rounded-lg text-xs font-semibold border border-zinc-700">
-          <i class="fa-solid fa-list mr-1"></i> <span id="viewModeText">Classic View</span>
+        <button onclick="toggleViewMode()" id="viewModeBtn" class="bg-zinc-800 text-stone-300 px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-zinc-700">
+          <i class="fa-solid fa-list mr-1"></i> <span id="viewModeText">Classic</span>
         </button>
-        <button onclick="toggleCartModal()" id="cartBtn" class="font-bold px-4 py-2 rounded-lg text-xs flex items-center space-x-2 bg-amber-500 text-zinc-950 shadow">
-          <i class="fa-solid fa-basket-shopping"></i><span>Cart</span><span id="cartCount" class="bg-zinc-950 text-amber-400 text-xs px-1.5 py-0.5 rounded-full">0</span>
+        <button onclick="toggleCartModal()" id="cartBtn" class="font-bold px-3 py-1.5 rounded-lg text-xs flex items-center space-x-1.5 bg-amber-500 text-zinc-950 shadow">
+          <i class="fa-solid fa-basket-shopping"></i><span>Cart</span><span id="cartCount" class="bg-zinc-950 text-amber-400 text-xs px-1.5 py-0.2 rounded-full">0</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- FEATURE HIGHLIGHTS BAR -->
-  <div id="featureHighlightsBar" class="bg-zinc-950 border-b border-zinc-800 py-2.5 px-4 hidden">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-4 text-xs font-semibold text-amber-300">
-      <span id="hlBadge1" class="hidden items-center bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full"><i class="fa-solid fa-check mr-1.5 text-amber-400"></i><span id="hlText1"></span></span>
-      <span id="hlBadge2" class="hidden items-center bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full"><i class="fa-solid fa-check mr-1.5 text-amber-400"></i><span id="hlText2"></span></span>
-      <span id="hlBadge3" class="hidden items-center bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full"><i class="fa-solid fa-check mr-1.5 text-amber-400"></i><span id="hlText3"></span></span>
-    </div>
-  </div>
-
-  <!-- HERO BANNER & DYNAMIC IMAGE SLIDER -->
-  <section class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden">
+  <!-- HERO BANNER & SLIDER -->
+  <section class="relative w-full h-[320px] md:h-[420px] bg-zinc-950 overflow-hidden">
     <div id="heroSlidesContainer" class="absolute inset-0 w-full h-full"></div>
-    <div id="heroOverlayDiv" class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/50 to-black/70 flex flex-col justify-center items-center text-center p-6 text-white z-10">
-      <img id="heroLogoInvert" src="" alt="Logo" class="w-auto object-contain mb-3 hero-logo-invert" style="height: 72px;">
-      <h2 id="heroTaglineTitle" class="text-2xl md:text-3xl font-extrabold tracking-widest uppercase mb-2">Store Name</h2>
-      <p id="bannerTagline" class="text-sm text-stone-300 mb-6">Authentic flavours cooked fresh.</p>
+    <div id="heroOverlayDiv" class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/50 to-black/70 flex flex-col justify-center items-center text-center p-4 text-white z-10">
+      <img id="heroLogoInvert" src="" alt="Logo" class="w-auto object-contain mb-2 hero-logo-invert" style="height: 56px;">
+      <h2 id="heroTaglineTitle" class="text-xl md:text-3xl font-extrabold tracking-widest uppercase mb-1">Store Name</h2>
+      <p id="bannerTagline" class="text-xs md:text-sm text-stone-300">Authentic flavours cooked fresh.</p>
     </div>
   </section>
 
   <!-- MENU SECTION -->
-  <section class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
-    <div id="catBarContainer" class="sticky top-[61px] z-30 py-3 -mx-4 px-4 mb-6 border-b border-zinc-800">
+  <section class="max-w-7xl mx-auto px-4 py-4 w-full flex-grow">
+    <div id="catBarContainer" class="sticky top-[57px] z-30 py-2.5 -mx-4 px-4 mb-4 border-b border-zinc-800 bg-zinc-900">
       <div id="categoryPills" class="flex space-x-2 overflow-x-auto no-scrollbar py-1"></div>
     </div>
     <div id="menuContentBox" class="w-full"></div>
@@ -67,35 +58,35 @@
   <div id="cartModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 hidden flex justify-end">
     <div id="cartDrawer" class="w-full max-w-md h-full flex flex-col shadow-2xl p-4 space-y-4">
       <div id="cartHeaderBg" class="p-3 text-white flex justify-between items-center rounded-lg shadow">
-        <h3 class="font-bold text-base"><i class="fa-solid fa-cart-shopping mr-2"></i> Your Order & Estimate</h3>
-        <button onclick="toggleCartModal()" class="text-white text-xl font-bold">&times;</button>
+        <h3 class="font-bold text-sm"><i class="fa-solid fa-cart-shopping mr-2"></i> Your Order & Estimate</h3>
+        <button onclick="toggleCartModal()" class="text-white text-lg font-bold">&times;</button>
       </div>
       <div id="cartItemsList" class="flex-grow overflow-y-auto space-y-2 text-xs divide-y divide-zinc-800"></div>
       <div class="pt-3 border-t border-zinc-800 space-y-2 text-xs">
         <div class="flex justify-between"><span>Subtotal (Excl. GST)</span><span id="cartSubtotal">$0.00</span></div>
         <div class="flex justify-between"><span>GST (15% Included)</span><span id="cartGST">$0.00</span></div>
-        <div class="flex justify-between font-bold text-base text-amber-400"><span>Total (NZD)</span><span id="cartTotal">$0.00</span></div>
+        <div class="flex justify-between font-bold text-sm text-amber-400"><span>Total (NZD)</span><span id="cartTotal">$0.00</span></div>
       </div>
     </div>
   </div>
 
   <!-- FOOTER -->
-  <footer id="mainFooter" class="text-xs py-10 border-t border-zinc-800 mt-12 bg-black text-stone-400">
-    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+  <footer id="mainFooter" class="text-xs py-8 border-t border-zinc-800 mt-12 bg-black text-stone-400">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
       <div>
-        <h4 id="footerStoreName" class="font-bold text-sm mb-2 text-stone-200">Store Name</h4>
-        <p id="footerAddress" class="mb-1">Address...</p>
-        <p class="mb-1">Phone: <a id="footerPhone" href="#" class="underline">Phone...</a></p>
+        <h4 id="footerStoreName" class="font-bold text-sm mb-1 text-stone-200">Store Name</h4>
+        <p id="footerAddress" class="mb-1 text-xs">Address...</p>
+        <p class="text-xs">Phone: <a id="footerPhone" href="#" class="underline">Phone...</a></p>
       </div>
       <div>
-        <h4 class="font-bold text-sm mb-2 text-stone-200"><i class="fa-solid fa-clock mr-1.5 text-amber-400"></i> Operating Hours</h4>
-        <div id="footerOperatingHours" class="space-y-1 text-[11px]"><p>Loading hours...</p></div>
+        <h4 class="font-bold text-sm mb-1 text-stone-200"><i class="fa-solid fa-clock mr-1 text-amber-400"></i> Operating Hours</h4>
+        <div id="footerOperatingHours" class="space-y-1 text-xs"><p>Loading hours...</p></div>
       </div>
       <div>
-        <h4 class="font-bold text-sm mb-2 text-stone-200"><i class="fa-solid fa-toolbox mr-1.5 text-amber-400"></i> Quick Links (Testing Mode)</h4>
-        <div class="flex flex-col space-y-1.5 text-[11px]">
-          <a href="admin.html" class="text-amber-400 hover:underline"><i class="fa-solid fa-user-gear mr-1"></i> Open Manager Portal (Admin)</a>
-          <a href="system-console.html" class="text-amber-400 hover:underline"><i class="fa-solid fa-terminal mr-1"></i> Open System Operator Console</a>
+        <h4 class="font-bold text-sm mb-1 text-stone-200"><i class="fa-solid fa-toolbox mr-1 text-amber-400"></i> Quick Links (Testing)</h4>
+        <div class="flex flex-col space-y-1 text-xs">
+          <a href="admin.html" class="text-amber-400 hover:underline"><i class="fa-solid fa-user-gear mr-1"></i> Open Manager Portal</a>
+          <a href="system-console.html" class="text-amber-400 hover:underline"><i class="fa-solid fa-terminal mr-1"></i> Open System Console</a>
         </div>
       </div>
     </div>
@@ -127,7 +118,6 @@
           applyThemeEngine();
           initStoreBranding();
           initHeroSlider();
-          renderHighlightsBar();
           renderCategoryPills();
           renderMenuContentBox();
         }
@@ -158,12 +148,12 @@
       document.getElementById('footerPhone').innerText = store.phone || '';
       document.getElementById('footerPhone').href = `tel:${store.phone || ''}`;
 
-      // Filter jam operasional agar hanya menampilkan hari standar (mon - sun)
+      // Jam Operasional Sinkron
       const op = activeConfig.operatingHours || {};
       const validDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
       const hoursHtml = Object.keys(op)
         .filter(key => validDays.includes(key.toLowerCase()))
-        .map(day => `<div class="flex justify-between capitalize"><span>${day}:</span><span class="text-stone-200">${op[day]}</span></div>`)
+        .map(day => `<div class="flex justify-between capitalize"><span>${day}:</span><span class="text-stone-200">${op[day] || 'Closed'}</span></div>`)
         .join('');
       document.getElementById('footerOperatingHours').innerHTML = hoursHtml || '<p>Hours not set</p>';
 
@@ -173,6 +163,7 @@
       }
     }
 
+    // Slider Otomatis Mengambil Menu yang Ditag isHero atau isPromo + Fallback Gambar
     function initHeroSlider() {
       const container = document.getElementById('heroSlidesContainer');
       const items = (activeConfig.menuItems || []).filter(i => (i.isHero || i.isPromo) && i.image);
@@ -205,21 +196,6 @@
       }
     }
 
-    function renderHighlightsBar() {
-      const hl = activeConfig.highlights || {};
-      const bar = document.getElementById('featureHighlightsBar');
-      let hasActive = false;
-      [1, 2, 3].forEach(i => {
-        const item = hl[`hl${i}`];
-        const badge = document.getElementById(`hlBadge${i}`);
-        if (item && item.active && item.text) {
-          document.getElementById(`hlText${i}`).innerText = item.text;
-          badge.classList.remove('hidden'); badge.classList.add('inline-flex'); hasActive = true;
-        } else { badge.classList.add('hidden'); }
-      });
-      if (hasActive) bar.classList.remove('hidden'); else bar.classList.add('hidden');
-    }
-
     function renderCategoryPills() {
       const items = (activeConfig.menuItems || []).filter(i => !i.isHidden);
       const categories = [...new Set(items.map(i => i.category))];
@@ -228,7 +204,7 @@
       const normalBg = th.catNormal || '#27272a';
 
       const createBtn = (id, label, icon) => `
-        <button onclick="filterCategory('${id}')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap flex items-center space-x-1.5 ${currentFilter === id ? 'text-zinc-950 font-bold' : 'text-stone-300'}" style="background-color: ${currentFilter === id ? activeBg : normalBg};">
+        <button onclick="filterCategory('${id}')" class="px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap flex items-center space-x-1 ${currentFilter === id ? 'text-zinc-950 font-bold' : 'text-stone-300'}" style="background-color: ${currentFilter === id ? activeBg : normalBg};">
           ${icon ? `<i class="${icon}"></i>` : ''}<span>${label}</span>
         </button>
       `;
@@ -245,7 +221,7 @@
 
     function toggleViewMode() {
       isClassicView = !isClassicView;
-      document.getElementById('viewModeText').innerText = isClassicView ? 'Grid View' : 'Classic View';
+      document.getElementById('viewModeText').innerText = isClassicView ? 'Grid' : 'Classic';
       renderMenuContentBox();
     }
 
@@ -264,31 +240,30 @@
       const btnBg = th.btnBg || '#f59e0b';
 
       if (items.length === 0) {
-        document.getElementById('menuContentBox').innerHTML = `<div class="text-center py-12 text-stone-500 text-xs">No menu items found in this filter.</div>`;
+        document.getElementById('menuContentBox').innerHTML = `<div class="text-center py-12 text-stone-500 text-xs">No menu items found.</div>`;
         return;
       }
 
       if (isClassicView) {
         document.getElementById('menuContentBox').innerHTML = `
-          <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 divide-y divide-zinc-800">
+          <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-3 divide-y divide-zinc-800">
             ${items.map(item => {
               const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
               return `
-                <div class="py-3 flex justify-between items-center text-xs">
-                  <div class="flex items-center space-x-3">
-                    ${item.image ? `<img src="${item.image}" class="w-12 h-12 rounded-lg object-cover">` : ''}
+                <div class="py-2.5 flex justify-between items-center text-xs">
+                  <div class="flex items-center space-x-2.5 pr-2">
+                    ${item.image ? `<img src="${item.image}" class="w-10 h-10 rounded-lg object-cover shrink-0">` : ''}
                     <div>
                       <span class="font-bold text-stone-100">${item.id}: ${item.name}</span>
-                      ${item.isFavorite ? '<i class="fa-solid fa-heart text-red-500 ml-1.5"></i>' : ''}
-                      <p class="text-stone-400 text-[11px]">${item.description || ''}</p>
+                      <p class="text-stone-400 text-[10px] leading-snug">${item.description || ''}</p>
                     </div>
                   </div>
-                  <div class="text-right flex items-center space-x-3">
+                  <div class="text-right shrink-0 flex items-center space-x-2">
                     <div>
-                      <span class="${hasPromo ? 'strike-red-diagonal mr-2' : 'font-bold text-amber-400'}">$${Number(item.price).toFixed(2)}</span>
+                      <span class="${hasPromo ? 'strike-red-diagonal text-[11px] mr-1.5' : 'font-bold text-amber-400'}">$${Number(item.price).toFixed(2)}</span>
                       ${hasPromo ? `<span class="font-bold text-amber-400">$${Number(item.promoPrice).toFixed(2)}</span>` : ''}
                     </div>
-                    <button onclick="addToCart('${item.id}')" class="bg-amber-500 text-zinc-950 font-bold px-3 py-1.5 rounded-lg">Add</button>
+                    <button onclick="addToCart('${item.id}')" class="bg-amber-500 text-zinc-950 font-bold px-2.5 py-1 rounded-md text-[11px]">Add</button>
                   </div>
                 </div>
               `;
@@ -299,36 +274,36 @@
       }
 
       document.getElementById('menuContentBox').innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           ${items.map(item => {
             const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
             const spiceLevel = Number(item.spiceLevel || 0);
             const spiceIcons = spiceLevel > 0 ? '<span class="text-red-500 ml-1">' + '<i class="fa-solid fa-pepper-hot"></i>'.repeat(spiceLevel) + '</span>' : '';
 
             return `
-              <div class="rounded-2xl border flex flex-col justify-between shadow-lg relative overflow-hidden" style="background-color: ${cardBg}; border-color: ${cardBorder};">
+              <div class="rounded-2xl border flex flex-col justify-between shadow-lg relative overflow-hidden text-xs" style="background-color: ${cardBg}; border-color: ${cardBorder};">
                 ${item.image ? `
-                  <div class="w-full h-40 bg-zinc-950 overflow-hidden relative">
+                  <div class="w-full h-36 bg-zinc-950 overflow-hidden relative">
                     <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
                   </div>
                 ` : ''}
 
-                <div class="p-4 flex flex-col justify-between flex-grow">
-                  <div class="absolute top-3 right-3 flex space-x-1.5 z-10">
-                    ${item.isFavorite ? '<span class="bg-red-950/90 text-red-400 border border-red-900 px-2 py-0.5 rounded-full text-[10px] font-bold shadow"><i class="fa-solid fa-heart mr-1"></i>Fav</span>' : ''}
-                    ${hasPromo ? '<span class="bg-amber-500/90 text-zinc-950 border border-amber-400 px-2 py-0.5 rounded-full text-[10px] font-bold shadow"><i class="fa-solid fa-tag mr-1"></i>Promo</span>' : ''}
+                <div class="p-3.5 flex flex-col justify-between flex-grow">
+                  <div class="absolute top-2.5 right-2.5 flex space-x-1 z-10">
+                    ${item.isFavorite ? '<span class="bg-red-950/90 text-red-400 border border-red-900 px-1.5 py-0.5 rounded-full text-[9px] font-bold"><i class="fa-solid fa-heart"></i></span>' : ''}
+                    ${hasPromo ? '<span class="bg-amber-500/90 text-zinc-950 border border-amber-400 px-1.5 py-0.5 rounded-full text-[9px] font-bold">Promo</span>' : ''}
                   </div>
 
                   <div>
-                    <h3 class="font-bold text-base pr-12">${item.id}: ${item.name} ${spiceIcons}</h3>
-                    <p class="text-xs text-stone-400 mt-1">${item.description || ''}</p>
+                    <h3 class="font-bold text-sm pr-10 text-stone-100">${item.id}: ${item.name} ${spiceIcons}</h3>
+                    <p class="text-[11px] text-stone-400 mt-1 leading-relaxed">${item.description || ''}</p>
                     
-                    <div class="mt-3 flex items-baseline space-x-2">
-                      <span class="${hasPromo ? 'strike-red-diagonal text-sm' : 'font-black text-amber-400 text-lg'}">$${Number(item.price).toFixed(2)}</span>
-                      ${hasPromo ? `<span class="font-black text-amber-400 text-lg">$${Number(item.promoPrice).toFixed(2)}</span>` : ''}
+                    <div class="mt-2.5 flex items-baseline space-x-2">
+                      <span class="${hasPromo ? 'strike-red-diagonal text-xs' : 'font-black text-amber-400 text-base'}">$${Number(item.price).toFixed(2)}</span>
+                      ${hasPromo ? `<span class="font-black text-amber-400 text-base">$${Number(item.promoPrice).toFixed(2)}</span>` : ''}
                     </div>
                   </div>
-                  <button onclick="addToCart('${item.id}')" class="mt-4 text-zinc-950 font-bold py-2.5 rounded-xl text-xs transition shadow" style="background-color: ${btnBg};">Add to Order</button>
+                  <button onclick="addToCart('${item.id}')" class="mt-3 text-zinc-950 font-bold py-2 rounded-xl text-xs transition shadow w-full" style="background-color: ${btnBg};">Add to Order</button>
                 </div>
               </div>
             `;
@@ -351,7 +326,7 @@
       document.getElementById('cartSubtotal').innerText = `$${(total/1.15).toFixed(2)}`;
       document.getElementById('cartGST').innerText = `$${(total - total/1.15).toFixed(2)}`;
       document.getElementById('cartTotal').innerText = `$${total.toFixed(2)}`;
-      document.getElementById('cartItemsList').innerHTML = cart.map(i => `<div class="py-2 flex justify-between"><span>${i.name}</span><span class="text-amber-400 font-bold">$${i.price}</span></div>`).join('');
+      document.getElementById('cartItemsList').innerHTML = cart.map(i => `<div class="py-2 flex justify-between text-xs"><span>${i.name}</span><span class="text-amber-400 font-bold">$${i.price}</span></div>`).join('');
     }
 
     function toggleCartModal() { document.getElementById('cartModal').classList.toggle('hidden'); }
