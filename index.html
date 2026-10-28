@@ -13,7 +13,6 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* Coretan miring merah tebal untuk harga promo */
     .strike-red-diagonal {
       position: relative;
       display: inline-block;
@@ -29,7 +28,6 @@
       pointer-events: none;
     }
 
-    /* Versi lebih besar khusus untuk hero banner promo */
     .strike-red-diagonal-lg {
       position: relative;
       display: inline-block;
@@ -48,18 +46,15 @@
 </head>
 <body id="mainBody" class="bg-zinc-900 text-stone-200 flex flex-col min-h-screen selection:bg-amber-500 selection:text-zinc-950 pb-16">
 
-  <!-- HEADER FULL-WIDTH -->
+  <!-- HEADER -->
   <header id="mainHeader" class="text-white shadow-xl sticky top-0 z-50 border-b border-zinc-800/60 w-full bg-black"> 
     <div class="w-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-4">
-      
-      <!-- LOGO AREA -->
       <div class="flex items-center space-x-3 shrink-0">
         <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain drop-shadow" style="height: 48px;">
         <span class="font-bold text-lg sm:text-xl tracking-wider uppercase text-amber-300 whitespace-nowrap">TAKEAWAY</span>
         <span id="headerStatusBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider transition-all"></span>
       </div>
       
-      <!-- CART BUTTON -->
       <div class="flex items-center space-x-2 shrink-0">
         <button onclick="toggleCartModal()" id="cartBtn" class="font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 sm:space-x-2 transition shadow-lg shrink-0 bg-amber-500 text-zinc-950">
           <i class="fa-solid fa-basket-shopping"></i>
@@ -67,15 +62,13 @@
           <span id="cartCount" class="bg-zinc-950 text-amber-400 font-bold text-[10px] sm:text-xs px-1.5 py-0.5 rounded-full">0</span>
         </button>
       </div>
-
     </div>
   </header>
 
-  <!-- HERO BANNER SLIDESHOW -->
+  <!-- HERO BANNER -->
   <section id="heroSection" class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden shadow-2xl">
     <div id="heroSlidesContainer" class="relative w-full h-full"></div>
 
-    <!-- Default Standard Overlay -->
     <div id="defaultHeroOverlay" class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/50 to-black/70 flex flex-col justify-center items-center text-center p-6 text-white transition-opacity duration-700 opacity-100 pointer-events-auto">
       <img id="heroLogo" src="" alt="Store Logo" class="w-auto object-contain mb-3 filter drop-shadow-lg" style="height: 80px;">
       <h2 id="heroTaglineTitle" class="text-2xl md:text-3xl font-extrabold tracking-widest uppercase mb-2">Store Name</h2>
@@ -87,7 +80,6 @@
       </a>
     </div>
 
-    <!-- Custom Overlay untuk Slide Menu Hero / Promo -->
     <div id="menuHeroOverlay" class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-black/60 to-transparent flex flex-col justify-end p-6 text-white opacity-0 pointer-events-none transition-opacity duration-500">
       <div class="max-w-3xl space-y-1">
         <span id="menuHeroBadge" class="bg-amber-500 text-zinc-950 text-[10px] font-black px-2.5 py-1 rounded uppercase tracking-wider mb-1 inline-block">SPECIAL PROMO</span>
@@ -98,7 +90,7 @@
     </div>
   </section>
 
-  <!-- MAIN MENU SECTION -->
+  <!-- MAIN MENU -->
   <section id="online-menu" class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2 border-b border-zinc-800 pb-4">
       <div>
@@ -115,16 +107,14 @@
       </div>
     </div>
 
-    <!-- CATEGORY PILLS BAR (DENGAN FILTER FAVORITE & PROMO) -->
     <div class="sticky top-[61px] z-30 bg-zinc-900/95 backdrop-blur-md py-3 -mx-4 px-4 shadow-lg mb-6 border-b border-zinc-800">
       <div id="categoryPills" class="flex space-x-2 overflow-x-auto no-scrollbar py-1"></div>
     </div>
 
-    <!-- MENU CONTENT CONTAINER -->
     <div id="menuContentBox" class="w-full"></div>
   </section>
 
-  <!-- CART ESTIMATOR MODAL -->
+  <!-- CART MODAL -->
   <div id="cartModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex justify-end">
     <div class="bg-zinc-900 w-full max-w-md h-full flex flex-col shadow-2xl border-l border-zinc-800">
       <div class="p-4 bg-red-800 text-white flex justify-between items-center shadow-md">
@@ -145,7 +135,7 @@
     </div>
   </div>
 
-  <!-- POPUP CLOSED NOTICE MODAL -->
+  <!-- NOTICE MODAL -->
   <div id="storeNoticeModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="bg-zinc-900 border border-zinc-700 w-full max-w-md rounded-2xl shadow-2xl p-6 text-center space-y-4 relative">
       <button onclick="closeStoreNoticeModal()" class="absolute top-4 right-4 text-stone-400 hover:text-white text-xl font-bold">&times;</button>
@@ -174,7 +164,6 @@
     </div>
   </footer>
 
-  <!-- FIREBASE SDKs & CLIENT SCRIPT -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -188,9 +177,7 @@
       appId: "1:780544019719:web:e5fccb00a4981f2579c9a2"
     };
 
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -205,8 +192,7 @@
     let computedSlides = [];
 
     document.addEventListener('DOMContentLoaded', () => {
-      const adminLink = document.getElementById('adminPortalLink');
-      if (adminLink) adminLink.href = `admin.html?tenant=${TENANT_ID}`;
+      document.getElementById('adminPortalLink').href = `admin.html?tenant=${TENANT_ID}`;
 
       db.collection("tenants").doc(TENANT_ID).onSnapshot((doc) => {
         if (doc.exists && doc.data().config) {
@@ -218,27 +204,16 @@
           renderMenuContentBox();
           checkStoreStatus();
         }
-      }, (error) => {
-        console.error("Firebase error:", error);
       });
     });
 
     function applyCustomTheme() {
       const theme = activeConfig.theme || {};
       const branding = activeConfig.branding || {};
-
-      const logoImg = document.getElementById('storeLogo');
-      if (logoImg && branding.logoHeight) logoImg.style.height = `${branding.logoHeight}px`;
-
-      const header = document.getElementById('mainHeader');
-      if (header && theme.headerBg) header.style.backgroundColor = theme.headerBg;
-
-      const body = document.getElementById('mainBody');
-      if (body && theme.bodyBg) body.style.backgroundColor = theme.bodyBg;
-
-      const footer = document.getElementById('mainFooter');
-      if (footer && theme.footerBg) footer.style.backgroundColor = theme.footerBg;
-
+      if (branding.logoHeight) document.getElementById('storeLogo').style.height = `${branding.logoHeight}px`;
+      if (theme.headerBg) document.getElementById('mainHeader').style.backgroundColor = theme.headerBg;
+      if (theme.bodyBg) document.getElementById('mainBody').style.backgroundColor = theme.bodyBg;
+      if (theme.footerBg) document.getElementById('mainFooter').style.backgroundColor = theme.footerBg;
       const btnBg = theme.btnBg || '#f59e0b';
       ['cartBtn', 'exploreBtn'].forEach(id => {
         const el = document.getElementById(id);
@@ -249,21 +224,17 @@
     function initStoreBranding() {
       const store = activeConfig.store || {};
       const branding = activeConfig.branding || {};
-      const storeName = store.name || 'Store Name';
-      
-      document.getElementById('heroTaglineTitle').innerText = storeName;
+      document.getElementById('heroTaglineTitle').innerText = store.name || 'Store Name';
       document.getElementById('bannerTagline').innerText = store.tagline || '';
-      document.getElementById('footerStoreName').innerText = storeName;
+      document.getElementById('footerStoreName').innerText = store.name || 'Store Name';
       document.getElementById('footerAddress').innerText = store.address || '';
       document.getElementById('footerPhone').innerText = store.phone || '';
       document.getElementById('footerPhone').href = `tel:${store.phone || ''}`;
 
-      const logoUrl = branding.logo || '';
-      if (logoUrl) {
-        document.getElementById('storeLogo').src = logoUrl;
-        document.getElementById('heroLogo').src = logoUrl;
+      if (branding.logo) {
+        document.getElementById('storeLogo').src = branding.logo;
+        document.getElementById('heroLogo').src = branding.logo;
       }
-
       renderFooterHours();
     }
 
@@ -271,16 +242,8 @@
       const op = activeConfig.operatingHours || {};
       const list = document.getElementById('footerHoursList');
       if (!list) return;
-      const days = [
-        { k: 'mon', label: 'Monday' },
-        { k: 'tue', label: 'Tuesday' },
-        { k: 'wed', label: 'Wednesday' },
-        { k: 'thu', label: 'Thursday' },
-        { k: 'fri', label: 'Friday' },
-        { k: 'sat', label: 'Saturday' },
-        { k: 'sun', label: 'Sunday' }
-      ];
-      list.innerHTML = days.map(d => `<li><span class="font-medium text-stone-300">${d.label}:</span> ${op[d.k] || 'Closed'}</li>`).join('');
+      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      list.innerHTML = days.map(d => `<li><span class="font-medium text-stone-300">${d}:</span> ${op[d.toLowerCase()] || 'Closed'}</li>`).join('');
     }
 
     function initHeroSlideshow() {
@@ -296,6 +259,7 @@
       defaultImgs.forEach(src => computedSlides.push({ type: 'default', src: src }));
 
       menuItems.forEach(item => {
+        if (item.isHidden) return; // Jangan masukkan item yang di-hide ke hero banner
         const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
         const finalPrice = hasPromo ? Number(item.promoPrice) : Number(item.price);
         if (item.isHero === true || hasPromo) {
@@ -330,8 +294,7 @@
     function nextHeroSlide() {
       if (computedSlides.length === 0) return;
       currentSlideIndex = (currentSlideIndex + 1) % computedSlides.length;
-      const slides = document.querySelectorAll('.hero-slide');
-      slides.forEach((el, idx) => {
+      document.querySelectorAll('.hero-slide').forEach((el, idx) => {
         el.style.opacity = idx === currentSlideIndex ? '1' : '0';
       });
       updateSlideOverlay(currentSlideIndex);
@@ -393,7 +356,7 @@
     }
 
     function renderCategoryPills() {
-      const items = activeConfig.menuItems || [];
+      const items = (activeConfig.menuItems || []).filter(i => !i.isHidden); // Exclude hidden
       const categories = [...new Set(items.map(i => i.category))];
       const pillsContainer = document.getElementById('categoryPills');
 
@@ -405,9 +368,7 @@
 
       categories.forEach(cat => {
         const isActive = cat === currentFilter;
-        html += `
-          <button onclick="filterCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${isActive ? 'bg-amber-500 text-zinc-950 font-bold shadow-md' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">${cat}</button>
-        `;
+        html += `<button onclick="filterCategory('${cat}')" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${isActive ? 'bg-amber-500 text-zinc-950 font-bold shadow-md' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">${cat}</button>`;
       });
       pillsContainer.innerHTML = html;
     }
@@ -427,6 +388,7 @@
     function renderMenuContentBox() {
       const items = activeConfig.menuItems || [];
       const visibleItems = items.filter(i => {
+        if (i.isHidden) return false; // Sembunyikan item yang di-hide
         if (i.isAvailable === false) return false;
         if (currentFilter === 'ALL') return true;
         if (currentFilter === 'FAVORITE') return i.isFavorite === true;
@@ -473,6 +435,7 @@
           </div>
         `;
       } else {
+        // Modern Grid Layout (Dengan Simbol Favorite & Spice Level)
         contentBox.innerHTML = `
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             ${visibleItems.map(item => {
@@ -495,6 +458,10 @@
                         <div class="text-right">
                           ${hasPromo ? `<div><span class="strike-red-diagonal text-base font-bold">$${Number(item.price).toFixed(2)}</span></div><div class="font-black text-amber-400 text-xl">$${finalPrice.toFixed(2)}</div>` : `<div class="font-black text-amber-400 text-lg">$${Number(item.price).toFixed(2)}</div>`}
                         </div>
+                      </div>
+                      <div class="flex items-center space-x-2 mt-2">
+                        ${item.isFavorite ? '<span class="text-amber-400 text-xs font-bold"><i class="fa-solid fa-star mr-1"></i>Favorite</span>' : ''}
+                        ${item.spiceLevel > 0 ? `<span class="text-xs text-amber-500 font-mono">🌶️ Spice x${item.spiceLevel}</span>` : ''}
                       </div>
                       <p class="text-xs text-stone-400 mt-1.5 line-clamp-2">${item.description || ''}</p>
                     </div>
