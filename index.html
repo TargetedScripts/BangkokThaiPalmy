@@ -158,8 +158,14 @@
       document.getElementById('footerPhone').innerText = store.phone || '';
       document.getElementById('footerPhone').href = `tel:${store.phone || ''}`;
 
+      // Filter jam operasional agar hanya menampilkan hari standar (mon - sun)
       const op = activeConfig.operatingHours || {};
-      document.getElementById('footerOperatingHours').innerHTML = Object.keys(op).map(day => `<div class="flex justify-between capitalize"><span>${day}:</span><span class="text-stone-200">${op[day]}</span></div>`).join('') || '<p>Hours not set</p>';
+      const validDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+      const hoursHtml = Object.keys(op)
+        .filter(key => validDays.includes(key.toLowerCase()))
+        .map(day => `<div class="flex justify-between capitalize"><span>${day}:</span><span class="text-stone-200">${op[day]}</span></div>`)
+        .join('');
+      document.getElementById('footerOperatingHours').innerHTML = hoursHtml || '<p>Hours not set</p>';
 
       if (branding.logo) {
         document.getElementById('storeLogo').src = branding.logo;
@@ -167,7 +173,6 @@
       }
     }
 
-    // Inisialisasi Slider Hero Mengambil Gambar Menu yang ditag isHero atau isPromo + Fallback
     function initHeroSlider() {
       const container = document.getElementById('heroSlidesContainer');
       const items = (activeConfig.menuItems || []).filter(i => (i.isHero || i.isPromo) && i.image);
@@ -178,8 +183,6 @@
         'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=1200&q=80',
         'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1200&q=80'
       ];
-      
-      // Jika menu yang ditag hero/promo tidak ada gambarnya, gunakan default
       if (slides.length === 0) slides = defaultImages;
 
       container.innerHTML = slides.map((img, idx) => `
@@ -265,7 +268,6 @@
         return;
       }
 
-      // Classic List View Mode
       if (isClassicView) {
         document.getElementById('menuContentBox').innerHTML = `
           <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 divide-y divide-zinc-800">
@@ -296,7 +298,6 @@
         return;
       }
 
-      // Standard Grid View Mode (Dengan Foto Makanan di Kartu)
       document.getElementById('menuContentBox').innerHTML = `
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           ${items.map(item => {
@@ -306,7 +307,6 @@
 
             return `
               <div class="rounded-2xl border flex flex-col justify-between shadow-lg relative overflow-hidden" style="background-color: ${cardBg}; border-color: ${cardBorder};">
-                <!-- Foto Makanan di Grid Card -->
                 ${item.image ? `
                   <div class="w-full h-40 bg-zinc-950 overflow-hidden relative">
                     <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
@@ -314,7 +314,6 @@
                 ` : ''}
 
                 <div class="p-4 flex flex-col justify-between flex-grow">
-                  <!-- Badges Favorite & Promo -->
                   <div class="absolute top-3 right-3 flex space-x-1.5 z-10">
                     ${item.isFavorite ? '<span class="bg-red-950/90 text-red-400 border border-red-900 px-2 py-0.5 rounded-full text-[10px] font-bold shadow"><i class="fa-solid fa-heart mr-1"></i>Fav</span>' : ''}
                     ${hasPromo ? '<span class="bg-amber-500/90 text-zinc-950 border border-amber-400 px-2 py-0.5 rounded-full text-[10px] font-bold shadow"><i class="fa-solid fa-tag mr-1"></i>Promo</span>' : ''}
