@@ -48,9 +48,9 @@
         <span id="headerStatusBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider transition-all"></span>
       </div>
       
-      <!-- CART BUTTON & RESET CACHE -->
+      <!-- CART BUTTON & FORCE RESET -->
       <div class="flex items-center space-x-2 shrink-0">
-        <button onclick="forceSyncConfig()" title="Refresh Data From Admin" class="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-stone-400 hover:text-white border border-zinc-700 text-xs">
+        <button onclick="forceSyncConfig()" title="Refresh & Clear Local Cache" class="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-stone-400 hover:text-white border border-zinc-700 text-xs transition">
           <i class="fa-solid fa-rotate"></i>
         </button>
         <button onclick="toggleCartModal()" id="cartBtn" class="font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 sm:space-x-2 transition shadow-lg shrink-0">
@@ -133,7 +133,7 @@
         </button>
       </div>
     </div>
-  </div>
+  </div
 
   <!-- POPUP ANNOUNCEMENT / VACATION / CLOSED MODAL -->
   <div id="storeNoticeModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
@@ -236,10 +236,6 @@
       if (saved) {
         try { 
           activeConfig = JSON.parse(saved); 
-          // Jika data localStorage tidak memiliki jam Rabu yang sesuai, lakukan autosync
-          if (!activeConfig.operatingHours || !activeConfig.operatingHours.wed) {
-            activeConfig = baseConfig;
-          }
         } catch(e) { 
           activeConfig = baseConfig; 
         }
@@ -415,20 +411,21 @@
 
       if (!list) return;
 
+      // Fleksibel terhadap kunci wed/wednesday dst.
       const days = [
-        { label: "Monday", val: op.mon || "Closed" },
-        { label: "Tuesday", val: op.tue || "Closed" },
-        { label: "Wednesday", val: op.wed || "Closed" },
-        { label: "Thursday", val: op.thu || "Closed" },
-        { label: "Friday", val: op.fri || "Closed" },
-        { label: "Saturday", val: op.sat || "Closed" },
-        { label: "Sunday", val: op.sun || "Closed" }
+        { label: "Monday", val: op.mon || op.monday || "Closed" },
+        { label: "Tuesday", val: op.tue || op.tuesday || "Closed" },
+        { label: "Wednesday", val: op.wed || op.wednesday || "Closed" },
+        { label: "Thursday", val: op.thu || op.thursday || "Closed" },
+        { label: "Friday", val: op.fri || op.friday || "Closed" },
+        { label: "Saturday", val: op.sat || op.saturday || "Closed" },
+        { label: "Sunday", val: op.sun || op.sunday || "Closed" }
       ];
 
       list.innerHTML = days.map(d => `
         <li class="flex justify-between pt-1">
           <span>${d.label}:</span> 
-          <span class="font-medium ${d.val.toLowerCase().includes('closed') ? 'text-red-400' : 'text-stone-200'}">${d.val}</span>
+          <span class="font-medium ${String(d.val).toLowerCase().includes('closed') ? 'text-red-400' : 'text-stone-200'}">${d.val}</span>
         </li>
       `).join('');
 
@@ -442,7 +439,7 @@
 
     function parseTimeStringToMinutes(timeStr) {
       if (!timeStr) return null;
-      const clean = timeStr.trim().toUpperCase();
+      const clean = String(timeStr).trim().toUpperCase();
       const match = clean.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
       if (!match) return null;
 
@@ -463,15 +460,19 @@
       const now = new Date(nzDateStr);
 
       const dayIndex = now.getDay();
-      const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-      const currentDayKey = dayKeys[dayIndex];
-      const todayHoursStr = op[currentDayKey] || "Closed";
+      const dayShortKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+      const dayLongKeys = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+      
+      const shortKey = dayShortKeys[dayIndex];
+      const longKey = dayLongKeys[dayIndex];
+      
+      const todayHoursStr = op[shortKey] || op[longKey] || "Closed";
 
-      if (!todayHoursStr || todayHoursStr.toLowerCase().includes('closed')) {
+      if (!todayHoursStr || String(todayHoursStr).toLowerCase().includes('closed')) {
         return { isOpen: false, todayHoursStr: "Closed Today" };
       }
 
-      const parts = todayHoursStr.split(/[-–—]/);
+      const parts = String(todayHoursStr).split(/[-–—]/);
       if (parts.length !== 2) {
         return { isOpen: true, todayHoursStr };
       }
@@ -498,7 +499,7 @@
       const openBadgeStyle = `background-color: ${theme.btnBg || '#f59e0b'}; color: ${theme.btnText || '#09090b'}; border: 1px solid ${theme.btnBg || '#f59e0b'};`;
       const closedBadgeStyle = `background-color: ${theme.accentBg || '#991b1b'}; color: ${theme.accentText || '#fef3c7'}; border: 1px solid ${theme.accentBg || '#991b1b'};`;
 
-      if (op.isTotallyClosed === true) {
+      if (op.isTotallyClosed === true || op.isTotallyClosed === 'true') {
         isStoreOpenRightNow = false;
         if (badge) {
           badge.innerText = "TEMPORARILY CLOSED";
@@ -549,7 +550,7 @@
 
     function handleCheckoutAction() {
       const op = activeConfig.operatingHours || {};
-      if (op.isTotallyClosed) {
+      if (op.isTotallyClosed === true || op.isTotallyClosed === 'true') {
         alert(`Sorry, order cannot be processed. ${op.closureTitle || 'Store is temporarily closed'}. Re-opening: ${op.reopenDate || 'Soon'}`);
         return;
       }
@@ -649,7 +650,8 @@
       const grid = document.getElementById('highlightsGrid');
       const hl = activeConfig.highlights || {};
 
-      if (hl.enabled === false) {
+      // Pengecekan strict boolean & string 'false' untuk menyembunyikan box highlights
+      if (hl.enabled === false || hl.enabled === 'false' || hl.show === false || hl.show === 'false') {
         section.classList.add('hidden');
         return;
       }
@@ -660,7 +662,7 @@
         hl.item3 || { enabled: true, title: "Custom Spice & Veggie", sub: "Tailored spice levels" }
       ];
 
-      const activeItems = allItems.filter(i => i.enabled !== false);
+      const activeItems = allItems.filter(i => i.enabled !== false && i.enabled !== 'false');
 
       if (activeItems.length === 0) {
         section.classList.add('hidden');
@@ -685,7 +687,7 @@
 
     function renderCategoryPills() {
       if (!activeConfig.menuItems) return;
-      const visibleItems = activeConfig.menuItems.filter(i => i.isAvailable !== false);
+      const visibleItems = activeConfig.menuItems.filter(i => i.isAvailable !== false && i.isAvailable !== 'false');
       const rawCategories = [...new Set(visibleItems.map(item => item.category))];
       const theme = activeConfig.theme || {};
 
@@ -739,7 +741,7 @@
       }
 
       const visibleItems = activeConfig.menuItems.filter(i => {
-        const isEnabled = i.isAvailable !== false;
+        const isEnabled = i.isAvailable !== false && i.isAvailable !== 'false';
         if (!isEnabled) return false;
 
         const isFav = (i.isFavorite === true || i.isFavorite === 'true' || i.isFavorite === 1);
