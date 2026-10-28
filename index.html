@@ -41,14 +41,14 @@
   <header id="mainHeader" class="text-white shadow-xl sticky top-0 z-50 border-b border-zinc-800/60 w-full"> 
     <div class="w-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-4">
       
-      <!-- LOGO AREA (DYNAMIC VARIABLE FROM ADMIN) -->
+      <!-- LOGO AREA (DYNAMIC VARIABLE FROM JS) -->
       <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
         <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain drop-shadow max-h-8 sm:max-h-10">
         <span id="headerLogoText" class="hidden sm:inline-block font-bold text-lg sm:text-xl tracking-wider uppercase text-amber-300 whitespace-nowrap">Takeaway</span>
         <span id="headerStatusBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider transition-all"></span>
       </div>
       
-      <!-- CART BUTTON & MANUAL REFRESH -->
+      <!-- REFRESH PAGE & CART BUTTON -->
       <div class="flex items-center space-x-2 shrink-0">
         <button onclick="location.reload(true)" title="Refresh Page Data" class="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-stone-400 hover:text-white border border-zinc-700 text-xs transition">
           <i class="fa-solid fa-rotate"></i>
@@ -134,7 +134,7 @@
     </div>
   </div>
 
-  <!-- POPUP ANNOUNCEMENT / VACATION / CLOSED MODAL -->
+  <!-- POPUP ANNOUNCEMENT / CLOSED MODAL -->
   <div id="storeNoticeModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div class="bg-zinc-900 border border-zinc-700 w-full max-w-md rounded-2xl shadow-2xl p-6 text-center space-y-4 relative">
       <button onclick="closeStoreNoticeModal()" class="absolute top-4 right-4 text-stone-400 hover:text-white text-xl font-bold">&times;</button>
@@ -144,7 +144,7 @@
       </div>
 
       <h3 id="noticeTitle" class="text-xl font-extrabold text-stone-100">Store Currently Closed</h3>
-      <p id="noticeMessage" class="text-xs text-stone-300 leading-relaxed max-w-xs mx-auto">We are currently closed. Please check our opening hours below!</p>
+      <p id="noticeMessage" class="text-xs text-stone-300 leading-relaxed max-w-xs mx-auto">We are currently closed. Please check our operating hours below!</p>
       
       <div id="reopenDateBox" class="bg-zinc-950 p-3 rounded-xl border border-zinc-800 text-xs text-amber-400 font-bold hidden">
         <i class="fa-regular fa-clock mr-1.5"></i> <span id="reopenDateText">Today's Hours: Closed Today</span>
@@ -156,7 +156,7 @@
     </div>
   </div>
 
-  <!-- LOCATION & MAPS SECTION WITH CLICKABLE PHONE & ADDRESS -->
+  <!-- LOCATION & MAPS SECTION -->
   <section id="locationSection" class="bg-zinc-950 py-12 border-t border-zinc-800 mt-12">
     <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
       <div class="space-y-4">
@@ -207,11 +207,10 @@
     </div>
   </footer>
 
-  <!-- DYNAMIC IMPORT SCRIPT FILE FROM SERVER (NO LOCALSTORAGE READ FOR MAIN SITE) -->
+  <!-- DYNAMIC CONFIG FILE FROM SERVER -->
   <script src="assets/js/bangkokthaipalmy.js"></script>
 
   <script>
-    const SECRET_KEY = "TargetedScripts-Master-Secret-2026!Key";
     let currentCategory = 'ALL';
     let cart = [];
     let heroIndex = 0;
@@ -221,15 +220,11 @@
     let isStoreOpenRightNow = false;
 
     document.addEventListener('DOMContentLoaded', () => {
-      // 100% LANGSUNG BACA DARI BANGKOKTHAIPALMY.JS (TANPA DIBAYANGI LOCALSTORAGE)
+      // BACA MURNI DARI FILE JS SERVER (ABAIKAN LOCALSTORAGE)
       if (typeof RESTOSYNC_CONFIG !== 'undefined') {
         activeConfig = RESTOSYNC_CONFIG;
       } else {
-        // Fallback default jika file JS bermasalah/gagal dimuat -> SET KE CLOSED!
-        activeConfig = {
-          operatingHours: { isTotallyClosed: true },
-          menuItems: []
-        };
+        activeConfig = { operatingHours: { isTotallyClosed: true }, menuItems: [] };
       }
 
       activeLayoutMode = activeConfig.store?.defaultLayout || 'grid';
@@ -324,7 +319,7 @@
       if (!list) return;
 
       const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-      const dayIndices = [1, 2, 3, 4, 5, 6, 0]; // Mon to Sun
+      const dayIndices = [1, 2, 3, 4, 5, 6, 0];
 
       list.innerHTML = dayIndices.map((idx, i) => {
         const val = getDayHoursValue(op, idx);
@@ -356,7 +351,6 @@
 
     function checkRealTimeOperatingHours() {
       const op = activeConfig.operatingHours || {};
-      
       const nzDateStr = new Date().toLocaleString("en-US", { timeZone: "Pacific/Auckland" });
       const now = new Date(nzDateStr);
       const dayIndex = now.getDay();
@@ -368,16 +362,12 @@
       }
 
       const parts = String(todayHoursStr).split(/[-–—]/);
-      if (parts.length !== 2) {
-        return { isOpen: true, todayHoursStr };
-      }
+      if (parts.length !== 2) return { isOpen: true, todayHoursStr };
 
       const openMin = parseTimeStringToMinutes(parts[0]);
       const closeMin = parseTimeStringToMinutes(parts[1]);
 
-      if (openMin === null || closeMin === null) {
-        return { isOpen: true, todayHoursStr };
-      }
+      if (openMin === null || closeMin === null) return { isOpen: true, todayHoursStr };
 
       const currentMin = (now.getHours() * 60) + now.getMinutes();
       const isOpen = (currentMin >= openMin && currentMin < closeMin);
@@ -396,11 +386,7 @@
 
       if (op.isTotallyClosed === true || op.isTotallyClosed === 'true') {
         isStoreOpenRightNow = false;
-        if (badge) {
-          badge.innerText = "TEMPORARILY CLOSED";
-          badge.style.cssText = closedBadgeStyle;
-        }
-
+        if (badge) { badge.innerText = "TEMPORARILY CLOSED"; badge.style.cssText = closedBadgeStyle; }
         document.getElementById('noticeTitle').innerText = op.closureTitle || "Store Temporarily Closed";
         document.getElementById('noticeMessage').innerText = op.closureMessage || "We are currently away on holidays. Please check back soon!";
         noticeModal.classList.remove('hidden');
@@ -411,29 +397,18 @@
       isStoreOpenRightNow = timeCheck.isOpen;
 
       if (!isStoreOpenRightNow) {
-        if (badge) {
-          badge.innerText = "CLOSED NOW";
-          badge.style.cssText = closedBadgeStyle;
-        }
-
+        if (badge) { badge.innerText = "CLOSED NOW"; badge.style.cssText = closedBadgeStyle; }
         document.getElementById('noticeTitle').innerText = "Store Currently Closed";
         document.getElementById('noticeMessage').innerText = `We are currently closed. Our operating hours for today are ${timeCheck.todayHoursStr}.`;
-        
         document.getElementById('reopenDateText').innerText = `Today's Hours: ${timeCheck.todayHoursStr}`;
         document.getElementById('reopenDateBox').classList.remove('hidden');
-
         noticeModal.classList.remove('hidden');
       } else {
-        if (badge) {
-          badge.innerText = "OPEN NOW";
-          badge.style.cssText = openBadgeStyle;
-        }
+        if (badge) { badge.innerText = "OPEN NOW"; badge.style.cssText = openBadgeStyle; }
       }
     }
 
-    function closeStoreNoticeModal() {
-      document.getElementById('storeNoticeModal').classList.add('hidden');
-    }
+    function closeStoreNoticeModal() { document.getElementById('storeNoticeModal').classList.add('hidden'); }
 
     function renderHighlightsBar() {
       const section = document.getElementById('highlightsSection');
@@ -484,55 +459,31 @@
       const accentBtnStyle = `background-color: ${theme.accentBg || '#991b1b'}; color: ${theme.accentText || '#fef3c7'}; border-color: ${theme.accentBg || '#991b1b'};`;
 
       let pillsHTML = `
-        <button onclick="filterCategory('ALL')" style="${currentCategory === 'ALL' ? primaryBtnStyle : ''}" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${currentCategory === 'ALL' ? 'shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">
-          ALL
-        </button>
-
-        <button onclick="filterCategory('FILTER_PROMO')" style="${currentCategory === 'FILTER_PROMO' ? primaryBtnStyle : accentBtnStyle}" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition border flex items-center space-x-1.5 shadow-md">
-          <i class="fa-solid fa-fire"></i>
-          <span>PROMO & OFFERS</span>
-        </button>
-
-        <button onclick="filterCategory('FILTER_FAVORITES')" style="${currentCategory === 'FILTER_FAVORITES' ? primaryBtnStyle : ''}" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition border flex items-center space-x-1.5 ${currentCategory === 'FILTER_FAVORITES' ? 'shadow-md' : 'bg-zinc-800 text-amber-400 border-zinc-700 hover:bg-zinc-700'}">
-          <i class="fa-solid fa-star"></i>
-          <span>FAVORITES</span>
-        </button>
+        <button onclick="filterCategory('ALL')" style="${currentCategory === 'ALL' ? primaryBtnStyle : ''}" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${currentCategory === 'ALL' ? 'shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">ALL</button>
+        <button onclick="filterCategory('FILTER_PROMO')" style="${currentCategory === 'FILTER_PROMO' ? primaryBtnStyle : accentBtnStyle}" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition border flex items-center space-x-1.5 shadow-md"><i class="fa-solid fa-fire"></i><span>PROMO & OFFERS</span></button>
+        <button onclick="filterCategory('FILTER_FAVORITES')" style="${currentCategory === 'FILTER_FAVORITES' ? primaryBtnStyle : ''}" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition border flex items-center space-x-1.5 ${currentCategory === 'FILTER_FAVORITES' ? 'shadow-md' : 'bg-zinc-800 text-amber-400 border-zinc-700 hover:bg-zinc-700'}"><i class="fa-solid fa-star"></i><span>FAVORITES</span></button>
       `;
 
       rawCategories.forEach(cat => {
         pillsHTML += `
-          <button onclick="filterCategory('${cat}')" style="${cat === currentCategory ? primaryBtnStyle : ''}" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${cat === currentCategory ? 'shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">
-            ${cat}
-          </button>
+          <button onclick="filterCategory('${cat}')" style="${cat === currentCategory ? primaryBtnStyle : ''}" class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition border ${cat === currentCategory ? 'shadow-md font-bold' : 'bg-zinc-800 text-stone-300 border-zinc-700 hover:bg-zinc-700'}">${cat}</button>
         `;
       });
 
       document.getElementById('categoryPills').innerHTML = pillsHTML;
     }
 
-    function filterCategory(cat) { 
-      currentCategory = cat; 
-      renderCategoryPills(); 
-      renderMenuContentBox(); 
-    }
-
-    function toggleUserLayout() {
-      activeLayoutMode = activeLayoutMode === 'grid' ? 'classic' : 'grid';
-      renderMenuContentBox();
-    }
+    function filterCategory(cat) { currentCategory = cat; renderCategoryPills(); renderMenuContentBox(); }
+    function toggleUserLayout() { activeLayoutMode = activeLayoutMode === 'grid' ? 'classic' : 'grid'; renderMenuContentBox(); }
 
     function renderMenuContentBox() {
       if (!activeConfig.menuItems) return;
 
       const btnText = document.getElementById('layoutSwitchText');
-      if (btnText) {
-        btnText.innerText = activeLayoutMode === 'grid' ? 'Switch to Classic List' : 'Switch to Modern Grid';
-      }
+      if (btnText) btnText.innerText = activeLayoutMode === 'grid' ? 'Switch to Classic List' : 'Switch to Modern Grid';
 
       const visibleItems = activeConfig.menuItems.filter(i => {
-        const isEnabled = i.isAvailable !== false && i.isAvailable !== 'false';
-        if (!isEnabled) return false;
-
+        if (i.isAvailable === false || i.isAvailable === 'false') return false;
         const isFav = (i.isFavorite === true || i.isFavorite === 'true' || i.isFav === true || i.isFav === 'true');
         const hasPromo = (i.promoPrice && Number(i.promoPrice) < Number(i.price));
 
@@ -595,9 +546,7 @@
                     ? `<button onclick="addToCart('${item.id}')" style="${accentBtnStyle}" class="w-full font-semibold py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 border border-white/10 shadow-md hover:opacity-90">
                          <i class="fa-solid fa-plus"></i> <span>Add to Order</span>
                        </button>`
-                    : `<button disabled class="w-full bg-zinc-900 text-stone-600 font-bold py-2.5 rounded-xl text-xs text-center border border-zinc-800 cursor-not-allowed">
-                         Out of Stock
-                       </button>`
+                    : `<button disabled class="w-full bg-zinc-900 text-stone-600 font-bold py-2.5 rounded-xl text-xs text-center border border-zinc-800 cursor-not-allowed">Out of Stock</button>`
                   }
                 </div>
               </div>
@@ -611,7 +560,6 @@
       const container = document.getElementById('heroSlidesContainer');
       const baseImages = activeConfig.branding?.heroImages || [];
       slidesDataGlobal = baseImages.map(img => ({ type: 'brand', src: img }));
-
       if (slidesDataGlobal.length === 0) return;
 
       container.innerHTML = slidesDataGlobal.map((s, idx) => `
@@ -626,7 +574,6 @@
       if (!item) return;
       const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
       const effectivePrice = hasPromo ? Number(item.promoPrice) : Number(item.price);
-      
       const ex = cart.find(c => c.id === id);
       if (ex) { ex.qty++; } else { cart.push({ ...item, price: effectivePrice, qty: 1 }); }
       updateCartUI();
@@ -644,7 +591,6 @@
     function updateCartUI() {
       document.getElementById('cartCount').innerText = cart.reduce((s,i)=>s+i.qty,0);
       const subtotal = cart.reduce((s,i)=>s+(i.price*i.qty),0);
-      
       document.getElementById('cartSubtotal').innerText = `$${subtotal.toFixed(2)}`;
       document.getElementById('cartTotal').innerText = `$${subtotal.toFixed(2)}`;
 
