@@ -146,7 +146,7 @@
       <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
         <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
           <h2 class="font-bold text-sm text-stone-100 flex items-center">
-            <i class="fa-solid fa-utensils text-amber-400 mr-2"></i> Menu Catalogue & Item Management
+            <i class="fa-solid fa-utensils text-amber-400 mr-2"></i> Menu Catalogue & Item Management (Quick Click Toggles)
           </h2>
           <button onclick="openAddMenuModal()" class="bg-zinc-800 hover:bg-zinc-700 text-amber-400 font-semibold px-3 py-1.5 rounded-lg text-xs border border-zinc-700 transition">
             <i class="fa-solid fa-plus mr-1"></i> Add New Menu Item
@@ -318,12 +318,29 @@
       tbody.innerHTML = items.map((item, idx) => {
         const hasPromo = item.promoPrice && Number(item.promoPrice) < Number(item.price);
         const isHidden = item.isHidden === true;
+        const isHero = item.isHero === true;
+        const isFav = item.isFavorite === true;
 
         return `
-          <tr class="hover:bg-zinc-800/40 transition ${isHidden ? 'opacity-50 bg-red-950/10' : ''}">
-            <td class="py-3 px-2 text-center"><span class="${item.isHero ? 'text-amber-400 font-bold' : 'text-stone-600'}"><i class="fa-solid fa-star"></i></span></td>
-            <td class="py-3 px-2 text-center"><span class="${item.isFavorite ? 'text-amber-400 font-bold' : 'text-stone-600'}"><i class="fa-solid fa-heart"></i></span></td>
-            <td class="py-3 px-2 text-center"><span class="${isHidden ? 'text-red-400 font-bold' : 'text-stone-600'}"><i class="fa-solid fa-eye-slash"></i></span></td>
+          <tr class="hover:bg-zinc-800/40 transition ${isHidden ? 'opacity-40 bg-red-950/10' : ''}">
+            <!-- QUICK TOGGLE HERO -->
+            <td class="py-3 px-2 text-center">
+              <button onclick="toggleQuickFlag(${idx}, 'isHero')" class="p-1.5 transition hover:scale-125">
+                <i class="fa-solid fa-star text-base ${isHero ? 'text-amber-400 drop-shadow' : 'text-stone-700'}"></i>
+              </button>
+            </td>
+            <!-- QUICK TOGGLE FAVORITE -->
+            <td class="py-3 px-2 text-center">
+              <button onclick="toggleQuickFlag(${idx}, 'isFavorite')" class="p-1.5 transition hover:scale-125">
+                <i class="fa-solid fa-heart text-base ${isFav ? 'text-amber-400 drop-shadow' : 'text-stone-700'}"></i>
+              </button>
+            </td>
+            <!-- QUICK TOGGLE HIDE -->
+            <td class="py-3 px-2 text-center">
+              <button onclick="toggleQuickFlag(${idx}, 'isHidden')" class="p-1.5 transition hover:scale-125" title="${isHidden ? 'Hidden (Click to Show)' : 'Visible (Click to Hide)'}">
+                <i class="fa-solid ${isHidden ? 'fa-eye-slash text-red-500' : 'fa-eye text-stone-500'} text-base"></i>
+              </button>
+            </td>
             <td class="py-3 px-3 font-bold text-stone-100">${item.id}: ${item.name}</td>
             <td class="py-3 px-3 text-stone-400">${item.category}</td>
             <td class="py-3 px-3">
@@ -332,12 +349,19 @@
             </td>
             <td class="py-3 px-3 text-center font-mono ${item.stock === 0 ? 'text-red-400 font-bold' : 'text-stone-300'}">${item.stock ?? 50}</td>
             <td class="py-3 px-3 text-center space-x-2">
-              <button onclick="openEditMenuModal(${idx})" class="text-amber-400 hover:text-amber-300 text-xs"><i class="fa-solid fa-pen-to-square"></i></button>
-              <button onclick="deleteMenuItem(${idx})" class="text-red-400 hover:text-red-300 text-xs"><i class="fa-solid fa-trash"></i></button>
+              <button onclick="openEditMenuModal(${idx})" class="text-amber-400 hover:text-amber-300 text-xs px-2 py-1 bg-zinc-800 rounded border border-zinc-700"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+              <button onclick="deleteMenuItem(${idx})" class="text-red-400 hover:text-red-300 text-xs px-2 py-1 bg-zinc-800 rounded border border-zinc-700"><i class="fa-solid fa-trash"></i></button>
             </td>
           </tr>
         `;
       }).join('');
+    }
+
+    // Fungsi Quick Toggle langsung dari tabel tanpa masuk modal edit
+    function toggleQuickFlag(idx, flagKey) {
+      if (!activeConfig.menuItems[idx]) return;
+      activeConfig.menuItems[idx][flagKey] = !activeConfig.menuItems[idx][flagKey];
+      renderAdminMenuTable();
     }
 
     async function saveAllChanges() {
