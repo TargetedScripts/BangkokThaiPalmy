@@ -23,10 +23,7 @@
     .strike-red-diagonal::after {
       content: "";
       position: absolute;
-      left: -3px;
-      right: -3px;
-      top: 50%;
-      height: 3px;
+      left: -3px; right: -3px; top: 50%; height: 3px;
       background: #ef4444;
       transform: translateY(-50%) rotate(-12deg);
       pointer-events: none;
@@ -43,7 +40,7 @@
       <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
         <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain drop-shadow max-h-8 sm:max-h-10">
         <span id="headerLogoText" class="hidden sm:inline-block font-bold text-lg sm:text-xl tracking-wider uppercase text-amber-300 whitespace-nowrap">Takeaway</span>
-        <span id="headerStatusBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider transition-all bg-emerald-950 text-emerald-400 border border-emerald-800">OPEN NOW</span>
+        <span id="headerStatusBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider transition-all"></span>
       </div>
       
       <!-- CART BUTTON -->
@@ -58,14 +55,14 @@
     </div>
   </header>
 
-  <!-- HERO BANNER CAROUSEL / OVERLAY -->
+  <!-- HERO BANNER CAROUSEL -->
   <section id="heroSection" class="relative w-full h-[380px] md:h-[460px] bg-zinc-950 overflow-hidden shadow-2xl">
     <div id="heroSlidesContainer" class="relative w-full h-full"></div>
 
     <div id="defaultHeroOverlay" class="absolute inset-0 bg-gradient-to-t from-zinc-900 via-black/50 to-black/70 flex flex-col justify-center items-center text-center p-6 text-white transition-opacity duration-700 opacity-100 pointer-events-auto">
       <img id="heroLogo" src="" alt="Store Logo" class="w-auto object-contain mb-3 filter drop-shadow-lg" style="height: 80px;">
-      <h2 id="heroTaglineTitle" class="text-2xl md:text-3xl font-extrabold tracking-widest uppercase mb-2">Bangkok Thai Takeaway</h2>
-      <p id="bannerTagline" class="text-sm md:text-lg text-stone-300 max-w-xl mb-6 font-light">Authentic Thai flavours cooked fresh to order.</p>
+      <h2 id="heroTaglineTitle" class="text-2xl md:text-3xl font-extrabold tracking-widest uppercase mb-2">Store Name</h2>
+      <p id="bannerTagline" class="text-sm md:text-lg text-stone-300 max-w-xl mb-6 font-light">Authentic flavours cooked fresh to order.</p>
       
       <a href="#online-menu" id="exploreBtn" class="bg-amber-500 text-zinc-950 font-bold px-8 py-3.5 rounded-xl shadow-2xl transition flex items-center space-x-2 text-base border border-white/20 hover:scale-105 transform">
         <i class="fa-solid fa-utensils"></i>
@@ -120,11 +117,21 @@
     </div>
   </div>
 
+  <!-- POPUP CLOSED / VACATION NOTICE MODAL -->
+  <div id="storeNoticeModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-zinc-700 w-full max-w-md rounded-2xl shadow-2xl p-6 text-center space-y-4 relative">
+      <button onclick="closeStoreNoticeModal()" class="absolute top-4 right-4 text-stone-400 hover:text-white text-xl font-bold">&times;</button>
+      <h3 id="noticeTitle" class="text-xl font-extrabold text-stone-100">Store Closed</h3>
+      <p id="noticeMessage" class="text-xs text-stone-300 leading-relaxed">We are currently closed.</p>
+      <button onclick="closeStoreNoticeModal()" class="w-full bg-zinc-800 text-stone-200 font-bold py-2 rounded-xl text-xs">Browse Menu Anyway</button>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <footer class="bg-black text-stone-500 text-xs py-8 border-t border-zinc-900 mt-12">
     <div class="max-w-7xl mx-auto px-4 text-center space-y-3">
       <p>
-        <span id="footerStoreName">Bangkok Thai Takeaway</span> | 
+        <span id="footerStoreName">Store Name</span> | 
         <a id="storeAddressLink" href="#" target="_blank" class="hover:text-stone-300 underline">Loading address...</a> | 
         Phone: <a id="storePhoneLink" href="#" class="hover:text-amber-400 text-stone-300 font-semibold underline">Loading phone...</a>
       </p>
@@ -135,7 +142,7 @@
     </div>
   </footer>
 
-  <!-- FIREBASE SDKs & CLIENT SCRIPT -->
+  <!-- FIREBASE SDKs & CLIENT LOGIC -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
@@ -173,6 +180,7 @@
           initHeroCarousel();
           renderCategoryPills();
           renderMenuContentBox();
+          checkStoreStatus();
         }
       }, (error) => {
         console.error("Firebase error:", error);
@@ -208,6 +216,27 @@
           <img src="${src}" class="w-full h-full object-cover">
         </div>
       `).join('');
+    }
+
+    function checkStoreStatus() {
+      const op = activeConfig.operatingHours || {};
+      const badge = document.getElementById('headerStatusBadge');
+      const noticeModal = document.getElementById('storeNoticeModal');
+
+      if (op.isTotallyClosed === true) {
+        badge.innerText = "CLOSED";
+        badge.className = "text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider bg-red-950 text-red-400 border border-red-800";
+        document.getElementById('noticeTitle').innerText = op.closureTitle || "Store Closed";
+        document.getElementById('noticeMessage').innerText = op.closureMessage || "We are currently away.";
+        noticeModal.classList.remove('hidden');
+      } else {
+        badge.innerText = "OPEN NOW";
+        badge.className = "text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-800";
+      }
+    }
+
+    function closeStoreNoticeModal() {
+      document.getElementById('storeNoticeModal').classList.add('hidden');
     }
 
     function renderCategoryPills() {
