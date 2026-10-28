@@ -41,18 +41,15 @@
   <header id="mainHeader" class="text-white shadow-xl sticky top-0 z-50 border-b border-zinc-800/60 w-full"> 
     <div class="w-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-4">
       
-      <!-- LOGO AREA (DYNAMIC VARIABLE FROM JS) -->
+      <!-- LOGO AREA (DYNAMIC VARIABLE FROM CONFIG) -->
       <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
         <img id="storeLogo" src="" alt="Logo" class="w-auto object-contain drop-shadow max-h-8 sm:max-h-10">
         <span id="headerLogoText" class="hidden sm:inline-block font-bold text-lg sm:text-xl tracking-wider uppercase text-amber-300 whitespace-nowrap">Takeaway</span>
         <span id="headerStatusBadge" class="text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider transition-all"></span>
       </div>
       
-      <!-- REFRESH PAGE & CART BUTTON -->
+      <!-- CART BUTTON -->
       <div class="flex items-center space-x-2 shrink-0">
-        <button onclick="location.reload(true)" title="Refresh Page Data" class="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-stone-400 hover:text-white border border-zinc-700 text-xs transition">
-          <i class="fa-solid fa-rotate"></i>
-        </button>
         <button onclick="toggleCartModal()" id="cartBtn" class="font-bold px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm flex items-center space-x-1.5 sm:space-x-2 transition shadow-lg shrink-0">
           <i class="fa-solid fa-basket-shopping"></i>
           <span>Cart</span>
@@ -156,7 +153,7 @@
     </div>
   </div>
 
-  <!-- LOCATION & MAPS SECTION -->
+  <!-- LOCATION & MAPS SECTION WITH DYNAMIC OPENING HOURS -->
   <section id="locationSection" class="bg-zinc-950 py-12 border-t border-zinc-800 mt-12">
     <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
       <div class="space-y-4">
@@ -213,18 +210,28 @@
   <script>
     let currentCategory = 'ALL';
     let cart = [];
-    let heroIndex = 0;
     let activeConfig = {};
     let slidesDataGlobal = [];
     let activeLayoutMode = 'grid';
     let isStoreOpenRightNow = false;
 
     document.addEventListener('DOMContentLoaded', () => {
-      // BACA MURNI DARI FILE JS SERVER (ABAIKAN LOCALSTORAGE)
-      if (typeof RESTOSYNC_CONFIG !== 'undefined') {
-        activeConfig = RESTOSYNC_CONFIG;
+      // 1. DATA MASTER DARI FAIL JS
+      const baseConfig = typeof RESTOSYNC_CONFIG !== 'undefined' ? RESTOSYNC_CONFIG : {};
+      
+      // 2. CHECK TERLEBIH DAHULU HASIL SAVE DARI ADMIN PORTAL (LOCALSTORAGE)
+      const savedData = localStorage.getItem('RESTOSYNC_WORKING_CONFIG');
+      
+      if (savedData) {
+        try {
+          // BACA HASIL SAVE DARI ADMIN JIKA WUJUD
+          activeConfig = JSON.parse(savedData);
+        } catch (e) {
+          activeConfig = baseConfig;
+        }
       } else {
-        activeConfig = { operatingHours: { isTotallyClosed: true }, menuItems: [] };
+        // JIKA TIADA, BACA TERUS DARI FAIL JS GITHUB
+        activeConfig = baseConfig;
       }
 
       activeLayoutMode = activeConfig.store?.defaultLayout || 'grid';
